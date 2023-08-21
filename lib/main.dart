@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 import 'permission.dart';
+import 'widgetStyle.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,8 +18,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        fontFamily: 'NotoSansJP'
+      theme: ThemeData.dark().copyWith(
+        textTheme: ThemeData.dark().textTheme.copyWith(
+          bodyText2: const TextStyle(
+            fontFamily: 'NotoSansJP',
+            color: Colors.white,
+          ),
+        ),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -34,8 +40,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PermissionRequest req = PermissionRequest();
+  PermissionRequest permissionRequest = PermissionRequest();
+  WidgetStyle widgetStyle = WidgetStyle();
 
+  var list = ["one","two","three","feageawg","ふぁがｗｇ"];
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +59,20 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("こんにちは")
-        ],
-      )
+      body: 
+        ListView.builder(
+          itemBuilder: (BuildContext context, int index){ return Text(list[index]); },
+          itemCount: list.length,
+        ),
+      // body: Column(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: [
+      //     ListView.builder(
+      //       itemBuilder: (BuildContext context, int index){ return Text(list[index]); },
+      //       itemCount: list.length,
+      //     ),
+      //   ],
+      // )
     );
   }
 }

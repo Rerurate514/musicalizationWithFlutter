@@ -67,7 +67,6 @@ flutter:
     - images/mp3_ui_sound_control_unmute_on.png
     - images/mp3_ui_update.png
 
-
   uses-material-design: true
 
 
