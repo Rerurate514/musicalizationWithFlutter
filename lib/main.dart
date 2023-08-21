@@ -17,7 +17,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: new ThemeData.dark(),
+      theme: ThemeData(
+        fontFamily: 'NotoSansJP'
+      ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -32,32 +34,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PermissionRequest req = new PermissionRequest();
-  
-  ///このメソッドは、外部ストレージのパスを取得するメソッドです。
-  Future<String> getExternalStoragePath() async {
-    Directory? directory = await getExternalStorageDirectory();
-    
-    if(directory == null) {
-      print("Failed to access external storage in [getExternalStoragePath] method");
-      return "";
-    }
+  PermissionRequest req = PermissionRequest();
 
-    String path = directory.path;
-    return path;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset(
-          'images/mp3_ui_mp3player_letters.png'
+        title: Row(
+          children: [
+            Image.asset(
+              'images/mp3_ui_mp3player_letters.png'
+            ),
+            Spacer(),
+            Text("ここにハンバーガーボタン"),
+          ],
         ),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          
+          Text("こんにちは")
         ],
       )
     );
