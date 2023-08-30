@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicalization/fetchFile.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -42,6 +43,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   PermissionRequest permissionRequest = PermissionRequest();
   WidgetStyle widgetStyle = WidgetStyle();
+  FetchFile fetchFile = FetchFile();
 
   var list = ["one","two","three","feageawg","ふぁがｗｇ"];
 
@@ -58,21 +60,22 @@ class _MyHomePageState extends State<MyHomePage> {
             Text("ここにハンバーガーボタン"),
           ],
         ),
-      ),
-      body: 
-        ListView.builder(
-          itemBuilder: (BuildContext context, int index){ return Text(list[index]); },
-          itemCount: list.length,
-        ),
-      // body: Column(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [
-      //     ListView.builder(
-      //       itemBuilder: (BuildContext context, int index){ return Text(list[index]); },
-      //       itemCount: list.length,
-      //     ),
-      //   ],
-      // )
+      ),   
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // ListView.builder(
+          //   itemBuilder: (BuildContext context, int index){ return Text(list[index]); },
+          //   itemCount: list.length,
+          // ),
+          TextButton(
+            onPressed: 
+              fetchFile.fetchFileFromDownloadDir,
+            child: 
+              const Text("dagesheewww"),
+          )
+        ],
+      )
     );
   }
 }
