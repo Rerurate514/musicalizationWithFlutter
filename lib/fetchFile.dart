@@ -8,21 +8,17 @@ class FetchFile{
   Future<Directory> getExternalDir() async {
     Directory? directory = Directory("/storage/emulated/0/Download/");
 
-    if(directory == null) {
-      Exception("Failed to access external storage in [getExternalDir] method");
-    }
-
     return directory;
   }
 
   ///このメソッドは外部ストレージのdownloadディレクトリ内のファイルを取得するメソッドです。
-  Future<void> fetchFileFromDownloadDir() async {
+  Future<List> fetchFileFromDownloadDir() async {
     Directory dir = await getExternalDir();
 
     List<FileSystemEntity> list = dir.listSync();
 
     print("di = $dir\nlist = $list");
 
-    //return list;
+    return list;
   }
 }
