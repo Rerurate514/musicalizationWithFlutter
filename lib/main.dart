@@ -3,6 +3,7 @@ import 'package:musicalization/fetchFile.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'dart:async';
 
 import 'permission.dart';
 import 'widgetStyle.dart';
@@ -41,11 +42,34 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PermissionRequest permissionRequest = PermissionRequest();
+  MediaAudioPermissionRequest permissionRequest = MediaAudioPermissionRequest();
   WidgetStyle widgetStyle = WidgetStyle();
   FetchFile fetchFile = FetchFile();
 
-  var list = ["one","two","three","feageawg","ふぁがｗｇ"];
+  List list = [];
+
+  final listStream = StreamController<List>();
+
+  @override
+  void initState(){
+    super.initState();    
+    startLogic();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    listStream.close();
+  }
+
+  Future<void> startLogic() async {
+    await permissionRequest.requestPermission();
+
+    setState(() {
+      fetchFile.fetchFileFromDownloadDir().then((value) => list = value);
+      print("n = $list");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,25 +81,32 @@ class _MyHomePageState extends State<MyHomePage> {
               'images/mp3_ui_mp3player_letters.png'
             ),
             Spacer(),
-            Text("ここにハンバーガーボタン"),
+            Text("ハンバーガー"),
+            TextButton(onPressed: (){setState(() {
+              print("b = $list");
+              //list.removeAt(0);
+              print("a = $list");
+            });}, child: Text("fwww"))
           ],
         ),
       ),   
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // ListView.builder(
-          //   itemBuilder: (BuildContext context, int index){ return Text(list[index]); },
-          //   itemCount: list.length,
-          // ),
-          TextButton(
-            onPressed: 
-              fetchFile.fetchFileFromDownloadDir,
-            child: 
-              const Text("dagesheewww"),
-          )
-        ],
-      )
+      body: 
+          ListView.builder(
+            itemBuilder: (BuildContext context, int index){ 
+              return Text(list[index].toString()); 
+            },
+            itemCount: list.length,
+          ),
     );
+  }
+}
+
+class ListStreamObserver{
+
+
+  ListStreamObserver(StreamController<List> _stream){
+    _stream.stream.listen((data) async {
+      
+    });
   }
 }

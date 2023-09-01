@@ -17,8 +17,30 @@ class FetchFile{
 
     List<FileSystemEntity> list = dir.listSync();
 
-    print("di = $dir\nlist = $list");
+    print("list = $list");
 
     return list;
+  }
+}
+
+class TrimFileStr{
+  List<String> trimFileName(List _list){
+    List list = _list;
+    List<String> result = convertFileNameToString(list);
+
+    
+
+    return result;
+  }
+
+  List<String> convertFileNameToString(List _list){
+    List list = _list;
+    List<String> result = [];
+
+    list.forEach((element) {
+      result.add(element);
+    });
+
+    return result;
   }
 }

@@ -1,10 +1,14 @@
 import 'package:permission_handler/permission_handler.dart';
 
-///このクラスは、権限要求を行うメソッドを集めたクラスです。
-class PermissionRequest{
+abstract class PermissionRequest{
+  Future<PermissionStatus> requestPermission();
+}
 
+///このクラスは、権限要求を行うメソッドを集めたクラスです。
+class MediaAudioPermissionRequest extends PermissionRequest{
   /// このメソッドは、音楽ファイルへのアクセス権限要求を行うメソッドです。
-  Future<void> requestMediaAudioPermission() async {
+  @override
+  Future<PermissionStatus> requestPermission() async {
     PermissionStatus status = await Permission.audio.request();
 
     if(status.isGranted){
@@ -13,5 +17,7 @@ class PermissionRequest{
     else{
       print('READ_MEDIA_AUDIO permission denied.');
     }
+
+    return status;
   }
 }
