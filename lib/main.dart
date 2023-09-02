@@ -42,11 +42,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  MediaAudioPermissionRequest permissionRequest = MediaAudioPermissionRequest();
-  WidgetStyle widgetStyle = WidgetStyle();
-  FetchFile fetchFile = FetchFile();
+  MediaAudioPermissionRequest _permissionRequest = MediaAudioPermissionRequest();
+  WidgetStyle _widgetStyle = WidgetStyle();
+  FetchFile _fetchFile = FetchFile();
 
-  List list = [];
+  List _list = [];
 
   final listStream = StreamController<List>();
 
@@ -63,12 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> startLogic() async {
-    await permissionRequest.requestPermission();
+    await _permissionRequest.requestPermission();
 
     setState(() {
-      fetchFile.fetchFileFromDownloadDir().then((value) => list = value);
-      print("n = $list");
-    });
+      _list = _fetchFile.strList;
+      print("setState = ${_list[1]}");
+    }); 
   }
 
   @override
@@ -82,20 +82,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Spacer(),
             Text("ハンバーガー"),
-            TextButton(onPressed: (){setState(() {
-              print("b = $list");
-              //list.removeAt(0);
-              print("a = $list");
-            });}, child: Text("fwww"))
           ],
         ),
       ),   
       body: 
           ListView.builder(
             itemBuilder: (BuildContext context, int index){ 
-              return Text(list[index].toString()); 
+              return Text(_list[index].toString()); 
             },
-            itemCount: list.length,
+            itemCount: _list.length,
           ),
     );
   }
