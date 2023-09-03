@@ -7,6 +7,7 @@ import 'dart:async';
 
 import 'permission.dart';
 import 'widgetStyle.dart';
+import 'string.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,11 +23,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData.dark().copyWith(
         textTheme: ThemeData.dark().textTheme.copyWith(
-          bodyText2: const TextStyle(
-            fontFamily: 'NotoSansJP',
-            color: Colors.white,
-          ),
-        ),
+              bodyText2: const TextStyle(
+                fontFamily: 'NotoSansJP',
+                color: Colors.white,
+              ),
+            ),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -42,22 +43,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  MediaAudioPermissionRequest _permissionRequest = MediaAudioPermissionRequest();
-  WidgetStyle _widgetStyle = WidgetStyle();
-  FetchFile _fetchFile = FetchFile();
+  final _permissionRequest = MediaAudioPermissionRequest();
+  final _widgetStyle = WidgetStyle();
+  final _fetchFile = FetchFile();
+  final _string = SetedString();
 
   List _list = [];
 
   final listStream = StreamController<List>();
 
   @override
-  void initState(){
-    super.initState();    
+  void initState() {
+    super.initState();
     startLogic();
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     listStream.close();
   }
@@ -67,41 +69,82 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       _list = _fetchFile.strList;
-      print("setState = ${_list[1]}");
-    }); 
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Image.asset(
-              'images/mp3_ui_mp3player_letters.png'
-            ),
-            Spacer(),
-            Text("ハンバーガー"),
-          ],
-        ),
-      ),   
-      body: 
-          ListView.builder(
-            itemBuilder: (BuildContext context, int index){ 
-              return Text(_list[index].toString()); 
-            },
-            itemCount: _list.length,
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Text(_string.appNameStr),
+              Spacer(),
+              const Text("ハンバーガー"),
+            ]
           ),
-    );
+        ),
+        body: Column(
+          children: [
+            Container(
+              color: Theme.of(context).primaryColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Image.asset(
+                    'images/mp3_ui_mp3player_letters.png',
+                    width: 80,
+                  ),
+                  Card(
+                      elevation: 4.0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 5.0),
+                        child: Image.asset(
+                          'images/mp3_ui_music_shuffle_button.png',
+                          width: 50,
+                        ),
+                      )),
+                  Card(
+                      elevation: 4.0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 5.0),
+                        child: Image.asset(
+                          'images/mp3_ui_google_drive_button.png',
+                          width: 50,
+                        ),
+                      )),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    elevation: 4.0,
+                    child: ListTile(
+                      leading: Image.asset(
+                        'images/mp3_menu_picture_setting.png',
+                        width: 50,
+                      ),
+                      title: Text(_list[index]),
+                    ),
+                  );
+                },
+                itemCount: _list.length,
+              ),
+            )
+          ],
+        ));
   }
 }
 
-class ListStreamObserver{
-
-
-  ListStreamObserver(StreamController<List> _stream){
-    _stream.stream.listen((data) async {
-      
-    });
+class ListStreamObserver {
+  ListStreamObserver(StreamController<List> _stream) {
+    _stream.stream.listen((data) async {});
   }
 }

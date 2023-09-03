@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 class FetchFile{
@@ -33,7 +31,7 @@ class FetchFile{
     Directory dir = await _getExternalDir();
 
     List<FileSystemEntity> result = dir.listSync();
-
+    
     return result;
   }
 }
@@ -55,6 +53,7 @@ class _TrimFileStr{
       result.add(
         fileNameStrList[i]
           .replaceAll("File: '/storage/emulated/0/Download/", "")
+          .replaceAll("Directory: '/storage/emulated/0/Download/", "")
           .replaceAll("'", "")
       );
     }
