@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:musicalization/fetchFile.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'dart:async';
 
-import 'permission.dart';
-import 'widgetStyle.dart';
-import 'string.dart';
+import 'Pages/homePage.dart';
+import 'Pages/listPage.dart';
+import 'Pages/playPage.dart';
+import 'Pages/settingPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,108 +39,48 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _permissionRequest = MediaAudioPermissionRequest();
-  final _widgetStyle = WidgetStyle();
-  final _fetchFile = FetchFile();
-  final _string = SetedString();
-
-  List _list = [];
+  late PageController _pageController;
 
   int _selecetedIndex = 0;
+
+  final _pages = [
+    const HomePage(title: "Home"),
+    const ListPage(title: "List"),
+    const PlayPage(title: "Play"),
+    const SettingPage(title: "Setting"),
+  ];
 
   @override
   void initState() {
     super.initState();
-    startLogic();
+    _pageController = PageController(initialPage: _selecetedIndex);
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
+	void dispose(){
+		super.dispose();
+		_pageController.dispose();
+	}
 
-  Future<void> startLogic() async {
-    await _permissionRequest.requestPermission();
-
-    setState(() {
-      _list = _fetchFile.strList;
-    });
-  }
-
-  void _onItemTapped(int indexArg){
+  void _onPageChanged(int indexArg){
     setState(() {
       _selecetedIndex = indexArg;
+       _pageController.animateToPage(
+        indexArg,
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.ease,
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(children: [
-          Text(_string.appNameStr),
-          Spacer(),
-          Image.asset(
-            'images/mp3_ui_main_mode.png',
-            width: 70,
-          )
-        ]),
-      ),
-      body: Column(
-        children: [
-          Container(
-            color: Theme.of(context).primaryColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Image.asset(
-                  'images/mp3_ui_mp3player_letters.png',
-                  width: 80,
-                ),
-                Card(
-                    elevation: 4.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 5.0),
-                      child: Image.asset(
-                        'images/mp3_ui_music_shuffle_button.png',
-                        width: 50,
-                      ),
-                    )),
-                Card(
-                    elevation: 4.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 5.0),
-                      child: Image.asset(
-                        'images/mp3_ui_google_drive_button.png',
-                        width: 50,
-                      ),
-                    )),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  elevation: 4.0,
-                  child: ListTile(
-                    leading: Image.asset(
-                      'images/mp3_menu_picture_setting.png',
-                      width: 50,
-                    ),
-                    title: Text(_list[index]),
-                  ),
-                );
-              },
-              itemCount: _list.length,
-            ),
-          )
-        ],
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -179,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
         selectedItemColor: Colors.white,
         currentIndex: _selecetedIndex,
-        onTap: _onItemTapped,
+        onTap: _onPageChanged,
       ),
     );
   }
