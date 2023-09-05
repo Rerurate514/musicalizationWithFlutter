@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>{
+class _HomePageState extends State<HomePage> {
   final _permissionRequest = MediaAudioPermissionRequest();
   final _fetchFile = FetchFile();
   final _string = SetedString();
@@ -48,40 +48,10 @@ class _HomePageState extends State<HomePage>{
       ),
       body: Column(
         children: [
-          Container(
-            color: Theme.of(context).primaryColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Image.asset(
-                  'images/mp3_ui_mp3player_letters.png',
-                  width: 80,
-                ),
-                Card(
-                    elevation: 4.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 5.0),
-                      child: Image.asset(
-                        'images/mp3_ui_music_shuffle_button.png',
-                        width: 50,
-                      ),
-                    )),
-                Card(
-                    elevation: 4.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 5.0),
-                      child: Image.asset(
-                        'images/mp3_ui_google_drive_button.png',
-                        width: 50,
-                      ),
-                    )),
-              ],
-            ),
-          ),
+          const _UpMenuBarWidget(),
           Expanded(
             child: ListView.builder(
+              addAutomaticKeepAlives: true,
               itemBuilder: (BuildContext context, int index) {
                 return Card(
                   shape: RoundedRectangleBorder(
@@ -103,5 +73,45 @@ class _HomePageState extends State<HomePage>{
         ],
       ),
     );
+  }
 }
+
+class _UpMenuBarWidget extends StatelessWidget {
+  const _UpMenuBarWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Image.asset(
+            'images/mp3_ui_mp3player_letters.png',
+            width: 80,
+          ),
+          Card(
+              elevation: 4.0,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                child: Image.asset(
+                  'images/mp3_ui_music_shuffle_button.png',
+                  width: 50,
+                ),
+              )),
+          Card(
+              elevation: 4.0,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                child: Image.asset(
+                  'images/mp3_ui_google_drive_button.png',
+                  width: 50,
+                ),
+              )),
+        ],
+      ),
+    );
+  }
 }

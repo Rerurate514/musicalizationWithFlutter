@@ -12,7 +12,7 @@ class ListPage extends StatefulWidget {
   State<ListPage> createState() => _ListPageState();
 }
 
-class _ListPageState extends State<ListPage>{
+class _ListPageState extends State<ListPage> {
   final _string = SetedString();
 
   List _list = [];
@@ -20,10 +20,7 @@ class _ListPageState extends State<ListPage>{
   @override
   void initState() {
     super.initState();
-    
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,38 +37,7 @@ class _ListPageState extends State<ListPage>{
       ),
       body: Column(
         children: [
-          Container(
-            color: Theme.of(context).primaryColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Image.asset(
-                  'images/mp3_ui_mp3player_letters.png',
-                  width: 80,
-                ),
-                Card(
-                    elevation: 4.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 5.0),
-                      child: Image.asset(
-                        'images/mp3_ui_music_shuffle_button.png',
-                        width: 50,
-                      ),
-                    )),
-                Card(
-                    elevation: 4.0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 5.0),
-                      child: Image.asset(
-                        'images/mp3_ui_google_drive_button.png',
-                        width: 50,
-                      ),
-                    )),
-              ],
-            ),
-          ),
+          _UpMenuBarWidget(),
           Expanded(
             child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
@@ -95,5 +61,45 @@ class _ListPageState extends State<ListPage>{
         ],
       ),
     );
+  }
 }
+
+class _UpMenuBarWidget extends StatelessWidget {
+  const _UpMenuBarWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Image.asset(
+            'images/mp3_ui_mp3player_letters.png',
+            width: 80,
+          ),
+          Card(
+              elevation: 4.0,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                child: Image.asset(
+                  'images/mp3_ui_music_shuffle_button.png',
+                  width: 50,
+                ),
+              )),
+          Card(
+              elevation: 4.0,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                child: Image.asset(
+                  'images/mp3_ui_music_register_button.png',
+                  width: 50,
+                ),
+              )),
+        ],
+      ),
+    );
+  }
 }

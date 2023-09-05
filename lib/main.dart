@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _selecetedIndex = indexArg;
        _pageController.animateToPage(
         indexArg,
-        duration: const Duration(milliseconds: 1000),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     });
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        onPageChanged: _onPageChanged,
+        // onPageChanged: _onPageChanged,
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
