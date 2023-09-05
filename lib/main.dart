@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List _list = [];
 
-  final listStream = StreamController<List>();
+  int _selecetedIndex = 0;
 
   @override
   void initState() {
@@ -61,7 +61,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     super.dispose();
-    listStream.close();
   }
 
   Future<void> startLogic() async {
@@ -72,79 +71,118 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _onItemTapped(int indexArg){
+    setState(() {
+      _selecetedIndex = indexArg;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              Text(_string.appNameStr),
-              Spacer(),
-              const Text("ハンバーガー"),
-            ]
-          ),
-        ),
-        body: Column(
-          children: [
-            Container(
-              color: Theme.of(context).primaryColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Image.asset(
-                    'images/mp3_ui_mp3player_letters.png',
-                    width: 80,
-                  ),
-                  Card(
-                      elevation: 4.0,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 5.0),
-                        child: Image.asset(
-                          'images/mp3_ui_music_shuffle_button.png',
-                          width: 50,
-                        ),
-                      )),
-                  Card(
-                      elevation: 4.0,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 5.0),
-                        child: Image.asset(
-                          'images/mp3_ui_google_drive_button.png',
-                          width: 50,
-                        ),
-                      )),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
+      appBar: AppBar(
+        title: Row(children: [
+          Text(_string.appNameStr),
+          Spacer(),
+          Image.asset(
+            'images/mp3_ui_main_mode.png',
+            width: 70,
+          )
+        ]),
+      ),
+      body: Column(
+        children: [
+          Container(
+            color: Theme.of(context).primaryColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Image.asset(
+                  'images/mp3_ui_mp3player_letters.png',
+                  width: 80,
+                ),
+                Card(
                     elevation: 4.0,
-                    child: ListTile(
-                      leading: Image.asset(
-                        'images/mp3_menu_picture_setting.png',
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 5.0),
+                      child: Image.asset(
+                        'images/mp3_ui_music_shuffle_button.png',
                         width: 50,
                       ),
-                      title: Text(_list[index]),
+                    )),
+                Card(
+                    elevation: 4.0,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 5.0),
+                      child: Image.asset(
+                        'images/mp3_ui_google_drive_button.png',
+                        width: 50,
+                      ),
+                    )),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  elevation: 4.0,
+                  child: ListTile(
+                    leading: Image.asset(
+                      'images/mp3_menu_picture_setting.png',
+                      width: 50,
                     ),
-                  );
-                },
-                itemCount: _list.length,
-              ),
-            )
-          ],
-        ));
+                    title: Text(_list[index]),
+                  ),
+                );
+              },
+              itemCount: _list.length,
+            ),
+          )
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'images/mp3_ui_home.png',
+              width: 35,
+            ),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'images/mp3_ui_list.png',
+              width: 25,
+            ),
+            label: "Music List"
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'images/mp3_ui_play_button.png',
+              width: 23,
+            ),
+            label: "Music Play"
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'images/mp3_ui_setting_button.png',
+              width: 20,
+            ),
+            label: "Setting"
+          ),
+        ],
+        selectedItemColor: Colors.white,
+        currentIndex: _selecetedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }
 
-class ListStreamObserver {
-  ListStreamObserver(StreamController<List> _stream) {
-    _stream.stream.listen((data) async {});
-  }
-}
+

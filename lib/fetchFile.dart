@@ -31,7 +31,7 @@ class FetchFile{
     Directory dir = await _getExternalDir();
 
     List<FileSystemEntity> result = dir.listSync();
-    
+
     return result;
   }
 }
@@ -64,10 +64,12 @@ class _TrimFileStr{
   List<String> convertFileNameToString(){
     List<String> result = [];
 
-    _list.forEach((element) {
-      result.add(element.toString());
-    });
+    for(var i = 0; i < _list.length; i++){
+      if(_list[i].toString().contains(".trashed-")) continue;
+      result.add(_list[i].toString());
+    }
 
     return result;
   }
+
 }
