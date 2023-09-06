@@ -1,10 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 import '../permission.dart';
 import '../string.dart';
 import '../fetchFile.dart';
+import '../colors.dart';
 
 class PlayPage extends StatefulWidget {
   const PlayPage({super.key, required this.title});
@@ -16,11 +15,13 @@ class PlayPage extends StatefulWidget {
 
 class _PlayPageState extends State<PlayPage> {
   final _string = SetedString();
+  final _colors = MyColors();
 
   String _musicName = "msuicName（仮）";
   String _listName = "listName（仮）";
 
-  String _musicDurCurText = "3m 45s / 1m 23s（仮）";
+  String _musicDurText = "3m 45s仮）";
+  String _musicCurText = "1m 23s（仮）";
 
   double _musicDuration = 100.0;
   double _musicCurrent = 0.0;
@@ -79,30 +80,15 @@ class _PlayPageState extends State<PlayPage> {
           Container(
             margin: const EdgeInsets.symmetric(vertical: 16),
             child: Column(children: [
-              Text(_musicDurCurText),
-              SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  trackHeight: 2.0,
-                  activeTrackColor: Theme.of(context).splashColor,
-                  inactiveTrackColor: Theme.of(context).cardColor,
-                  thumbColor: const Color.fromARGB(255, 44, 232, 245),
-                  thumbShape:
-                      const RoundSliderThumbShape(enabledThumbRadius: 8.0),
-                  overlayColor: Colors.blue,
-                  overlayShape:
-                      const RoundSliderOverlayShape(overlayRadius: 20.0),
-                ),
-                child: Slider(
-                  value: _musicCurrent,
-                  onChanged: (currentValue) {
-                    setState(() {
-                      _musicCurrent = currentValue;
-                    });
-                  },
-                  min: 0,
-                  max: _musicDuration,
-                ),
-              )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(_musicCurText),
+                  const Text(" / "),
+                  Text(_musicDurText),
+                ],
+              ),
+              buildSlider(),
             ]),
           ),
           Container(
@@ -118,6 +104,17 @@ class _PlayPageState extends State<PlayPage> {
           ),
         ]),
       ),
+      floatingActionButton: Padding(
+          padding: const EdgeInsets.only(top: 80),
+          child: FloatingActionButton(
+            onPressed: () {},
+            backgroundColor: Theme.of(context).cardColor,
+            child: const Icon(
+              Icons.menu,
+              color: Color.fromARGB(255, 44, 232, 245),
+            ),
+          )),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 
@@ -140,4 +137,29 @@ class _PlayPageState extends State<PlayPage> {
           )),
     );
   }
+
+  Widget buildSlider() {
+    return SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        trackHeight: 2.0,
+        activeTrackColor: Theme.of(context).splashColor,
+        inactiveTrackColor: Theme.of(context).cardColor,
+        thumbColor: _colors.primaryBlue,
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8.0),
+        overlayColor: Colors.blue,
+        overlayShape: const RoundSliderOverlayShape(overlayRadius: 20.0),
+      ),
+      child: Slider(
+        value: _musicCurrent,
+        onChanged: (currentValue) {
+          setState(() {
+            _musicCurrent = currentValue;
+          });
+        },
+        min: 0,
+        max: _musicDuration,
+      ),
+    );
+  }
 }
+

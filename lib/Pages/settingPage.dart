@@ -12,7 +12,7 @@ class SettingPage extends StatefulWidget {
   State<SettingPage> createState() => _SettingPageState();
 }
 
-class _SettingPageState extends State<SettingPage>{
+class _SettingPageState extends State<SettingPage> {
   final _permissionRequest = MediaAudioPermissionRequest();
   final _fetchFile = FetchFile();
   final _string = SetedString();
@@ -36,21 +36,18 @@ class _SettingPageState extends State<SettingPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(children: [
-          Text(_string.appNameStr),
-          const Spacer(),
-          Image.asset(
-            'images/mp3_ui_setting_button.png',
-            width: 40,
-          )
-        ]),
-      ),
-      body: Column(
-        children: [
-          const Text("rerurate")
-        ],
-      ),
-    );
+        appBar: AppBar(
+          title: Row(children: [
+            Text(_string.appNameStr),
+            const Spacer(),
+            Image.asset(
+              'images/mp3_ui_setting_button.png',
+              width: 40,
+            )
+          ]),
+        ),
+        body: Center(
+          child: Column(children: []),
+        ));
   }
 }
