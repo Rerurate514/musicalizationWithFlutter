@@ -42,7 +42,7 @@ class _SettingPageState extends State<SettingPage>{
           const Spacer(),
           Image.asset(
             'images/mp3_ui_setting_button.png',
-            width: 70,
+            width: 40,
           )
         ]),
       ),
@@ -52,5 +52,5 @@ class _SettingPageState extends State<SettingPage>{
         ],
       ),
     );
-}
+  }
 }

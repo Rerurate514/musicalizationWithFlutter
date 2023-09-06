@@ -94,7 +94,7 @@ class _UpMenuBarWidget extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                 child: Image.asset(
-                  'images/mp3_ui_music_register_button.png',
+                  'images/mp3_ui_list_make.png',
                   width: 50,
                 ),
               )),

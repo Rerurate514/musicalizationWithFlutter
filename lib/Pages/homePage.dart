@@ -93,23 +93,25 @@ class _UpMenuBarWidget extends StatelessWidget {
           Card(
               elevation: 4.0,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                child: Image.asset(
-                  'images/mp3_ui_music_shuffle_button.png',
-                  width: 50,
-                ),
-              )),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 5.0),
+                  child: InkWell(
+                    child: Image.asset(
+                      'images/mp3_ui_music_shuffle_button.png',
+                      width: 50,
+                    ),
+                  ))),
           Card(
               elevation: 4.0,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                child: Image.asset(
-                  'images/mp3_ui_google_drive_button.png',
-                  width: 50,
-                ),
-              )),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 5.0),
+                  child: InkWell(
+                    child: Image.asset(
+                      'images/mp3_ui_google_drive_button.png',
+                      width: 50,
+                    ),
+                  ))),
         ],
       ),
     );
