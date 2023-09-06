@@ -4,6 +4,7 @@ import '../permission.dart';
 import '../string.dart';
 import '../fetchFile.dart';
 import '../colors.dart';
+import '../audioPlayerManager.dart';
 
 class PlayPage extends StatefulWidget {
   const PlayPage({super.key, required this.title});
@@ -16,12 +17,13 @@ class PlayPage extends StatefulWidget {
 class _PlayPageState extends State<PlayPage> {
   final _string = SetedString();
   final _colors = MyColors();
+  final audioPlayerManager = AudioPlayerManager();
 
-  String _musicName = "msuicName（仮）";
-  String _listName = "listName（仮）";
+  String _musicName = "";
+  String _listName = "list";
 
-  String _musicDurText = "3m 45s仮）";
-  String _musicCurText = "1m 23s（仮）";
+  String _musicDurText = "duration";
+  String _musicCurText = "current";
 
   double _musicDuration = 100.0;
   double _musicCurrent = 0.0;
@@ -33,8 +35,22 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   Future<void> _startLogic() async {
-    setState(() {});
+    setState(() {
+      _musicName = audioPlayerManager.musicName;
+      _musicDuration = audioPlayerManager.musicDuration;
+      _musicCurrent = audioPlayerManager.musicCurrent;
+    });
   }
+
+  void _onMusicBackButtonTapped() {}
+
+  void _onPlayModeToggleButtonTapped() {}
+
+  void _onMusicPlayingToggleButtonTapped() {}
+
+  void _onVolumeChangeButtonTapped() {}
+
+  void _onMusicNextButtonTapped() {}
 
   @override
   Widget build(BuildContext context) {
@@ -52,28 +68,28 @@ class _PlayPageState extends State<PlayPage> {
       body: Center(
         child: Column(children: [
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 16),
+            margin: const EdgeInsets.only(top: 25, bottom: 25),
             child: Text(
               _listName,
               style: const TextStyle(fontSize: 18),
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(bottom: 8),
+            margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
             child: Text(
               _musicName,
               style: const TextStyle(fontSize: 25),
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 16),
+            margin: const EdgeInsets.symmetric(vertical: 8),
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1000)),
               elevation: 16,
               child: Image.asset(
                 'images/mp3_menu_picture_setting.png',
-                width: 350,
+                width: 325,
               ),
             ),
           ),
@@ -94,12 +110,16 @@ class _PlayPageState extends State<PlayPage> {
           Container(
             margin: const EdgeInsets.symmetric(vertical: 16),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              buildCardWithImage('images/mp3_ui_back_music.png', 40),
-              buildCardWithImage('images/mp3_ui_loop_button_off.png', 50),
-              buildCardWithImage('images/mp3_ui_music_stop_button.png', 60),
               buildCardWithImage(
-                  'images/mp3_ui_sound_control_unmute_off.png', 50),
-              buildCardWithImage('images/mp3_ui_next_music.png', 40),
+                  'images/mp3_ui_back_music.png', 40, _onMusicBackButtonTapped),
+              buildCardWithImage('images/mp3_ui_loop_button_off.png', 50,
+                  _onPlayModeToggleButtonTapped),
+              buildCardWithImage('images/mp3_ui_music_stop_button.png', 55,
+                  _onMusicPlayingToggleButtonTapped, 16),
+              buildCardWithImage('images/mp3_ui_sound_control_unmute_off.png',
+                  50, _onVolumeChangeButtonTapped),
+              buildCardWithImage(
+                  'images/mp3_ui_next_music.png', 40, _onMusicNextButtonTapped),
             ]),
           ),
         ]),
@@ -118,7 +138,9 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 
-  Widget buildCardWithImage(String imagePath, double imageWidth) {
+  Widget buildCardWithImage(
+      String imagePathArg, double imageWidthArg, void Function() onTapped,
+      [double paddingArg = 8.0]) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       child: Card(
@@ -127,11 +149,12 @@ class _PlayPageState extends State<PlayPage> {
           ),
           elevation: 4,
           child: Padding(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(paddingArg),
             child: InkWell(
+              onTap: onTapped,
               child: Image.asset(
-                imagePath,
-                width: imageWidth,
+                imagePathArg,
+                width: imageWidthArg,
               ),
             ),
           )),
@@ -162,4 +185,3 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 }
-

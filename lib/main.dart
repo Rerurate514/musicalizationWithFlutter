@@ -5,6 +5,8 @@ import 'Pages/listPage.dart';
 import 'Pages/playPage.dart';
 import 'Pages/settingPage.dart';
 
+import 'audioPlayerManager.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -39,6 +41,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final audioPlayerManager = AudioPlayerManager();
+
   late PageController _pageController;
 
   int _selecetedIndex = 0;

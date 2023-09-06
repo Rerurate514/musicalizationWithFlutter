@@ -1,8 +1,16 @@
-import 'dart:html';
-
 import 'package:audioplayers/audioplayers.dart';
 
 class AudioPlayerManager {
+  AudioPlayerManager._();
+
+  static AudioPlayerManager? _instance;
+
+  factory AudioPlayerManager(){
+    _instance ??= AudioPlayerManager._();
+    return _instance!;
+  }
+  
+
   AudioPlayer _audioPlayer = AudioPlayer();
 
   String _musicName = "";
@@ -22,15 +30,23 @@ class AudioPlayerManager {
   bool _isLooping = false;
   bool get isLooping => _isLooping;
 
-  Future<void> startMusic(String musicPathArg) async {
-    setMusic(musicPathArg);
-    await _audioPlayer.play(DeviceFileSource(_musicPath));
+  Future<void> startMusic() async {
+    try{
+      await _audioPlayer.play(DeviceFileSource(_musicPath));
+    }
+    catch(e, stackTrace){
+      throw Error.throwWithStackTrace(e, stackTrace);
+    }
 
     _isPlaying = true;
   }
 
-  void setMusic(String musicPathArg){
+  void setMusicPath(String musicPathArg){
     _musicPath = musicPathArg;
+  }
+
+  void setMusicName(String musicNameArg){
+    _musicName = musicNameArg;
   }
 
   Future<void> pauseMusic() async {
@@ -39,5 +55,5 @@ class AudioPlayerManager {
     _isPlaying = false;
   }
 
-  
+    
 }

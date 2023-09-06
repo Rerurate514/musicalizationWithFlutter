@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../permission.dart';
 import '../string.dart';
 import '../fetchFile.dart';
+import '../audioPlayerManager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -17,7 +18,10 @@ class _HomePageState extends State<HomePage> {
   final _fetchFile = FetchFile();
   final _string = SetedString();
 
-  List _list = [];
+  final audioPlayerManager = AudioPlayerManager();
+
+  List _pathList = [];
+  List _nameList = [];
 
   @override
   void initState() {
@@ -29,8 +33,15 @@ class _HomePageState extends State<HomePage> {
     await _permissionRequest.requestPermission();
 
     setState(() {
-      _list = _fetchFile.strList;
+      _pathList = _fetchFile.list;
+      _nameList = _fetchFile.strList;
     });
+  }
+
+  Future<void> _onListItemTapped(
+      String musicNameArg, String musicPathArg) async {
+    audioPlayerManager.setMusicName(musicNameArg);
+    audioPlayerManager.setMusicPath(musicPathArg);
   }
 
   @override
@@ -58,16 +69,20 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   elevation: 4.0,
-                  child: ListTile(
-                    leading: Image.asset(
-                      'images/mp3_menu_picture_setting.png',
-                      width: 50,
+                  child: InkWell(
+                    onTap: () => _onListItemTapped(
+                        _nameList[index], _pathList[index].toString()),
+                    child: ListTile(
+                      leading: Image.asset(
+                        'images/mp3_menu_picture_setting.png',
+                        width: 50,
+                      ),
+                      title: Text(_nameList[index]),
                     ),
-                    title: Text(_list[index]),
                   ),
                 );
               },
-              itemCount: _list.length,
+              itemCount: _nameList.length,
             ),
           )
         ],
