@@ -11,7 +11,7 @@ class AudioPlayerManager {
   }
   
 
-  AudioPlayer _audioPlayer = AudioPlayer();
+  final _audioPlayer = AudioPlayer();
 
   String _musicName = "";
   String get musicName => _musicName;
@@ -55,5 +55,5 @@ class AudioPlayerManager {
     _isPlaying = false;
   }
 
-    
+  
 }

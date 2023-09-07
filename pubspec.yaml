@@ -14,8 +14,10 @@ dependencies:
   path_provider: ^2.1.0
   audioplayers: ^5.1.0
 
-
   cupertino_icons: ^1.0.2
+
+
+  
 
 
 
@@ -86,3 +88,6 @@ fonts:
         weight: 400
       - asset: assets/fonts/NotoSansJP-Thin.ttf
         weight: 100
+
+  # icons:
+  #   image_path: 'images/mp3_ui_music_stop_button.png'

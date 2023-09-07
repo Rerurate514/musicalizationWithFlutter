@@ -15,7 +15,7 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   final _string = SetedString();
 
-  List _list = [];
+  final _list = [];
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _ListPageState extends State<ListPage> {
       appBar: AppBar(
         title: Row(children: [
           Text(_string.appNameStr),
-          Spacer(),
+          const Spacer(),
           Image.asset(
             'images/mp3_ui_list_mode.png',
             width: 70,
@@ -37,7 +37,7 @@ class _ListPageState extends State<ListPage> {
       ),
       body: Column(
         children: [
-          _UpMenuBarWidget(),
+          const _UpMenuBarWidget(),
           Expanded(
             child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {

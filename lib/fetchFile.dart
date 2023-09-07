@@ -9,6 +9,7 @@ class FetchFile{
 
   late _TrimFileStr _trimFileStr;
 
+
   FetchFile(){
     _doAsyncMethod();
   }
@@ -21,8 +22,21 @@ class FetchFile{
 
   ///このメソッドは外部ストレージのオブジェクトを取得するメソッドです。
   Future<Directory> _getExternalDir() async {
-    Directory? directory = Directory("/storage/emulated/0/Download/");
+    Directory? directory = Directory("");
 
+    if(Platform.isWindows){
+      directory = Directory("C:\\Users\\rerur\\pic\\Saved Pictures\\Saved Pictures");
+    }
+    else if(Platform.isAndroid){
+      directory = Directory("/storage/emulated/0/Download/");
+    }
+    else if(Platform.isIOS){
+
+    }
+    else{
+      throw Error();
+    }
+    
     return directory;
   }
 
