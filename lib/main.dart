@@ -64,8 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
 	void dispose(){
-		super.dispose();
+    audioPlayerManager.destroyAudioPlayer();
 		_pageController.dispose();
+    super.dispose();
 	}
 
   void _onPageChanged(int indexArg){

@@ -5,11 +5,10 @@ class AudioPlayerManager {
 
   static AudioPlayerManager? _instance;
 
-  factory AudioPlayerManager(){
+  factory AudioPlayerManager() {
     _instance ??= AudioPlayerManager._();
     return _instance!;
   }
-  
 
   final _audioPlayer = AudioPlayer();
 
@@ -34,21 +33,20 @@ class AudioPlayerManager {
     _setMusicName(musicNameArg);
     _setMusicPath(musicPathArg);
 
-    try{
+    try {
       await _audioPlayer.play(DeviceFileSource(_musicPath));
-    }
-    catch(e, stackTrace){
+    } catch (e, stackTrace) {
       throw Error.throwWithStackTrace(e, stackTrace);
     }
 
     _isPlaying = true;
   }
 
-  void _setMusicPath(String musicPathArg){
+  void _setMusicPath(String musicPathArg) {
     _musicPath = musicPathArg;
   }
 
-  void _setMusicName(String musicNameArg){
+  void _setMusicName(String musicNameArg) {
     _musicName = musicNameArg;
   }
 
@@ -58,16 +56,26 @@ class AudioPlayerManager {
     _isPlaying = false;
   }
 
-  void setPlayingMusicCurrentListener(){
+  void setPlayingMusicCurrentListener() {
     _audioPlayer.onPositionChanged.listen((Duration duration) {
       double seconds = duration.inSeconds.toDouble();
       _musicCurrent = seconds;
     });
   }
 
-  void setPlayingMusicDurationListener(){
+  void setPlayingMusicDurationListener() {
     _audioPlayer.onDurationChanged.listen((Duration duration) {
       _musicDuration = duration.inSeconds.toDouble();
     });
+  }
+
+  void toggleMusicLoop() {
+    isLooping
+        ? _audioPlayer.setReleaseMode(ReleaseMode.release)
+        : _audioPlayer.setReleaseMode(ReleaseMode.loop);
+  }
+
+  void destroyAudioPlayer() {
+    _audioPlayer.dispose();
   }
 }

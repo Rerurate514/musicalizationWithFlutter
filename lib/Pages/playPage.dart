@@ -49,6 +49,9 @@ class _PlayPageState extends State<PlayPage> {
       _musicDuration = audioPlayerManager.musicDuration;
       _musicCurrent = audioPlayerManager.musicCurrent;
     });
+
+    print(_musicDuration);
+    print(_musicCurrent);
   }
 
   void _setMusicName(){
