@@ -30,7 +30,10 @@ class AudioPlayerManager {
   bool _isLooping = false;
   bool get isLooping => _isLooping;
 
-  Future<void> startMusic() async {
+  Future<void> startMusic(String musicNameArg, String musicPathArg) async {
+    _setMusicName(musicNameArg);
+    _setMusicPath(musicPathArg);
+
     try{
       await _audioPlayer.play(DeviceFileSource(_musicPath));
     }
@@ -41,11 +44,11 @@ class AudioPlayerManager {
     _isPlaying = true;
   }
 
-  void setMusicPath(String musicPathArg){
+  void _setMusicPath(String musicPathArg){
     _musicPath = musicPathArg;
   }
 
-  void setMusicName(String musicNameArg){
+  void _setMusicName(String musicNameArg){
     _musicName = musicNameArg;
   }
 
@@ -55,5 +58,16 @@ class AudioPlayerManager {
     _isPlaying = false;
   }
 
-  
+  void setPlayingMusicCurrentListener(){
+    _audioPlayer.onPositionChanged.listen((Duration duration) {
+      double seconds = duration.inSeconds.toDouble();
+      _musicCurrent = seconds;
+    });
+  }
+
+  void setPlayingMusicDurationListener(){
+    _audioPlayer.onDurationChanged.listen((Duration duration) {
+      _musicDuration = duration.inSeconds.toDouble();
+    });
+  }
 }

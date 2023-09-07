@@ -58,6 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _selecetedIndex);
+    audioPlayerManager.setPlayingMusicCurrentListener();
+    audioPlayerManager.setPlayingMusicDurationListener();
   }
 
   @override

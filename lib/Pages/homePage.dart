@@ -40,8 +40,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _onListItemTapped(
       String musicNameArg, String musicPathArg) async {
-    audioPlayerManager.setMusicName(musicNameArg);
-    audioPlayerManager.setMusicPath(musicPathArg);
+    audioPlayerManager.startMusic(musicNameArg, musicPathArg);
   }
 
   @override
