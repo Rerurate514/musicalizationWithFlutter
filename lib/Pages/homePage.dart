@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import '../permission.dart';
 import '../string.dart';
@@ -26,10 +27,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _startLogic();
+    _initFetchFile();
   }
 
-  Future<void> _startLogic() async {
+  Future<void> _initFetchFile() async {
     await _permissionRequest.requestPermission();
 
     setState(() {

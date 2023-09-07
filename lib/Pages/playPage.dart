@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import '../permission.dart';
 import '../string.dart';
@@ -32,13 +33,27 @@ class _PlayPageState extends State<PlayPage> {
   void initState() {
     super.initState();
     _startLogic();
+
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      _setMusicDurCur();
+    });
   }
 
   Future<void> _startLogic() async {
+    _setMusicName();
+    _setMusicDurCur();
+  }
+
+  void _setMusicDurCur(){
     setState(() {
-      _musicName = audioPlayerManager.musicName;
       _musicDuration = audioPlayerManager.musicDuration;
       _musicCurrent = audioPlayerManager.musicCurrent;
+    });
+  }
+
+  void _setMusicName(){
+    setState(() {
+      _musicName = audioPlayerManager.musicName;
     });
   }
 
