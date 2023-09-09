@@ -29,6 +29,7 @@ class AudioPlayerManager {
   bool _isLooping = false;
   bool get isLooping => _isLooping;
 
+  ///audioPlayerに曲をセットして、再生を開始する。
   Future<void> startMusic(String musicNameArg, String musicPathArg) async {
     _setMusicName(musicNameArg);
     _setMusicPath(musicPathArg);
@@ -42,20 +43,24 @@ class AudioPlayerManager {
     _isPlaying = true;
   }
 
+  ///曲のパスセット
   void _setMusicPath(String musicPathArg) {
     _musicPath = musicPathArg;
   }
 
+  ///曲の名前のセット
   void _setMusicName(String musicNameArg) {
     _musicName = musicNameArg;
   }
 
+  ///曲の一時停止
   Future<void> pauseMusic() async {
     await _audioPlayer.pause();
 
     _isPlaying = false;
   }
 
+  ///audioPlayerの再生位置取得
   void setPlayingMusicCurrentListener() {
     _audioPlayer.onPositionChanged.listen((Duration duration) {
       double seconds = duration.inSeconds.toDouble();
@@ -63,6 +68,7 @@ class AudioPlayerManager {
     });
   }
 
+  ///audioPlayerの曲の長さ取得
   void setPlayingMusicDurationListener() {
     _audioPlayer.onDurationChanged.listen((Duration duration) {
       _musicDuration = duration.inSeconds.toDouble();
@@ -70,11 +76,17 @@ class AudioPlayerManager {
   }
 
   void toggleMusicLoop() {
-    isLooping
-        ? _audioPlayer.setReleaseMode(ReleaseMode.release)
-        : _audioPlayer.setReleaseMode(ReleaseMode.loop);
+    if(_isLooping){
+      _audioPlayer.setReleaseMode(ReleaseMode.release);
+      _isLooping = false;
+    }
+    else{
+      _audioPlayer.setReleaseMode(ReleaseMode.loop);
+      _isLooping = true;
+    }
   }
 
+  ///audioPlayerインスタンスの解放
   void destroyAudioPlayer() {
     _audioPlayer.dispose();
   }
