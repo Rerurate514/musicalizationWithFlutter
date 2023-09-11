@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../permission.dart';
-import '../string.dart';
+import '../setting/string.dart';
 import '../fetchFile.dart';
 
 class ListPage extends StatefulWidget {

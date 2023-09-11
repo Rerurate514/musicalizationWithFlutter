@@ -1,13 +1,16 @@
 import 'dart:io';
+import 'trimFileStr.dart';
 
 class FetchFile{
   late List _list = [];
   List get list => _list;
 
-  late List _strList;
-  List get strList => _strList;
+  late List _nameList;
+  List get nameList => _nameList;
+    late List _pathList;
+  List get pathList => _pathList;
 
-  late _TrimFileStr _trimFileStr;
+  final _trimFileStr = TrimFileStr();
 
 
   FetchFile(){
@@ -16,8 +19,8 @@ class FetchFile{
 
   Future<void> _doAsyncMethod() async {
     await _fetchFileFromDownloadDir().then((value) => _list = value);
-    _trimFileStr = _TrimFileStr(_list);
-    _strList = _trimFileStr.list;
+    _nameList = _trimFileStr.convertFileNameToNameString(_list);
+    _pathList = _trimFileStr.convertFileNameToPathString(_list);
   }
 
   ///このメソッドは外部ストレージのオブジェクトを取得するメソッドです。
@@ -48,42 +51,4 @@ class FetchFile{
 
     return result;
   }
-}
-
-class _TrimFileStr{
-  late List _list = [];
-  List get list => _list;
-
-  _TrimFileStr(List listArg){
-    _list = listArg;
-    _list = trimFileName();
-  }
-
-  List<String> trimFileName(){
-    List<String> fileNameStrList = convertFileNameToString();
-    List<String> result = [];
-
-    for(var i = 0; i < fileNameStrList.length; i++){
-      result.add(
-        fileNameStrList[i]
-          .replaceAll("File: '/storage/emulated/0/Download/", "")
-          .replaceAll("Directory: '/storage/emulated/0/Download/", "")
-          .replaceAll("'", "")
-      );
-    }
-
-    return result;
-  }
-
-  List<String> convertFileNameToString(){
-    List<String> result = [];
-
-    for(var i = 0; i < _list.length; i++){
-      if(_list[i].toString().contains(".trashed-")) continue;
-      result.add(_list[i].toString());
-    }
-
-    return result;
-  }
-
 }

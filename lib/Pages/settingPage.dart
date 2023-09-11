@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../permission.dart';
-import '../string.dart';
+import '../setting/string.dart';
 import '../fetchFile.dart';
 
 class SettingPage extends StatefulWidget {
@@ -29,7 +29,7 @@ class _SettingPageState extends State<SettingPage> {
     await _permissionRequest.requestPermission();
 
     setState(() {
-      _list = _fetchFile.strList;
+
     });
   }
 

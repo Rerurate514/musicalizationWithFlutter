@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import '../permission.dart';
-import '../string.dart';
-import '../fetchFile.dart';
-import '../colors.dart';
+import '../setting/string.dart';
+import '../setting/colors.dart';
 import '../audioPlayerManager.dart';
 
 class PlayPage extends StatefulWidget {
@@ -45,13 +43,15 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _setMusicDurCur(){
-    setState(() {
-      _musicDuration = audioPlayerManager.musicDuration;
-      _musicCurrent = audioPlayerManager.musicCurrent;
-    });
+    if(mounted){
+      setState(() {
+        _musicDuration = audioPlayerManager.musicDuration;
+        _musicCurrent = audioPlayerManager.musicCurrent;
+      });
+    }
 
-    print(_musicDuration);
-    print(_musicCurrent);
+    _musicCurText = _musicCurrent.toInt().toString() + " s";
+    _musicDurText = _musicDuration.toInt().toString() + " s";
   }
 
   void _setMusicName(){
@@ -60,15 +60,25 @@ class _PlayPageState extends State<PlayPage> {
     });
   }
 
-  void _onMusicBackButtonTapped() {}
+  void _onMusicBackButtonTapped() {
 
-  void _onPlayModeToggleButtonTapped() {}
+  }
 
-  void _onMusicPlayingToggleButtonTapped() {}
+  void _onPlayModeToggleButtonTapped() {
 
-  void _onVolumeChangeButtonTapped() {}
+  }
 
-  void _onMusicNextButtonTapped() {}
+  void _onMusicPlayingToggleButtonTapped() {
+
+  }
+
+  void _onVolumeChangeButtonTapped() {
+
+  }
+
+  void _onMusicNextButtonTapped() {
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +128,7 @@ class _PlayPageState extends State<PlayPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(_musicCurText),
-                  const Text(" / "),
+                  const Text("   /   "),
                   Text(_musicDurText),
                 ],
               ),

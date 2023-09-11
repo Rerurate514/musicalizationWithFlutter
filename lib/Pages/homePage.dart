@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import '../permission.dart';
-import '../string.dart';
+import '../setting/string.dart';
 import '../fetchFile.dart';
 import '../audioPlayerManager.dart';
 
@@ -34,8 +34,8 @@ class _HomePageState extends State<HomePage> {
     await _permissionRequest.requestPermission();
 
     setState(() {
-      _pathList = _fetchFile.list;
-      _nameList = _fetchFile.strList;
+      _pathList = _fetchFile.pathList;
+      _nameList = _fetchFile.nameList;
     });
   }
 

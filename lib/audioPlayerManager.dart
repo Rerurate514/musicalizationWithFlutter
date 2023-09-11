@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 
+///audioPlayerの管理を行うクラス
 class AudioPlayerManager {
   AudioPlayerManager._();
 
@@ -9,24 +10,24 @@ class AudioPlayerManager {
     _instance ??= AudioPlayerManager._();
     return _instance!;
   }
-
+  
   final _audioPlayer = AudioPlayer();
 
-  String _musicName = "";
+  String _musicName = "";                       //曲の名前
   String get musicName => _musicName;
 
-  double _musicDuration = 0.0;
+  double _musicDuration = 0.0;                  //曲の長さ
   double get musicDuration => _musicDuration;
-  double _musicCurrent = 0.0;
+  double _musicCurrent = 0.0;                   //曲の再生位置
   double get musicCurrent => _musicCurrent;
 
-  String _musicPath = "";
+  String _musicPath = "";                       //曲のファイルパス
   String get musicPath => _musicPath;
 
-  bool _isPlaying = false;
+  bool _isPlaying = false;                      //再生しているかどうか
   bool get isPlaying => _isPlaying;
 
-  bool _isLooping = false;
+  bool _isLooping = false;                      //ループしているかどうか
   bool get isLooping => _isLooping;
 
   ///audioPlayerに曲をセットして、再生を開始する。
@@ -37,6 +38,7 @@ class AudioPlayerManager {
     try {
       await _audioPlayer.play(DeviceFileSource(_musicPath));
     } catch (e, stackTrace) {
+      print("${_musicPath}");
       throw Error.throwWithStackTrace(e, stackTrace);
     }
 
@@ -75,6 +77,7 @@ class AudioPlayerManager {
     });
   }
 
+  ///曲のループを切り替えする。
   void toggleMusicLoop() {
     if(_isLooping){
       _audioPlayer.setReleaseMode(ReleaseMode.release);
