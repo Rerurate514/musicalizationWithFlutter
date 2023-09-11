@@ -28,13 +28,14 @@ class FetchFile{
     Directory? directory = Directory("");
 
     if(Platform.isWindows){
+      //todo
       directory = Directory("C:\\Users\\rerur\\pic\\Saved Pictures\\Saved Pictures");
     }
     else if(Platform.isAndroid){
       directory = Directory("/storage/emulated/0/Download/");
     }
     else if(Platform.isIOS){
-
+      //todo
     }
     else{
       throw Error();

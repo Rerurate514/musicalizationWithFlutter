@@ -89,6 +89,14 @@ class AudioPlayerManager {
     }
   }
 
+  ///再生位置の変更
+  void seekMusic(double newCurrentArg){
+    _musicCurrent = newCurrentArg;
+    _audioPlayer.seek(
+      Duration(seconds: newCurrentArg.toInt())
+    );
+  }
+
   ///audioPlayerインスタンスの解放
   void destroyAudioPlayer() {
     _audioPlayer.dispose();

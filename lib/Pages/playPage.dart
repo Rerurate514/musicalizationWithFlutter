@@ -205,6 +205,7 @@ class _PlayPageState extends State<PlayPage> {
         onChanged: (currentValue) {
           setState(() {
             _musicCurrent = currentValue;
+            audioPlayerManager.seekMusic(_musicCurrent);
           });
         },
         min: 0,
