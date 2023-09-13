@@ -18,14 +18,24 @@ class _PlayPageState extends State<PlayPage> {
   final _colors = MyColors();
   final audioPlayerManager = AudioPlayerManager();
 
-  String _musicName = "";
-  String _listName = "list";
+  String _musicName = "null";
+  String _listName = "listName";
 
-  String _musicDurText = "duration";
-  String _musicCurText = "current";
+  String _musicDurText = "null";
+  String _musicCurText = "null";
 
   double _musicDuration = 100.0;
   double _musicCurrent = 0.0;
+
+  List _playBtnImage = ['images/mp3_ui_music_stop_button.png','images/mp3_ui_play_button.png'];
+  int _playBtnIndex = 0;
+
+  List _modeBtnImage = [
+    'images/mp3_ui_loop_button_off.png',
+    'images/mp3_ui_loop_button_on.png'
+    ,'images/mp3_ui_music_shuffle_button.png'
+  ];
+  int _modeBtnIndex = 0;
 
   @override
   void initState() {
@@ -65,11 +75,24 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onPlayModeToggleButtonTapped() {
+    _changeModeImage();
+  }
 
+  void _changeModeImage(){
+    setState(() {
+      _modeBtnIndex++;
+      if(_modeBtnIndex == 3) _modeBtnIndex = 0;
+    });
   }
 
   void _onMusicPlayingToggleButtonTapped() {
+    _changePlayImage();
+  }
 
+  void _changePlayImage(){
+    setState(() {
+      _playBtnIndex = (_playBtnIndex + 1) % _playBtnImage.length;
+    });
   }
 
   void _onVolumeChangeButtonTapped() {
@@ -140,9 +163,9 @@ class _PlayPageState extends State<PlayPage> {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               buildCardWithImage(
                   'images/mp3_ui_back_music.png', 40, _onMusicBackButtonTapped),
-              buildCardWithImage('images/mp3_ui_loop_button_off.png', 50,
+              buildCardWithImage(_modeBtnImage[_modeBtnIndex], 50,
                   _onPlayModeToggleButtonTapped),
-              buildCardWithImage('images/mp3_ui_music_stop_button.png', 55,
+              buildCardWithImage(_playBtnImage[_playBtnIndex], 55,
                   _onMusicPlayingToggleButtonTapped, 16),
               buildCardWithImage('images/mp3_ui_sound_control_unmute_off.png',
                   50, _onVolumeChangeButtonTapped),

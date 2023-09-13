@@ -38,8 +38,8 @@ class AudioPlayerManager {
     try {
       await _audioPlayer.play(DeviceFileSource(_musicPath));
     } catch (e, stackTrace) {
-      print("${_musicPath}");
-      throw Error.throwWithStackTrace(e, stackTrace);
+      print("${_musicPath} , $stackTrace");
+      //throw Error.throwWithStackTrace(e, stackTrace);
     }
 
     _isPlaying = true;
@@ -62,7 +62,7 @@ class AudioPlayerManager {
     _isPlaying = false;
   }
 
-  ///audioPlayerの再生位置取得
+  ///audioPlayerの再生位置取得リスナーをセットする
   void setPlayingMusicCurrentListener() {
     _audioPlayer.onPositionChanged.listen((Duration duration) {
       double seconds = duration.inSeconds.toDouble();
@@ -70,12 +70,20 @@ class AudioPlayerManager {
     });
   }
 
-  ///audioPlayerの曲の長さ取得
+  ///audioPlayerの曲の長さ取得リスナーをセットする
   void setPlayingMusicDurationListener() {
     _audioPlayer.onDurationChanged.listen((Duration duration) {
       _musicDuration = duration.inSeconds.toDouble();
     });
   }
+
+  ///曲の終了検知リスナーを登録する
+  void setPlayerCompletionListener(){
+    _audioPlayer.onPlayerComplete.listen((event) {
+      _isPlaying = false;
+    });
+  }
+
 
   ///曲のループを切り替えする。
   void toggleMusicLoop() {
