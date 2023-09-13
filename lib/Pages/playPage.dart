@@ -87,6 +87,7 @@ class _PlayPageState extends State<PlayPage> {
 
   void _onMusicPlayingToggleButtonTapped() {
     _changePlayImage();
+    audioPlayerManager.togglePlayMusic();
   }
 
   void _changePlayImage(){

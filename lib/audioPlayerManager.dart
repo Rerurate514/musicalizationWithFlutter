@@ -55,11 +55,16 @@ class AudioPlayerManager {
     _musicName = musicNameArg;
   }
 
-  ///曲の一時停止
-  Future<void> pauseMusic() async {
-    await _audioPlayer.pause();
-
-    _isPlaying = false;
+  ///曲の一時停止、再生切り替え
+  Future<void> togglePlayMusic() async {
+    if(isPlaying) {
+      await _audioPlayer.pause();
+      _isPlaying = false;
+    }
+    else{
+      await _audioPlayer.play(DeviceFileSource(_musicPath), position: Duration(seconds: _musicCurrent.toInt()));
+      _isPlaying = true;
+    }
   }
 
   ///audioPlayerの再生位置取得リスナーをセットする
