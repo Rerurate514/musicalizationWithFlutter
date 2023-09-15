@@ -238,3 +238,51 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 }
+
+class PlayButtonBase extends StatefulWidget{
+  final String imagePathArg;
+  final double imageWidthArg;
+  final void Function() onTapped;
+  final double paddingArg;
+
+  PlayButtonBase(
+    {
+      required this.imagePathArg, 
+      required this.imageWidthArg, 
+      required this.onTapped, 
+      this.paddingArg = 8.0,
+    }
+  );
+
+  @override
+  _PlayButtonBase createState() => _PlayButtonBase();
+}
+
+class _PlayButtonBase extends State<PlayButtonBase>{
+  String imagePathArg = "";
+  double imageWidthArg  = 0.0;
+  void Function() onTapped = () => {};
+  double paddingArg = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(1000),
+          ),
+          elevation: 4,
+          child: Padding(
+            padding: EdgeInsets.all(paddingArg),
+            child: InkWell(
+              onTap: onTapped,
+              child: Image.asset(
+                imagePathArg,
+                width: imageWidthArg,
+              ),
+            ),
+          )),
+    );
+  }
+}

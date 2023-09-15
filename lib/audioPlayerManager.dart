@@ -57,6 +57,8 @@ class AudioPlayerManager {
 
   ///曲の一時停止、再生切り替え
   Future<void> togglePlayMusic() async {
+    if(musicPath == "") return;
+
     if(isPlaying) {
       await _audioPlayer.pause();
       _isPlaying = false;
