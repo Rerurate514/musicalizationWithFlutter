@@ -17,6 +17,8 @@ class _PlayPageState extends State<PlayPage> {
   final _string = SetedString();
   final _colors = MyColors();
   final audioPlayerManager = AudioPlayerManager();
+  final musicButtonFuncs = _MusicButtonFuncs();
+  final musicButtonImageController = _MusicButtonImageController();
 
   String _musicName = "null";
   String _listName = "listName";
@@ -26,16 +28,6 @@ class _PlayPageState extends State<PlayPage> {
 
   double _musicDuration = 100.0;
   double _musicCurrent = 0.0;
-
-  List _playBtnImage = ['images/mp3_ui_music_stop_button.png','images/mp3_ui_play_button.png'];
-  int _playBtnIndex = 0;
-
-  List _modeBtnImage = [
-    'images/mp3_ui_loop_button_off.png',
-    'images/mp3_ui_loop_button_on.png'
-    ,'images/mp3_ui_music_shuffle_button.png'
-  ];
-  int _modeBtnIndex = 0;
 
   @override
   void initState() {
@@ -52,6 +44,12 @@ class _PlayPageState extends State<PlayPage> {
     _setMusicDurCur();
   }
 
+  void _setMusicName(){
+    setState(() {
+      _musicName = audioPlayerManager.musicName;
+    });
+  }
+
   void _setMusicDurCur(){
     if(mounted){
       setState(() {
@@ -64,44 +62,34 @@ class _PlayPageState extends State<PlayPage> {
     _musicDurText = _musicDuration.toInt().toString() + " s";
   }
 
-  void _setMusicName(){
-    setState(() {
-      _musicName = audioPlayerManager.musicName;
-    });
-  }
-
   void _onMusicBackButtonTapped() {
-
+    musicButtonFuncs.onMusicBackButtonTapped();
   }
 
   void _onPlayModeToggleButtonTapped() {
-    _changeModeImage();
-  }
-
-  void _changeModeImage(){
     setState(() {
-      _modeBtnIndex++;
-      if(_modeBtnIndex == 3) _modeBtnIndex = 0;
+      musicButtonImageController.changeModeImage();
+      musicButtonFuncs.onPlayModeToggleButtonTapped();
     });
   }
 
   void _onMusicPlayingToggleButtonTapped() {
-    _changePlayImage();
-    audioPlayerManager.togglePlayMusic();
-  }
-
-  void _changePlayImage(){
     setState(() {
-      _playBtnIndex = (_playBtnIndex + 1) % _playBtnImage.length;
+      musicButtonImageController.changePlayImage();
+      musicButtonFuncs.onMusicPlayingToggleButtonTapped();
     });
   }
 
-  void _onVolumeChangeButtonTapped() {
 
+  void _onVolumeChangeButtonTapped() {
+    setState(() {
+      musicButtonImageController.changeVolumeImage();
+      musicButtonFuncs.onVolumeChangeButtonTapped();
+    });
   }
 
   void _onMusicNextButtonTapped() {
-
+    musicButtonFuncs.onMusicNextButtonTapped();
   }
 
   @override
@@ -163,15 +151,31 @@ class _PlayPageState extends State<PlayPage> {
             margin: const EdgeInsets.symmetric(vertical: 16),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               buildCardWithImage(
-                  'images/mp3_ui_back_music.png', 40, _onMusicBackButtonTapped),
-              buildCardWithImage(_modeBtnImage[_modeBtnIndex], 50,
-                  _onPlayModeToggleButtonTapped),
-              buildCardWithImage(_playBtnImage[_playBtnIndex], 55,
-                  _onMusicPlayingToggleButtonTapped, 16),
-              buildCardWithImage('images/mp3_ui_sound_control_unmute_off.png',
-                  50, _onVolumeChangeButtonTapped),
+                musicButtonImageController.backBtnImage, 
+                40, 
+                _onMusicBackButtonTapped,
+              ),
               buildCardWithImage(
-                  'images/mp3_ui_next_music.png', 40, _onMusicNextButtonTapped),
+                musicButtonImageController.modeBtnImage, 
+                50,
+                _onPlayModeToggleButtonTapped,
+              ),
+              buildCardWithImage(
+                musicButtonImageController.playBtnImage, 
+                55,
+                _onMusicPlayingToggleButtonTapped,
+                16
+              ),
+              buildCardWithImage(
+                musicButtonImageController.volumeBtnImage,
+                50, 
+                _onVolumeChangeButtonTapped,
+              ),
+              buildCardWithImage(
+                musicButtonImageController.nextBtnImage,
+                40,
+                _onMusicNextButtonTapped
+              ),
             ]),
           ),
         ]),
@@ -239,50 +243,75 @@ class _PlayPageState extends State<PlayPage> {
   }
 }
 
-class PlayButtonBase extends StatefulWidget{
-  final String imagePathArg;
-  final double imageWidthArg;
-  final void Function() onTapped;
-  final double paddingArg;
 
-  PlayButtonBase(
-    {
-      required this.imagePathArg, 
-      required this.imageWidthArg, 
-      required this.onTapped, 
-      this.paddingArg = 8.0,
-    }
-  );
 
-  @override
-  _PlayButtonBase createState() => _PlayButtonBase();
+class _MusicButtonImageController{
+  final audioPlayerManager = AudioPlayerManager();
+
+  String _backBtnImage = 'images/mp3_ui_back_music.png';
+  String get backBtnImage => _backBtnImage;
+
+  List _playBtnImage = ['images/mp3_ui_music_stop_button.png','images/mp3_ui_play_button.png'];
+  int _playBtnIndex = 0;
+  String get playBtnImage => _playBtnImage[_playBtnIndex];
+
+  List _modeBtnImage = [
+    'images/mp3_ui_loop_button_off.png',
+    'images/mp3_ui_loop_button_on.png'
+    ,'images/mp3_ui_music_shuffle_button.png'
+  ];
+  int _modeBtnIndex = 0;
+  String get modeBtnImage => _modeBtnImage[_modeBtnIndex];
+
+  List _volumeBtnImage = [
+    'images/mp3_ui_sound_control_unmute_off.png',
+    'images/mp3_ui_sound_control_unmute_on.png',
+  ];
+  int _volumeBtnIndex = 0;
+  String get volumeBtnImage => _volumeBtnImage[_volumeBtnIndex];
+
+  String _nextBtnImage = 'images/mp3_ui_next_music.png';
+  String get nextBtnImage => _nextBtnImage;
+
+  void changeModeImage(){
+    _modeBtnIndex++;
+    if(_modeBtnIndex == 3) _modeBtnIndex = 0;
+  }
+
+
+  void changePlayImage(){
+    _playBtnIndex = (_playBtnIndex + 1) % _playBtnImage.length;
+  }
+
+
+  void changeVolumeImage(){
+    _volumeBtnIndex = (_volumeBtnIndex + 1) % _volumeBtnImage.length;
+  }
 }
 
-class _PlayButtonBase extends State<PlayButtonBase>{
-  String imagePathArg = "";
-  double imageWidthArg  = 0.0;
-  void Function() onTapped = () => {};
-  double paddingArg = 0.0;
+class _MusicButtonFuncs{
+  final audioPlayerManager = AudioPlayerManager();
+  
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(1000),
-          ),
-          elevation: 4,
-          child: Padding(
-            padding: EdgeInsets.all(paddingArg),
-            child: InkWell(
-              onTap: onTapped,
-              child: Image.asset(
-                imagePathArg,
-                width: imageWidthArg,
-              ),
-            ),
-          )),
-    );
+  void onMusicBackButtonTapped() {
+
+  }
+
+  void onPlayModeToggleButtonTapped() {
+
+  }
+
+  void onMusicPlayingToggleButtonTapped() {
+
+    audioPlayerManager.togglePlayMusic();
+  }
+
+
+  void onVolumeChangeButtonTapped() {
+
+  }
+
+  void onMusicNextButtonTapped() {
+
   }
 }
