@@ -38,7 +38,7 @@ class FetchFile{
       //todo
     }
     else{
-      throw Error();
+      print("unknown platform, undefined logic");
     }
     
     return directory;

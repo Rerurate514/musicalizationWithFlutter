@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../permission.dart';
+import '../logic/permission.dart';
 import '../setting/string.dart';
-import '../fetchFile.dart';
+import '../logic/fetchFile.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key, required this.title});

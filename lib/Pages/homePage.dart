@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import '../permission.dart';
+import '../logic/permission.dart';
 import '../setting/string.dart';
-import '../fetchFile.dart';
+import '../logic/fetchFile.dart';
 import '../audioPlayerManager.dart';
 
 class HomePage extends StatefulWidget {

@@ -30,6 +30,8 @@ class AudioPlayerManager {
   bool _isLooping = false;                      //ループしているかどうか
   bool get isLooping => _isLooping;
 
+  int _modeIndex = 0;
+
   ///audioPlayerに曲をセットして、再生を開始する。
   Future<void> startMusic(String musicNameArg, String musicPathArg) async {
     _setMusicName(musicNameArg);
@@ -91,7 +93,6 @@ class AudioPlayerManager {
     });
   }
 
-
   ///曲のループを切り替えする。
   void toggleMusicLoop() {
     if(_isLooping){
@@ -104,12 +105,36 @@ class AudioPlayerManager {
     }
   }
 
+  ///曲のループを切り替えする。
+  void toggleMusicMode() {
+    if(_modeIndex == 0){//何もなし
+      //シャッフル再生 = false
+    }
+    else if(_modeIndex == 1){//ループ再生
+      toggleMusicLoop();
+    }
+    else if(_modeIndex == 2){//シャッフル再生
+      toggleMusicLoop();
+      //シャッフル再生 = true
+    }
+
+    _modeIndex++;
+    if(_modeIndex == 3) _modeIndex = 0;
+  }
+
   ///再生位置の変更
   void seekMusic(double newCurrentArg){
     _musicCurrent = newCurrentArg;
     _audioPlayer.seek(
       Duration(seconds: newCurrentArg.toInt())
     );
+  }
+
+  ///audioPlayerの音量変更<br>
+  ///@params volumeArg これは0 ~ 100の範囲です。
+  void changeVolume(int volumeArg){
+    if(volumeArg < 0 && volumeArg > 100) return;
+    _audioPlayer.setVolume(volumeArg / 100);
   }
 
   ///audioPlayerインスタンスの解放
