@@ -7,7 +7,7 @@ class FetchFile{
 
   late List _nameList;
   List get nameList => _nameList;
-    late List _pathList;
+  late List _pathList;
   List get pathList => _pathList;
 
   final _trimFileStr = TrimFileStr();
