@@ -17,5 +17,5 @@ class _MusicList{
   @PrimaryKey()
   late ObjectId id;
   late String name;
-  late List<String> list;
+  late List<_MusicInfo> list;
 }
