@@ -3,7 +3,7 @@ import 'dart:async';
 
 import '../setting/string.dart';
 import '../setting/colors.dart';
-import '../audioPlayerManager.dart';
+import '../logic/audioPlayerManager.dart';
 
 class PlayPage extends StatefulWidget {
   const PlayPage({super.key, required this.title});
@@ -14,7 +14,7 @@ class PlayPage extends StatefulWidget {
 }
 
 class _PlayPageState extends State<PlayPage> {
-  final _string = SetedString();
+  final _string = StringConstants();
   final _colors = MyColors();
   final audioPlayerManager = AudioPlayerManager();
   final musicButtonFuncs = _MusicButtonFuncs();

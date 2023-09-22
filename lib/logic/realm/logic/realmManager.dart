@@ -12,7 +12,7 @@ class MusicListManager{
     realm = Realm(config);
   }
 
-  void insert({required String name, required }){
+  void add({required String name, required }){
 
   }
 

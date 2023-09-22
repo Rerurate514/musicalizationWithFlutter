@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../logic/permission.dart';
 import '../setting/string.dart';
-import '../logic/fetchFile.dart';
+import '../logic/fileFetcher.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key, required this.title});
@@ -13,7 +13,7 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  final _string = SetedString();
+  final _string = StringConstants();
 
   final _list = [];
 

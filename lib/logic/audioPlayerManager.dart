@@ -12,27 +12,35 @@ class AudioPlayerManager {
   }
 
   final _audioPlayer = AudioPlayer();
-  final _data = _AudioPlayerMusicData();
   final _player = _MusicPlayer();
   final _audioPlayerListenerResistry = _AudioPlayerListenerResistry();
+
+  _AudioPlayerMusicData _data = _AudioPlayerMusicData();
+
+  get musicDuration => _data.musicDuration;
+  get musicCurrent => _data.musicCurrent;
+  get musicName => _data.musicName;
 
   int _musicModeIndex = 0;
 
   ///audioPlayerに曲をセットして、再生を開始する。
   Future<void> startMusic(String musicNameArg, String musicPathArg) async {
-    _player.startMusic(_audioPlayer, _data, musicNameArg, musicPathArg);
+    _data = await _player.startMusic(_audioPlayer, _data, musicNameArg, musicPathArg);
   }
 
   ///曲の一時停止、再生切り替え
   Future<void> togglePlayMusic() async {
     if (_data.musicPath == "") return;
 
+    print(_data._isPlaying);
+
     _data.isPlaying
-        ? await _player.pauseMusic(_audioPlayer, _data)
-        : await _player.resumeMusic(_audioPlayer, _data);
+        ? _data = await _player.pauseMusic(_audioPlayer, _data)
+        : _data = await _player.resumeMusic(_audioPlayer, _data);
   }
 
-  ///曲のループを切り替えする。
+  ///曲のmodeを切り替えする。<br>
+  ///none => loopPlay => shufflePlay
   void toggleMusicMode() {
     switch (_musicModeIndex) {
       case 0:
@@ -64,7 +72,7 @@ class AudioPlayerManager {
   ///audioPlayerの音量変更<br>
   ///@params volumeArg これは0 ~ 100の範囲です。
   void changeVolume(int volumeArg) {
-    _player.changeVolume(_audioPlayer, _data, volumeArg);
+    _player.changeVolume(_audioPlayer, volumeArg);
   }
 
   ///audioPlayerの再生位置取得リスナーをセットする
@@ -93,7 +101,7 @@ class AudioPlayerManager {
 
 class _MusicPlayer {
   ///audioPlayerに曲をセットして、再生を開始する。
-  Future<void> startMusic(
+  Future<_AudioPlayerMusicData> startMusic(
       AudioPlayer audioPlayerArg,
       _AudioPlayerMusicData dataArg,
       String musicNameArg,
@@ -107,24 +115,33 @@ class _MusicPlayer {
     } catch (e, stackTrace) {
       throw Error.throwWithStackTrace(e, stackTrace);
     }
+
+    return dataArg;
   }
 
   ///曲の一時停止
-  Future<void> pauseMusic(
+  Future<_AudioPlayerMusicData> pauseMusic(
       AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg) async {
     await audioPlayerArg.pause();
     dataArg.isPlaying = false;
+
+    return dataArg;
   }
 
-  ///曲の再再生
-  Future<void> resumeMusic(
-      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg) async {
+  ///曲の再開
+  Future<_AudioPlayerMusicData> resumeMusic(
+      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg
+  ) async {
     await audioPlayerArg.resume();
+    dataArg.isPlaying = true;
+
+    return dataArg;
   }
 
   ///曲のループを切り替えする。
-  void toggleMusicLoop(
-      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg) {
+  _AudioPlayerMusicData toggleMusicLoop(
+      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg
+  ) {
     if (dataArg.isLooping) {
       audioPlayerArg.setReleaseMode(ReleaseMode.release);
       dataArg.isLooping = false;
@@ -132,19 +149,22 @@ class _MusicPlayer {
       audioPlayerArg.setReleaseMode(ReleaseMode.loop);
       dataArg.isLooping = true;
     }
+
+    return dataArg;
   }
 
   ///再生位置の変更
-  void seekMusic(AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg,
+  _AudioPlayerMusicData seekMusic(AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg,
       double newCurrentArg) {
     dataArg.musicCurrent = newCurrentArg;
     audioPlayerArg.seek(Duration(seconds: newCurrentArg.toInt()));
+
+    return dataArg;
   }
 
   ///audioPlayerの音量変更<br>
   ///@params volumeArg これは0 ~ 100の範囲です。
-  void changeVolume(AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg,
-      int volumeArg) {
+  void changeVolume(AudioPlayer audioPlayerArg, int volumeArg) {
     if (volumeArg < 0 && volumeArg > 100) return;
     audioPlayerArg.setVolume(volumeArg / 100);
   }
@@ -152,32 +172,39 @@ class _MusicPlayer {
 
 class _AudioPlayerListenerResistry {
   ///audioPlayerの再生位置取得リスナーをセットする
-  void setPlayingMusicCurrentListener(
-      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg) {
+  _AudioPlayerMusicData setPlayingMusicCurrentListener(
+      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg
+  ) {
     audioPlayerArg.onPositionChanged.listen((Duration duration) {
       double seconds = duration.inSeconds.toDouble();
       dataArg.musicCurrent = seconds;
     });
+
+    return dataArg;
   }
 
   ///audioPlayerの曲の長さ取得リスナーをセットする
-  void setPlayingMusicDurationListener(
-      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg) {
+  _AudioPlayerMusicData setPlayingMusicDurationListener(
+      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg
+  ) {
     audioPlayerArg.onDurationChanged.listen((Duration duration) {
       dataArg.musicDuration = duration.inSeconds.toDouble();
     });
+
+    return dataArg;
   }
 
   ///曲の終了検知リスナーを登録する
-  void setPlayerCompletionListener(
-      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg) {
+  _AudioPlayerMusicData setPlayerCompletionListener(
+      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg
+  ) {
     audioPlayerArg.onPlayerComplete.listen((event) {
       dataArg.isPlaying = false;
     });
+
+    return dataArg;
   }
 }
-
-class _AudioPlayerToggleManager {}
 
 class _AudioPlayerMusicData {
   String _musicName = ""; //曲の名前

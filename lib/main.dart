@@ -5,7 +5,7 @@ import 'Pages/listPage.dart';
 import 'Pages/playPage.dart';
 import 'Pages/settingPage.dart';
 
-import 'audioPlayerManager.dart';
+import 'logic/audioPlayerManager.dart';
 
 void main() {
   runApp(const MyApp());

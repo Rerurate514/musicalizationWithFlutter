@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../logic/permission.dart';
 import '../setting/string.dart';
-import '../logic/fetchFile.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key, required this.title});
@@ -13,24 +11,12 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  final _permissionRequest = MediaAudioPermissionRequest();
-  final _fetchFile = FetchFile();
-  final _string = SetedString();
-
-  List _list = [];
+  final _string = StringConstants();
 
   @override
   void initState() {
     super.initState();
-    _startLogic();
-  }
 
-  Future<void> _startLogic() async {
-    await _permissionRequest.requestPermission();
-
-    setState(() {
-
-    });
   }
 
   @override

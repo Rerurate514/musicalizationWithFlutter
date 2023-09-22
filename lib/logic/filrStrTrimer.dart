@@ -1,4 +1,4 @@
-class TrimFileStr{
+class FileStrTrimer{
   List<String> convertFileNameToNameString(List listArg){
     List<String> strList = convertFileNameToString(listArg);
     List<String> result = [];

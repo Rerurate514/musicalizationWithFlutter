@@ -3,8 +3,8 @@ import 'dart:async';
 
 import '../logic/permission.dart';
 import '../setting/string.dart';
-import '../logic/fetchFile.dart';
-import '../audioPlayerManager.dart';
+import '../logic/fileFetcher.dart';
+import '../logic/audioPlayerManager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -16,8 +16,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _permissionRequest = MediaAudioPermissionRequest();
-  final _fetchFile = FetchFile();
-  final _string = SetedString();
+  final _fetchFile = FileFetcher();
+  final _string = StringConstants();
 
   final audioPlayerManager = AudioPlayerManager();
 

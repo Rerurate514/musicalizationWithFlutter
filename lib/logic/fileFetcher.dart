@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'trimFileStr.dart';
+import 'filrStrTrimer.dart';
 
-class FetchFile{
+class FileFetcher{
   late List _list = [];
   List get list => _list;
 
@@ -10,10 +10,10 @@ class FetchFile{
   late List _pathList;
   List get pathList => _pathList;
 
-  final _trimFileStr = TrimFileStr();
+  final _trimFileStr = FileStrTrimer();
 
 
-  FetchFile(){
+  FileFetcher(){
     _doAsyncMethod();
   }
 
@@ -24,12 +24,12 @@ class FetchFile{
   }
 
   ///このメソッドは外部ストレージのオブジェクトを取得するメソッドです。
-  Future<Directory> _getExternalDir() async {
+  Future<Directory> _fetchExternalDir() async {
     Directory? directory = Directory("");
 
     if(Platform.isWindows){
       //todo
-      directory = Directory("C:\\Users\\rerur\\pic\\Saved Pictures\\Saved Pictures");
+      directory = Directory("C:\\Users\\InUserName\\pic\\Saved Pictures\\Saved Pictures");
     }
     else if(Platform.isAndroid){
       directory = Directory("/storage/emulated/0/Download/");
@@ -46,7 +46,7 @@ class FetchFile{
 
   ///このメソッドは外部ストレージのdownloadディレクトリ内のファイルを取得するメソッドです。
   Future<List> _fetchFileFromDownloadDir() async {
-    Directory dir = await _getExternalDir();
+    Directory dir = await _fetchExternalDir();
 
     List<FileSystemEntity> result = dir.listSync();
 
