@@ -30,10 +30,6 @@ class AudioPlayerManager {
 
   ///曲の一時停止、再生切り替え
   Future<void> togglePlayMusic() async {
-    if (_data.musicPath == "") return;
-
-    print(_data._isPlaying);
-
     _data.isPlaying
         ? _data = await _player.pauseMusic(_audioPlayer, _data)
         : _data = await _player.resumeMusic(_audioPlayer, _data);
@@ -234,7 +230,7 @@ class _AudioPlayerMusicData {
   bool _isPlaying = false; //再生しているかどうか
   bool get isPlaying => _isPlaying;
   set isPlaying(bool isPlayingArg) {
-    _isLooping = isPlayingArg;
+    _isPlaying = isPlayingArg;
   }
 
   bool _isLooping = false; //ループしているかどうか
