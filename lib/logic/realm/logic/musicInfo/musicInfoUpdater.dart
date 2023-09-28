@@ -1,15 +1,18 @@
-import 'musicInfoManager.dart';
+import 'package:musicalization/logic/realm/model/schema.dart';
+import 'package:realm/realm.dart';
+
+import 'realmIOManager.dart';
 import '../../../fileFetcher.dart';
 
 class MusicInfoUpdater {
   final fileFetcher = FileFetcher();
-  final musicInfoManager = MusicInfoManager();
+  final musicInfoManager = RealmIOManager(MusicInfo.schema);
 
   void updateDataBase() {
     List pathList = _getPathFileFromFetcher();
     List nameList = _getNameFileFromFetcher();
 
-    musicInfoManager.deleteAllRealmRecord();
+    musicInfoManager.deleteAll;
 
     _addMusicInfo(pathList, nameList);
   }
@@ -24,10 +27,15 @@ class MusicInfoUpdater {
 
   void _addMusicInfo(List pathListArg, List nameListArg) {
     for (var i = 0; i > pathListArg.length; i++) {
-      musicInfoManager.add(
-        nameArg: nameListArg[i],
-        pathArg: pathListArg[i]
+      MusicInfo addData = MusicInfo(
+        ObjectId(), 
+        nameListArg[i], 
+        pathListArg[i], 
+        0, 
+        "", 
+        ""
       );
+      musicInfoManager.add<MusicInfo>(dataInsToAddArg: addData);
     }
   }
 }

@@ -11,12 +11,14 @@ class MusicInfo extends _MusicInfo
   MusicInfo(
     ObjectId id,
     String name,
-    double volume,
+    String path,
+    int volume,
     String lyrics,
     String picture,
   ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
+    RealmObjectBase.set(this, 'path', path);
     RealmObjectBase.set(this, 'volume', volume);
     RealmObjectBase.set(this, 'lyrics', lyrics);
     RealmObjectBase.set(this, 'picture', picture);
@@ -35,9 +37,14 @@ class MusicInfo extends _MusicInfo
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  double get volume => RealmObjectBase.get<double>(this, 'volume') as double;
+  String get path => RealmObjectBase.get<String>(this, 'path') as String;
   @override
-  set volume(double value) => RealmObjectBase.set(this, 'volume', value);
+  set path(String value) => RealmObjectBase.set(this, 'path', value);
+
+  @override
+  int get volume => RealmObjectBase.get<int>(this, 'volume') as int;
+  @override
+  set volume(int value) => RealmObjectBase.set(this, 'volume', value);
 
   @override
   String get lyrics => RealmObjectBase.get<String>(this, 'lyrics') as String;
@@ -63,7 +70,8 @@ class MusicInfo extends _MusicInfo
     return const SchemaObject(ObjectType.realmObject, MusicInfo, 'MusicInfo', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('volume', RealmPropertyType.double),
+      SchemaProperty('path', RealmPropertyType.string),
+      SchemaProperty('volume', RealmPropertyType.int),
       SchemaProperty('lyrics', RealmPropertyType.string),
       SchemaProperty('picture', RealmPropertyType.string),
     ]);
@@ -75,12 +83,12 @@ class MusicList extends _MusicList
   MusicList(
     ObjectId id,
     String name, {
-    Iterable<MusicInfo> list = const [],
+    Iterable<ObjectId> list = const [],
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
-    RealmObjectBase.set<RealmList<MusicInfo>>(
-        this, 'list', RealmList<MusicInfo>(list));
+    RealmObjectBase.set<RealmList<ObjectId>>(
+        this, 'list', RealmList<ObjectId>(list));
   }
 
   MusicList._();
@@ -96,10 +104,10 @@ class MusicList extends _MusicList
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  RealmList<MusicInfo> get list =>
-      RealmObjectBase.get<MusicInfo>(this, 'list') as RealmList<MusicInfo>;
+  RealmList<ObjectId> get list =>
+      RealmObjectBase.get<ObjectId>(this, 'list') as RealmList<ObjectId>;
   @override
-  set list(covariant RealmList<MusicInfo> value) =>
+  set list(covariant RealmList<ObjectId> value) =>
       throw RealmUnsupportedSetError();
 
   @override
@@ -116,8 +124,8 @@ class MusicList extends _MusicList
     return const SchemaObject(ObjectType.realmObject, MusicList, 'MusicList', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('list', RealmPropertyType.object,
-          linkTarget: 'MusicInfo', collectionType: RealmCollectionType.list),
+      SchemaProperty('list', RealmPropertyType.objectid,
+          collectionType: RealmCollectionType.list),
     ]);
   }
 }

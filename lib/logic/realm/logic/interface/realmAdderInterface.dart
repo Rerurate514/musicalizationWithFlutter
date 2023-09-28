@@ -1,6 +1,8 @@
 import 'package:realm/realm.dart';
 import '../realmIOResults.dart';
  
-abstract class RealmAdderInterface<SCHEMA>{
-  RealmIOResults add({required SCHEMA dataArg});
+import 'realmValidatedSchemaValueInterface.dart';
+
+abstract class RealmAdderInterface{
+  RealmIOResults add<T extends RealmValidatedSchemaValueInterface>({required Realm realm,required T dataInsToAddArg});
 }

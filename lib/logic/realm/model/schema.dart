@@ -1,34 +1,22 @@
 import 'package:realm/realm.dart';
 
-import '../logic/musicInfo/Column/musicName.dart';
-import '../logic/musicInfo/Column/musicPath.dart';
-import '../logic/musicInfo/Column/musicVolume.dart';
-import '../logic/musicInfo/Column/musicLyrics.dart';
-import '../logic/musicInfo/Column/musicPicture.dart';
-
-import '../logic/musicList/Column/listName.dart';
-import '../logic/musicList/Column/listMusicList.dart';
-
 part 'schema.g.dart';
-
-
-
 
 @RealmModel()
 class _MusicInfo{
   @PrimaryKey()
   late ObjectId id;     //テーブルId
-  late MusicName name;     //曲名
-  late MusicPath path;     //曲のパス
-  late MusicVolume volume;   //音量
-  late MusicLyrics lyrics;   //歌詞
-  late MusicPicture picture;  //絵
+  late String name;     //曲名
+  late String path;     //曲のパス
+  late int volume;   //音量
+  late String lyrics;   //歌詞
+  late String picture;  //絵
 }
 
 @RealmModel()
 class _MusicList{
   @PrimaryKey()
   late ObjectId id;           //テーブルId
-  late ListName name;           //リスト名
-  late ListMusicList list;   //MusicInfoのIDからなる曲リスト
+  late String name;           //リスト名
+  late List<ObjectId> list;   //MusicInfoのIDからなる曲リスト
 }
