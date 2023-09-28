@@ -11,6 +11,12 @@ import 'validatedMusicInfo.dart';
 class MusicInfoRecordFactory{
   late final ValidatedMusicInfo validatedMusicInfo;
   late final ObjectId _id;
+  late final String _unValidatedName;
+  late final String _unValidatedPath;
+  late final int _unValidatedVolume;
+  late final String _unValidatedLyrics;
+  late final String _unValidatedPicture;
+
   late final MusicName _name;
   late final MusicPath _path;
   late final MusicVolume _volume;
@@ -19,18 +25,24 @@ class MusicInfoRecordFactory{
 
   MusicInfoRecordFactory(
     ObjectId idArg,
-    MusicName nameArg,
-    MusicPath pathArg,
-    MusicVolume volumeArg,
-    MusicLyrics lyricsArg,
-    MusicPicture pictureArg
+    String nameArg,
+    String pathArg,
+    int volumeArg,
+    String lyricsArg,
+    String pictureArg
   ){
     _id = idArg;
-    _name = nameArg;
-    _path = pathArg;
-    _volume = volumeArg;
-    _lyrics = lyricsArg;
-    _picture = pictureArg;
+    _unValidatedName = nameArg;
+    _unValidatedPath = pathArg;
+    _unValidatedVolume = volumeArg;
+    _unValidatedLyrics = lyricsArg;
+    _unValidatedPicture = pictureArg;
+
+    _name = MusicName(_unValidatedName);
+    _path = MusicPath(_unValidatedPath);
+    _volume = MusicVolume(_unValidatedVolume);
+    _lyrics = MusicLyrics(_unValidatedLyrics);
+    _picture = MusicPicture(_unValidatedPicture);
   }
 
   ValidatedMusicInfo createIns(){
