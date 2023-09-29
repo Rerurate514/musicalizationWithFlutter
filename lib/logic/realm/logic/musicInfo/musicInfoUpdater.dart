@@ -1,7 +1,7 @@
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:realm/realm.dart';
 
-import 'realmIOManager.dart';
+import '../realmIOManager.dart';
 import '../../../fileFetcher.dart';
 
 import '../musicInfo/validatedMusicInfo.dart';
@@ -37,7 +37,9 @@ class MusicInfoUpdater {
         "", 
         ""
       );
-      musicInfoManager.add<ValidatedMusicInfo>(dataInsToAddArg: addData);
+      musicInfoManager.add<ValidatedMusicInfo>(
+        dataInsToAddArg: addData
+      );
     }
   }
 }

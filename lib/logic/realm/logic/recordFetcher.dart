@@ -1,16 +1,16 @@
 import 'package:realm/realm.dart';
-import 'interface/realmReaderInterface.dart';
 import 'realmIOResults.dart';
+import '../logic/realmIOManager.dart';
 
-class RecordFetcher<READERINS extends RealmReaderInterface>{
-  late final READERINS _readerIns;
+class RecordFetcher<SCHEMAOBJECT extends SchemaObject>{
+  late final RealmIOManager _realmIOManager;
 
-  RecordFetcher(READERINS readerInsArg){
-    _readerIns = readerInsArg;
+  RecordFetcher(SCHEMAOBJECT schemaObjectArg){
+    _realmIOManager = RealmIOManager(schemaObjectArg);
   }
 
-  List getAllReacordList(Realm realm){
-    RealmIOResults result = _readerIns.readAll(realm: realm);
-    return result.payload;
+  List getAllReacordList(){
+    List result = _realmIOManager.readAll();
+    return result;
   }
 }

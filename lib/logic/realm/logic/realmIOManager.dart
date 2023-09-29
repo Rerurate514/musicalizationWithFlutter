@@ -1,13 +1,12 @@
 import 'package:musicalization/logic/realm/logic/interface/realmValidatedSchemaValueInterface.dart';
 import 'package:realm/realm.dart';
-import '../../model/schema.dart';
-import '../realmInstanceFactory.dart';
-import '../realmIOResults.dart';
+import 'realmInstanceFactory.dart';
+import 'realmIOResults.dart';
 
-import '../interface/realmReaderInterface.dart';
-import '../interface/realmAdderInterface.dart';
+import 'interface/realmReaderInterface.dart';
+import 'interface/realmAdderInterface.dart';
 
-import '../interface/realmIOManagerInterface.dart';
+import 'interface/realmIOManagerInterface.dart';
 
 class RealmIOManager extends RealmIOManagerInterface{
   final realmInsFac = RealmInstanceFactory();
@@ -22,6 +21,12 @@ class RealmIOManager extends RealmIOManagerInterface{
   @override
   void add<T extends RealmValidatedSchemaValueInterface>({required RealmValidatedSchemaValueInterface dataInsToAddArg}){
     _adder.add<T>(realm: realm, dataInsToAddArg: dataInsToAddArg);
+  }
+
+  @override
+  SCHEMA readAll<SCHEMA extends RealmObject>() {
+    RealmIOResults results = _reader.readAll(realm: realm);
+    return results.payload;
   }
 
   @override
