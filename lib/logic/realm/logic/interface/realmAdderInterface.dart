@@ -4,5 +4,5 @@ import '../realmIOResults.dart';
 import 'realmValidatedSchemaValueInterface.dart';
 
 abstract class RealmAdderInterface{
-  RealmIOResults add<T extends RealmValidatedSchemaValueInterface>({required Realm realm,required T dataInsToAddArg});
+  Future<RealmIOResults> add<T extends RealmValidatedSchemaValueInterface>({required Realm realm,required T dataInsToAddArg});
 }

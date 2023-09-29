@@ -8,13 +8,13 @@ import '../musicInfo/validatedMusicInfo.dart';
 
 class MusicInfoUpdater {
   final fileFetcher = FileFetcher();
-  final musicInfoManager = RealmIOManager(MusicInfo.schema);
+  final realmIOManager = RealmIOManager(MusicInfo.schema);
 
   void updateDataBase() {
     List pathList = _getPathFileFromFetcher();
     List nameList = _getNameFileFromFetcher();
-
-    musicInfoManager.deleteAll;
+    
+    realmIOManager.deleteAll<MusicInfo>();
 
     _addMusicInfo(pathList, nameList);
   }
@@ -27,8 +27,8 @@ class MusicInfoUpdater {
     return fileFetcher.nameList;
   }
 
-  void _addMusicInfo(List pathListArg, List nameListArg) {
-    for (var i = 0; i > pathListArg.length; i++) {
+  Future<void> _addMusicInfo(List pathListArg, List nameListArg) async {
+    for (var i = 0; i < pathListArg.length; i++) {
       ValidatedMusicInfo addData = ValidatedMusicInfo(
         ObjectId(), 
         nameListArg[i],
@@ -37,7 +37,7 @@ class MusicInfoUpdater {
         "", 
         ""
       );
-      musicInfoManager.add<ValidatedMusicInfo>(
+      realmIOManager.add<ValidatedMusicInfo>(
         dataInsToAddArg: addData
       );
     }
