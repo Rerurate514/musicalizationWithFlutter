@@ -4,6 +4,8 @@ import 'package:realm/realm.dart';
 import 'realmIOManager.dart';
 import '../../../fileFetcher.dart';
 
+import '../musicInfo/validatedMusicInfo.dart';
+
 class MusicInfoUpdater {
   final fileFetcher = FileFetcher();
   final musicInfoManager = RealmIOManager(MusicInfo.schema);
@@ -27,15 +29,15 @@ class MusicInfoUpdater {
 
   void _addMusicInfo(List pathListArg, List nameListArg) {
     for (var i = 0; i > pathListArg.length; i++) {
-      MusicInfo addData = MusicInfo(
+      ValidatedMusicInfo addData = ValidatedMusicInfo(
         ObjectId(), 
-        nameListArg[i], 
-        pathListArg[i], 
+        nameListArg[i],
+        pathListArg[i],
         0, 
         "", 
         ""
       );
-      musicInfoManager.add<MusicInfo>(dataInsToAddArg: addData);
+      musicInfoManager.add<ValidatedMusicInfo>(dataInsToAddArg: addData);
     }
   }
 }
