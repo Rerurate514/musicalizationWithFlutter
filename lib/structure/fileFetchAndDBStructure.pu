@@ -1,0 +1,52 @@
+@startuml
+
+title ファイルのフェッチ処理とデータベース登録処理
+
+box database
+    database MusicInfo_Realm
+    participant RealmIOManager
+end box
+
+box fileFetch
+    participant FileFetcher
+    participant MusicFileListData
+end box
+
+participant MusicInfoUpdater
+participant RecordFetcher
+
+participant MainFile
+
+box UI
+    participant HomePage
+    participant UpdateBtn
+end box
+
+==UIの描画中==
+
+MainFile -> HomePage : UIの描画要求
+HomePage -> RecordFetcher : リストの要求
+RecordFetcher -> RealmIOManager : レコード情報要求
+RealmIOManager -> MusicInfo_Realm : レコード情報要求
+MusicInfo_Realm -> RealmIOManager : レコード情報
+RealmIOManager -> RecordFetcher : レコード情報
+RecordFetcher -> HomePage : リストの受け渡し
+
+==UI描画後==
+
+UpdateBtn -> HomePage : ボタンevent発火\nデータベースの\nアップデート
+HomePage -> MusicInfoUpdater : データベースの\nアップデート要求
+
+MusicInfoUpdater -> MusicFileListData : ファイルリストの\n取得
+MusicFileListData -> FileFetcher : ファイルリストの\nフェッチ要求
+FileFetcher -> FileFetcher : ファイルの\nフェッチ
+FileFetcher -> MusicFileListData : ファイルリストの\n受け渡し
+
+MusicFileListData -> MusicInfoUpdater : ファイルリストの\n受け渡し
+
+group "async and while"
+    MusicInfoUpdater -> RealmIOManager : Realmに曲を登録要求
+    RealmIOManager -> MusicInfo_Realm : 情報登録
+end group
+
+@enduml
