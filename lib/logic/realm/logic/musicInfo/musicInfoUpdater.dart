@@ -10,13 +10,13 @@ class MusicInfoUpdater {
   final fileFetcher = FileFetcher();
   final realmIOManager = RealmIOManager(MusicInfo.schema);
 
-  void updateDataBase() {
+  Future updateDataBase() async {
     List pathList = _getPathFileFromFetcher();
     List nameList = _getNameFileFromFetcher();
     
     realmIOManager.deleteAll<MusicInfo>();
 
-    _addMusicInfo(pathList, nameList);
+    await _addMusicInfo(pathList, nameList);
   }
 
   List _getPathFileFromFetcher() {
@@ -27,7 +27,7 @@ class MusicInfoUpdater {
     return fileFetcher.nameList;
   }
 
-  Future<void> _addMusicInfo(List pathListArg, List nameListArg) async {
+  Future _addMusicInfo(List pathListArg, List nameListArg) async {
     for (var i = 0; i < pathListArg.length; i++) {
       ValidatedMusicInfo addData = ValidatedMusicInfo(
         ObjectId(), 
