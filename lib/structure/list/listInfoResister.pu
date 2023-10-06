@@ -1,0 +1,33 @@
+@startuml
+
+title ListPageにおけるデータベースへの情報登録シーケンス
+
+box UI
+    participant ListPage
+end box
+
+box realmReadControll
+    participant ListAdder
+    participant ValidatedList
+    participant RealmIOManager
+end box
+
+database RealmDB
+
+==write==
+
+ListPage -> ListAdder : List情報\nonResisterBtnTapped
+ListAdder -> ValidatedList : List情報
+ValidatedList -> ValidatedList : バリデート
+ValidatedList -> ListAdder : バリデートされた\nList情報
+
+ListAdder -> RealmIOManager : ValidatedList情報
+
+RealmIOManager -> RealmDB : レコード情報登録
+
+
+==edit==
+
+
+
+@enduml
