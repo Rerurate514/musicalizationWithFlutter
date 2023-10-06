@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:musicalization/logic/realm/logic/musicInfo/musicInfoUpdater.dart';
+import 'package:musicalization/logic/realm/model/schema.dart';
 import 'dart:async';
 
-import '../logic/permission.dart';
 import '../setting/string.dart';
-import '../logic/fileFetcher.dart';
 import '../logic/audioPlayerManager.dart';
+
+import '../logic/realm/logic/recordFetcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -15,33 +17,54 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _permissionRequest = MediaAudioPermissionRequest();
-  final _fetchFile = FileFetcher();
   final _string = StringConstants();
 
   final audioPlayerManager = AudioPlayerManager();
 
-  List _pathList = [];
-  List _nameList = [];
+  final recordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
+  final MusicInfoUpdater musicInfoUpdater = MusicInfoUpdater();
+
+  final ScrollController _scrollController = ScrollController();
+
+  List<MusicInfo> _list = [];
 
   @override
   void initState() {
     super.initState();
-    _initFetchFile();
+    _initFileFetcher();
   }
 
-  Future<void> _initFetchFile() async {
-    await _permissionRequest.requestPermission();
-
-    setState(() {
-      _pathList = _fetchFile.pathList;
-      _nameList = _fetchFile.nameList;
+  Future<void> _initFileFetcher() async {
+    setState((){
+      _list = recordFetcher.getAllReacordList();
     });
   }
 
   Future<void> _onListItemTapped(
-      String musicNameArg, String musicPathArg) async {
+    String musicNameArg, String musicPathArg) async {
     audioPlayerManager.startMusic(musicNameArg, musicPathArg);
+  }
+
+  void _onUpdateBtnTapped(){
+    setState(() {
+      _list = [];
+    });
+    musicInfoUpdater.updateDataBase();
+
+
+    Future.delayed(const Duration(microseconds: 1000),() {
+      setState(() {
+        _list = recordFetcher.getAllReacordList();
+      });
+    });
+  }
+
+  String getStr(int index){
+    // for(MusicInfo i in _list){
+    //   print("irerraotr $index = " + i.name.toString());
+    // }
+    print("index = $index, len = ${_list.length}");
+    return _list[index].name.toString();
   }
 
   @override
@@ -62,6 +85,7 @@ class _HomePageState extends State<HomePage> {
           const _UpMenuBarWidget(),
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               addAutomaticKeepAlives: true,
               itemBuilder: (BuildContext context, int index) {
                 return Card(
@@ -71,21 +95,29 @@ class _HomePageState extends State<HomePage> {
                   elevation: 4.0,
                   child: InkWell(
                     onTap: () => _onListItemTapped(
-                        _nameList[index], _pathList[index].toString()),
+                        _list[index].path, _list[index].path.toString()),
                     child: ListTile(
                       leading: Image.asset(
                         'images/mp3_menu_picture_setting.png',
                         width: 50,
                       ),
-                      title: Text(_nameList[index]),
+                      title: Text(getStr(index)),
                     ),
                   ),
                 );
               },
-              itemCount: _nameList.length,
+              itemCount: _list.length,
             ),
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).cardColor,
+        child: Image.asset(
+          'images/mp3_ui_update.png',
+          width: 40,
+        ),
+        onPressed: _onUpdateBtnTapped,
       ),
     );
   }

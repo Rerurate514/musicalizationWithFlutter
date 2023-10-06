@@ -1,0 +1,16 @@
+@startuml
+
+title ListPageにおけるデータベースからのレコード情報フェッチシーケンス
+
+==read==
+
+ListPage -> RecordFetcher : DBからのレコード要求
+RecordFetcher -> RealmIOManager : レコード要求
+RealmIOManager -> RealmDB : readAll
+
+RealmDB -> RealmIOManager : レコード情報受け渡し
+RealmIOManager -> RecordFetcher : レコード情報受け渡し
+RecordFetcher -> ListPage : レコード情報受け渡し
+
+
+@enduml
