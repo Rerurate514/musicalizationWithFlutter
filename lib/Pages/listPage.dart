@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:musicalization/logic/realm/logic/musicList/musicListAdder.dart';
+import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:realm/realm.dart';
-
-import '';
 
 import '../setting/string.dart';
 
@@ -14,11 +14,10 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  final _adder = MusicListAdder();
   final _string = StringConstants();
 
-  final List<MusicInfo> _musicList = [];
-
-  final List<ObjectId> _musicListToDB = [];
+  final List<MusicInfo> _listInMusicInfo = [];
 
   @override
   void initState() {
@@ -26,13 +25,22 @@ class _ListPageState extends State<ListPage> {
   }
 
   void _onResisterBtnTapped() {
-    //todo show dialog to enter listName
-    _showListNameEnteredDialog();
-
-    //todo show dialog to decide list of music
+    _onResisterBtnTapped();
   }
 
-  void _showListNameEnteredDialog() {
+  void _addMusicList(){
+    String musicListNameToDB = "";
+    List<ObjectId> musicListToDB = [];
+
+    musicListNameToDB = _showListNameEnteredDialog();
+    musicListToDB = _showChoiceListMusicDialog();
+
+    _commitMusicList(musicListNameToDB, musicListToDB);
+  }
+
+  String _showListNameEnteredDialog() {
+    String resultListName = "";
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -44,7 +52,7 @@ class _ListPageState extends State<ListPage> {
                 hintText: _string.listDialogTExtFieldHintText,
               ),
               onChanged: (textArg) {
-                _addMusicListName(textArg);
+                resultListName = textArg;
               },
             ),
             actions: <Widget>[
@@ -57,15 +65,19 @@ class _ListPageState extends State<ListPage> {
               TextButton(
                   child: Text(_string.listDialogOK),
                   onPressed: () => {
-                        _showListNameEnteredDialog(),
+                        _showChoiceListMusicDialog(),
                         Navigator.pop(context),
                       }),
             ],
           );
         });
+
+    return resultListName;
   }
 
-  void _showCohiceListMusicDialog() {
+  List<ObjectId> _showChoiceListMusicDialog() {
+    List<ObjectId> musicList = [];
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -84,8 +96,7 @@ class _ListPageState extends State<ListPage> {
                           ),
                           elevation: 4.0,
                           child: InkWell(
-                              onTap: () => _addMusicToList(
-                                  "#todo ここに押されたリストのMusicfoを入れる"),
+                              onTap: () => musicList.add(ObjectId()), //todo ここに曲のObjectIdをいれる
                               child: ListTile(
                                 leading: Image.asset(
                                   'images/mp3_menu_picture_setting.png',
@@ -110,24 +121,17 @@ class _ListPageState extends State<ListPage> {
               TextButton(
                   child: Text(_string.listDialogOK),
                   onPressed: () => {
-                        _addMusicListToDB(),
                         Navigator.pop(context),
                       }),
             ],
           );
         });
+
+    return musicList;
   }
 
-  void _addMusicListName(String textArg){
-    print("inputText = " + textArg);
-  }
-
-  void _addMusicToList(String textArg) {
-    print("inputText = " + textArg);
-  }
-
-  Future _addMusicListToDB() async {
-
+  Future _commitMusicList(String nameArg, List<ObjectId> musicListArg) async {
+    _adder.add(nameArg, musicListArg);
   }
 
   void _onShuffleBtnTapped() {}
@@ -161,11 +165,11 @@ class _ListPageState extends State<ListPage> {
                       'images/mp3_menu_picture_setting.png',
                       width: 50,
                     ),
-                    title: Text(_musicList[index]),
+                    title: Text(_listInMusicInfo[index].name),
                   ),
                 );
               },
-              itemCount: _musicList.length,
+              itemCount: _listInMusicInfo.length,
             ),
           )
         ],
