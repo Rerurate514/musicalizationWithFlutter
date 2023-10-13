@@ -1,3 +1,4 @@
+import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:realm/realm.dart';
 import '../logic/realmIOManager.dart';
 
@@ -8,8 +9,8 @@ class RecordFetcher<SCHEMA extends RealmObject>{
     _realmIOManager = RealmIOManager(schemaObjectArg);
   }
 
-  List getAllReacordList(){
-    List result = _realmIOManager.readAll<SCHEMA>();
+  List<SCHEMA> getAllReacordList(){
+    List<SCHEMA> result = _realmIOManager.readAll<SCHEMA>();
     return result;
   }
 }
