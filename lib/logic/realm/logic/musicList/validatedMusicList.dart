@@ -1,6 +1,7 @@
 
 
 import 'package:musicalization/logic/realm/model/schema.dart';
+import 'package:realm/realm.dart';
 
 import '../interface/realmValidatedSchemaValueInterface.dart';
 
@@ -20,6 +21,7 @@ class ValidatedMusicList extends RealmValidatedSchemaValueInterface{
     _name = ListName(listArg.name);
     _list = ListMusicList(listArg.list);
 
-    _payload = MusicList(listArg.id, listArg.name);
+    _payload = MusicList(ObjectId(), _name.value);
+    _payload.list.addAll(_list.value);
   }
 }

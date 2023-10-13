@@ -16,6 +16,8 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   final _musicInfoRecordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
+  final _musicListRecordFetcher = RecordFetcher<MusicList>(MusicList.schema);
+
   final _adder = MusicListAdder();
   final _string = StringConstants();
 
@@ -27,6 +29,13 @@ class _ListPageState extends State<ListPage> {
   @override
   void initState() {
     super.initState();
+    _initListFetcher();
+  }
+
+  Future<void> _initListFetcher() async {
+    setState(() {
+      _listInMusicList = _musicListRecordFetcher.getAllReacordList();
+    });
   }
 
   void _onResisterBtnTapped() {
@@ -37,10 +46,8 @@ class _ListPageState extends State<ListPage> {
     await _showListNameEnteredDialog();
     await _showChoiceListMusicDialog();
 
-    print("listName = ${_tempListName}");
-    print("listList = ${_tempListInMusicList}");
-
-    // _commitMusicList(_tempListInMusicListNameToDB, _tempListInMusicListToDB);
+    await _commitMusicList(_tempListName, _tempListInMusicList);
+    _initListFetcher();
   }
 
   Future _showListNameEnteredDialog() async {
@@ -65,8 +72,8 @@ class _ListPageState extends State<ListPage> {
               TextButton(
                   child: Text(_string.listDialogCancel),
                   onPressed: () => {
-                    Navigator.of(context).pop(textFieldValue),
-              }),
+                        Navigator.of(context).pop(textFieldValue),
+                      }),
               TextButton(
                   child: Text(_string.listDialogOK),
                   onPressed: () => {
@@ -75,61 +82,26 @@ class _ListPageState extends State<ListPage> {
             ],
           );
         });
+  }
 
-    if(result != null) _tempListName = result;
+  void _getMusicListCallback(List<ObjectId> listArg) {
+    _tempListInMusicList = listArg;
   }
 
   Future _showChoiceListMusicDialog() async {
-    List<MusicInfo> listInMusicInfo =
+    final List<MusicInfo> listInMusicInfo =
         _musicInfoRecordFetcher.getAllReacordList();
-    
+
     _tempListInMusicList = [];
 
     final result = await showDialog<List<ObjectId>>(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(_string.listDialogChoiceMusicTitle),
-            content: Container(
-                width: double.maxFinite,
-                child: ListView.builder(
-                  addAutomaticKeepAlives: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      elevation: 4.0,
-                      child: InkWell(
-                          onTap: () => _tempListInMusicList.add(listInMusicInfo[index].id),
-                          child: ListTile(
-                            leading: Image.asset(
-                              'images/mp3_menu_picture_setting.png',
-                              width: 50,
-                            ),
-                            title: Text(listInMusicInfo[index].name),
-                          )),
-                    );
-                  },
-                  itemCount: listInMusicInfo.length,
-                )),
-            actions: <Widget>[
-              // ボタン領域
-              TextButton(
-                  child: Text(_string.listDialogCancel),
-                  onPressed: () => {
-                        Navigator.pop(context),
-                      }),
-              TextButton(
-                  child: Text(_string.listDialogOK),
-                  onPressed: () => {
-                        Navigator.pop(context),
-                      }),
-            ],
+          return _ResisterListDialog(
+            listInMusicInfo: listInMusicInfo,
+            getMusicListCallback: _getMusicListCallback,
           );
         });
-
-    
   }
 
   Future _commitMusicList(String nameArg, List<ObjectId> musicListArg) async {
@@ -177,6 +149,103 @@ class _ListPageState extends State<ListPage> {
         ],
       ),
     );
+  }
+}
+
+class _ResisterListDialog extends StatefulWidget {
+  late final List<MusicInfo> listInMusicInfo;
+  late final Function(List<ObjectId>) getMusicListCallback;
+  _ResisterListDialog(
+      {required this.listInMusicInfo, required this.getMusicListCallback});
+
+  @override
+  _ResisterListDialogState createState() =>
+      _ResisterListDialogState(this.listInMusicInfo, this.getMusicListCallback);
+}
+
+class _ResisterListDialogState extends State<_ResisterListDialog> {
+  final _string = StringConstants();
+  List<MusicInfo> listInMusicInfo = [];
+
+  final String unselectedListTileImage =
+      'images/mp3_ui_music_register_button.png';
+  final String selectedListTileImage = 'images/mp3_ui_list_add.png';
+
+  late List<bool> selected;
+
+  List<ObjectId> tempListInMusicList = [];
+
+  late final Function(List<ObjectId>) getMusicListCallback;
+
+  _ResisterListDialogState(List<MusicInfo> listArg,
+      Function(List<ObjectId>) getMusicListCallbackArg) {
+    listInMusicInfo = listArg;
+    getMusicListCallback = getMusicListCallbackArg;
+
+    selected = List.generate(listInMusicInfo.length, (index) => false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void addList(ObjectId idArg) {
+    setState(() {
+      tempListInMusicList.contains(idArg)
+          ? tempListInMusicList.remove(idArg)
+          : tempListInMusicList.add(idArg);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return (AlertDialog(
+      title: Text(_string.listDialogChoiceMusicTitle),
+      content: Container(
+          width: double.maxFinite,
+          child: ListView.builder(
+            addAutomaticKeepAlives: true,
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                elevation: 4.0,
+                child: InkWell(
+                    onTap: () => {
+                          setState(() {
+                            selected[index] = !selected[index];
+                          }),
+                          addList(listInMusicInfo[index].id),
+                        },
+                    child: ListTile(
+                      leading: Image.asset(
+                        selected[index]
+                            ? selectedListTileImage
+                            : unselectedListTileImage,
+                        width: 45,
+                      ),
+                      title: Text(listInMusicInfo[index].name),
+                    )),
+              );
+            },
+            itemCount: listInMusicInfo.length,
+          )),
+      actions: <Widget>[
+        TextButton(
+            child: Text(_string.listDialogCancel),
+            onPressed: () => {
+                  getMusicListCallback(tempListInMusicList),
+                  Navigator.pop(context),
+                }),
+        TextButton(
+            child: Text(_string.listDialogOK),
+            onPressed: () => {
+                  Navigator.pop(context),
+                }),
+      ],
+    ));
   }
 }
 
