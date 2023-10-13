@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:musicalization/logic/realm/logic/musicList/musicListAdder.dart';
+import 'package:musicalization/logic/realm/logic/recordFetcher.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:realm/realm.dart';
 
@@ -14,10 +15,14 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  final _musicInfoRecordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
   final _adder = MusicListAdder();
   final _string = StringConstants();
 
-  final List<MusicInfo> _listInMusicInfo = [];
+  List<MusicList> _listInMusicList = [];
+
+  String _tempListName = "";
+  List<ObjectId> _tempListInMusicList = [];
 
   @override
   void initState() {
@@ -25,25 +30,25 @@ class _ListPageState extends State<ListPage> {
   }
 
   void _onResisterBtnTapped() {
-    _onResisterBtnTapped();
+    _addMusicList();
   }
 
-  void _addMusicList(){
-    String musicListNameToDB = "";
-    List<ObjectId> musicListToDB = [];
+  void _addMusicList() async {
+    await _showListNameEnteredDialog();
+    await _showChoiceListMusicDialog();
 
-    musicListNameToDB = _showListNameEnteredDialog();
-    musicListToDB = _showChoiceListMusicDialog();
+    print("listName = ${_tempListName}");
+    print("listList = ${_tempListInMusicList}");
 
-    _commitMusicList(musicListNameToDB, musicListToDB);
+    // _commitMusicList(_tempListInMusicListNameToDB, _tempListInMusicListToDB);
   }
 
-  String _showListNameEnteredDialog() {
-    String resultListName = "";
-
-    showDialog(
+  Future _showListNameEnteredDialog() async {
+    final result = await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
+          String textFieldValue = "";
+
           return AlertDialog(
             title: Text(_string.listDialogTitle),
             content: TextField(
@@ -52,7 +57,7 @@ class _ListPageState extends State<ListPage> {
                 hintText: _string.listDialogTExtFieldHintText,
               ),
               onChanged: (textArg) {
-                resultListName = textArg;
+                _tempListName = textArg;
               },
             ),
             actions: <Widget>[
@@ -60,57 +65,54 @@ class _ListPageState extends State<ListPage> {
               TextButton(
                   child: Text(_string.listDialogCancel),
                   onPressed: () => {
-                        Navigator.pop(context),
-                      }),
+                    Navigator.of(context).pop(textFieldValue),
+              }),
               TextButton(
                   child: Text(_string.listDialogOK),
                   onPressed: () => {
-                        _showChoiceListMusicDialog(),
                         Navigator.pop(context),
                       }),
             ],
           );
         });
 
-    return resultListName;
+    if(result != null) _tempListName = result;
   }
 
-  List<ObjectId> _showChoiceListMusicDialog() {
-    List<ObjectId> musicList = [];
+  Future _showChoiceListMusicDialog() async {
+    List<MusicInfo> listInMusicInfo =
+        _musicInfoRecordFetcher.getAllReacordList();
+    
+    _tempListInMusicList = [];
 
-    showDialog(
+    final result = await showDialog<List<ObjectId>>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(_string.listDialogChoiceMusicTitle),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Column(children: [
-                    ListView.builder(
-                      addAutomaticKeepAlives: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          elevation: 4.0,
-                          child: InkWell(
-                              onTap: () => musicList.add(ObjectId()), //todo ここに曲のObjectIdをいれる
-                              child: ListTile(
-                                leading: Image.asset(
-                                  'images/mp3_menu_picture_setting.png',
-                                  width: 50,
-                                ),
-                                title: Text(""),
-                              )),
-                        );
-                      },
-                    )
-                  ])
-                ],
-              ),
-            ),
+            content: Container(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  addAutomaticKeepAlives: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      elevation: 4.0,
+                      child: InkWell(
+                          onTap: () => _tempListInMusicList.add(listInMusicInfo[index].id),
+                          child: ListTile(
+                            leading: Image.asset(
+                              'images/mp3_menu_picture_setting.png',
+                              width: 50,
+                            ),
+                            title: Text(listInMusicInfo[index].name),
+                          )),
+                    );
+                  },
+                  itemCount: listInMusicInfo.length,
+                )),
             actions: <Widget>[
               // ボタン領域
               TextButton(
@@ -127,7 +129,7 @@ class _ListPageState extends State<ListPage> {
           );
         });
 
-    return musicList;
+    
   }
 
   Future _commitMusicList(String nameArg, List<ObjectId> musicListArg) async {
@@ -165,11 +167,11 @@ class _ListPageState extends State<ListPage> {
                       'images/mp3_menu_picture_setting.png',
                       width: 50,
                     ),
-                    title: Text(_listInMusicInfo[index].name),
+                    title: Text(_listInMusicList[index].name),
                   ),
                 );
               },
-              itemCount: _listInMusicInfo.length,
+              itemCount: _listInMusicList.length,
             ),
           )
         ],
