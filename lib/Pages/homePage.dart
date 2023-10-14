@@ -4,6 +4,8 @@ import 'package:musicalization/logic/realm/model/schema.dart';
 import 'dart:async';
 
 import '../setting/string.dart';
+import '../setting/picture.dart';
+
 import '../logic/audioPlayerManager.dart';
 
 import '../logic/realm/logic/recordFetcher.dart';
@@ -18,11 +20,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _string = StringConstants();
+  final _picture = PictureConstants();
 
-  final audioPlayerManager = AudioPlayerManager();
+  final _audioPlayerManager = AudioPlayerManager();
 
   final recordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
-  final MusicInfoUpdater musicInfoUpdater = MusicInfoUpdater();
+  final MusicInfoUpdater _musicInfoUpdater = MusicInfoUpdater();
 
   final ScrollController _scrollController = ScrollController();
 
@@ -42,29 +45,21 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _onListItemTapped(
     String musicNameArg, String musicPathArg) async {
-    audioPlayerManager.startMusic(musicNameArg, musicPathArg);
+    _audioPlayerManager.startMusic(musicNameArg, musicPathArg);
   }
 
   void _onUpdateBtnTapped(){
     setState(() {
       _list = [];
     });
-    musicInfoUpdater.updateDataBase();
-
+    
+    _musicInfoUpdater.updateDataBase();
 
     Future.delayed(const Duration(microseconds: 1000),() {
       setState(() {
         _list = recordFetcher.getAllReacordList();
       });
     });
-  }
-
-  String getStr(int index){
-    // for(MusicInfo i in _list){
-    //   print("irerraotr $index = " + i.name.toString());
-    // }
-    print("index = $index, len = ${_list.length}");
-    return _list[index].name.toString();
   }
 
   @override
@@ -75,14 +70,14 @@ class _HomePageState extends State<HomePage> {
           Text(_string.appNameStr),
           const Spacer(),
           Image.asset(
-            'images/mp3_ui_main_mode.png',
+            _picture.mainModeImg,
             width: 70,
           )
         ]),
       ),
       body: Column(
         children: [
-          const _UpMenuBarWidget(),
+          _UpMenuBarWidget(),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -98,10 +93,10 @@ class _HomePageState extends State<HomePage> {
                         _list[index].path, _list[index].path.toString()),
                     child: ListTile(
                       leading: Image.asset(
-                        'images/mp3_menu_picture_setting.png',
+                        _picture.musicRecordImg,
                         width: 50,
                       ),
-                      title: Text(getStr(index)),
+                      title: Text(_list[index].name),
                     ),
                   ),
                 );
@@ -114,7 +109,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).cardColor,
         child: Image.asset(
-          'images/mp3_ui_update.png',
+          _picture.updateImg,
           width: 40,
         ),
         onPressed: _onUpdateBtnTapped,
@@ -124,7 +119,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _UpMenuBarWidget extends StatelessWidget {
-  const _UpMenuBarWidget();
+  _UpMenuBarWidget();
+  final _picture = PictureConstants();
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +130,7 @@ class _UpMenuBarWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Image.asset(
-            'images/mp3_ui_mp3player_letters.png',
+            _picture.appTitleLettersImg,
             width: 80,
           ),
           Card(
@@ -144,7 +140,7 @@ class _UpMenuBarWidget extends StatelessWidget {
                       horizontal: 20.0, vertical: 5.0),
                   child: InkWell(
                     child: Image.asset(
-                      'images/mp3_ui_music_shuffle_button.png',
+                      _picture.shuffleImg,
                       width: 50,
                     ),
                   ))),
@@ -155,7 +151,7 @@ class _UpMenuBarWidget extends StatelessWidget {
                       horizontal: 20.0, vertical: 5.0),
                   child: InkWell(
                     child: Image.asset(
-                      'images/mp3_ui_google_drive_button.png',
+                      _picture.fetchingFromGoogleDriveImg,
                       width: 50,
                     ),
                   ))),

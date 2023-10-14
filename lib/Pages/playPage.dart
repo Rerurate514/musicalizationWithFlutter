@@ -3,6 +3,7 @@ import 'dart:async';
 
 import '../setting/string.dart';
 import '../setting/colors.dart';
+import '../setting/picture.dart';
 import '../logic/audioPlayerManager.dart';
 
 class PlayPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class PlayPage extends StatefulWidget {
 class _PlayPageState extends State<PlayPage> {
   final _string = StringConstants();
   final _colors = MyColors();
+  final _picture = PictureConstants();
   final audioPlayerManager = AudioPlayerManager();
   final musicButtonFuncs = _MusicButtonFuncs();
   final musicButtonImageController = _MusicButtonImageController();
@@ -99,7 +101,7 @@ class _PlayPageState extends State<PlayPage> {
           Text(_string.appNameStr),
           const Spacer(),
           Image.asset(
-            'images/mp3_ui_music_mode.png',
+            _picture.playModeImg,
             width: 70,
           )
         ]),
@@ -127,8 +129,8 @@ class _PlayPageState extends State<PlayPage> {
                   borderRadius: BorderRadius.circular(1000)),
               elevation: 16,
               child: Image.asset(
-                'images/mp3_menu_picture_setting.png',
-                width: 325,
+                _picture.musicRecordImg,
+                width: 10,//325
               ),
             ),
           ),
@@ -238,34 +240,33 @@ class _PlayPageState extends State<PlayPage> {
 
 class _MusicButtonImageController {
   final audioPlayerManager = AudioPlayerManager();
+  final _picture = PictureConstants();
 
-  String _backBtnImage = 'images/mp3_ui_back_music.png';
+  late final String _backBtnImage;
   String get backBtnImage => _backBtnImage;
 
-  List _playBtnImage = [
-    'images/mp3_ui_music_stop_button.png',
-    'images/mp3_ui_play_button.png'
-  ];
+  late final List _playBtnImage;
   int _playBtnIndex = 0;
   String get playBtnImage => _playBtnImage[_playBtnIndex];
 
-  List _modeBtnImage = [
-    'images/mp3_ui_loop_button_off.png',
-    'images/mp3_ui_loop_button_on.png',
-    'images/mp3_ui_music_shuffle_button.png'
-  ];
+  late final List _modeBtnImage;
   int _modeBtnIndex = 0;
   String get modeBtnImage => _modeBtnImage[_modeBtnIndex];
 
-  List _volumeBtnImage = [
-    'images/mp3_ui_sound_control_unmute_off.png',
-    'images/mp3_ui_sound_control_unmute_on.png',
-  ];
+  late final List _volumeBtnImage;
   int _volumeBtnIndex = 0;
   String get volumeBtnImage => _volumeBtnImage[_volumeBtnIndex];
 
-  String _nextBtnImage = 'images/mp3_ui_next_music.png';
+  late final String _nextBtnImage;
   String get nextBtnImage => _nextBtnImage;
+
+  _MusicButtonImageController(){
+    _backBtnImage = _picture.backMusicBtnImg;
+    _playBtnImage = [_picture.stopMusicBtnImg, _picture.playMusicBtnImg];
+    _modeBtnImage = [_picture.loopOffMusicBtnImg, _picture.loopOnMusicBtnImg, _picture.shuffleImg];
+    _volumeBtnImage = [_picture.soundUnmuteOffMusicBtnImg, _picture.soundUnmuteOnMusicBtnImg];
+    _nextBtnImage = _picture.nextBtnMusicImg;
+  }
 
   void changeModeImage() {
     _modeBtnIndex++;

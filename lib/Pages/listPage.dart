@@ -5,6 +5,7 @@ import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:realm/realm.dart';
 
 import '../setting/string.dart';
+import '../setting/picture.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key, required this.title});
@@ -20,6 +21,7 @@ class _ListPageState extends State<ListPage> {
 
   final _adder = MusicListAdder();
   final _string = StringConstants();
+  final _picture = PictureConstants();
 
   List<MusicList> _listInMusicList = [];
 
@@ -47,11 +49,13 @@ class _ListPageState extends State<ListPage> {
     await _showChoiceListMusicDialog();
 
     await _commitMusicList(_tempListName, _tempListInMusicList);
-    _initListFetcher();
+    Future.delayed(const Duration(milliseconds: 100), (){
+      _initListFetcher();
+    });
   }
 
   Future _showListNameEnteredDialog() async {
-    final result = await showDialog<String>(
+    await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
           String textFieldValue = "";
@@ -94,7 +98,7 @@ class _ListPageState extends State<ListPage> {
 
     _tempListInMusicList = [];
 
-    final result = await showDialog<List<ObjectId>>(
+    await showDialog<List<ObjectId>>(
         context: context,
         builder: (BuildContext context) {
           return _ResisterListDialog(
@@ -118,7 +122,7 @@ class _ListPageState extends State<ListPage> {
           Text(_string.appNameStr),
           const Spacer(),
           Image.asset(
-            'images/mp3_ui_list_mode.png',
+            _picture.listModeImg,
             width: 70,
           )
         ]),
@@ -136,7 +140,7 @@ class _ListPageState extends State<ListPage> {
                   elevation: 4.0,
                   child: ListTile(
                     leading: Image.asset(
-                      'images/mp3_menu_picture_setting.png',
+                      _picture.musicRecordImg,
                       width: 50,
                     ),
                     title: Text(_listInMusicList[index].name),
@@ -167,9 +171,8 @@ class _ResisterListDialogState extends State<_ResisterListDialog> {
   final _string = StringConstants();
   List<MusicInfo> listInMusicInfo = [];
 
-  final String unselectedListTileImage =
-      'images/mp3_ui_music_register_button.png';
-  final String selectedListTileImage = 'images/mp3_ui_list_add.png';
+  final String unselectedListTileImage = PictureConstants().resisterMusicImg;
+  final String selectedListTileImage = PictureConstants().musicAddToListImg;
 
   late List<bool> selected;
 
@@ -236,12 +239,12 @@ class _ResisterListDialogState extends State<_ResisterListDialog> {
         TextButton(
             child: Text(_string.listDialogCancel),
             onPressed: () => {
-                  getMusicListCallback(tempListInMusicList),
                   Navigator.pop(context),
                 }),
         TextButton(
             child: Text(_string.listDialogOK),
             onPressed: () => {
+                  getMusicListCallback(tempListInMusicList),
                   Navigator.pop(context),
                 }),
       ],
@@ -252,6 +255,8 @@ class _ResisterListDialogState extends State<_ResisterListDialog> {
 class _UpMenuBarWidget extends StatelessWidget {
   late Function() _onResisterBtnTapped;
   late Function() _onShuffleBtnTapped;
+
+  final _picture = PictureConstants();
 
   _UpMenuBarWidget(Function() onResisterBtnTappedArg, onShuffleBtnTappedArg) {
     _onResisterBtnTapped = onResisterBtnTappedArg;
@@ -266,7 +271,7 @@ class _UpMenuBarWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Image.asset(
-            'images/mp3_ui_mp3player_letters.png',
+            _picture.appTitleLettersImg,
             width: 80,
           ),
           Card(
@@ -277,7 +282,7 @@ class _UpMenuBarWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 5.0),
                   child: Image.asset(
-                    'images/mp3_ui_music_shuffle_button.png',
+                    _picture.shuffleImg,
                     width: 50,
                   ),
                 )),
@@ -290,7 +295,7 @@ class _UpMenuBarWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 5.0),
                   child: Image.asset(
-                    'images/mp3_ui_list_make.png',
+                    _picture.makeListImg,
                     width: 50,
                   ),
                 )),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../setting/string.dart';
+import '../setting/picture.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key, required this.title});
@@ -12,6 +13,7 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   final _string = StringConstants();
+  final _picture = PictureConstants();
 
   @override
   void initState() {
@@ -27,7 +29,7 @@ class _SettingPageState extends State<SettingPage> {
             Text(_string.appNameStr),
             const Spacer(),
             Image.asset(
-              'images/mp3_ui_setting_button.png',
+              _picture.settingModeImg,
               width: 40,
             )
           ]),
