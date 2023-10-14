@@ -63,6 +63,7 @@ flutter:
     - images/mp3_ui_play_button.png
     - images/mp3_ui_register_mode.png
     - images/mp3_ui_return.png
+    - images/mp3_ui_right_arrow.png
     - images/mp3_ui_setting_button.png
     - images/mp3_ui_setyoursize_letters.png
     - images/mp3_ui_sound_control_mute_off.png
