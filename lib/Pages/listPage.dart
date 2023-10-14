@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:musicalization/logic/realm/logic/musicList/musicListAdder.dart';
+import 'package:musicalization/logic/realm/logic/musicList/musicListController.dart';
 import 'package:musicalization/logic/realm/logic/recordFetcher.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:realm/realm.dart';
@@ -19,7 +19,7 @@ class _ListPageState extends State<ListPage> {
   final _musicInfoRecordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
   final _musicListRecordFetcher = RecordFetcher<MusicList>(MusicList.schema);
 
-  final _adder = MusicListAdder();
+  final _musicListController = MusicListController();
   final _string = StringConstants();
   final _picture = PictureConstants();
 
@@ -27,6 +27,7 @@ class _ListPageState extends State<ListPage> {
 
   String _tempListName = "";
   List<ObjectId> _tempListInMusicList = [];
+  bool _isDialogContinued = false;
 
   @override
   void initState() {
@@ -35,8 +36,10 @@ class _ListPageState extends State<ListPage> {
   }
 
   Future<void> _initListFetcher() async {
-    setState(() {
-      _listInMusicList = _musicListRecordFetcher.getAllReacordList();
+    Future.delayed(const Duration(milliseconds: 100), () {
+      setState(() {
+        _listInMusicList = _musicListRecordFetcher.getAllReacordList();
+      });
     });
   }
 
@@ -45,21 +48,20 @@ class _ListPageState extends State<ListPage> {
   }
 
   void _addMusicList() async {
+    _isDialogContinued = false;
     await _showListNameEnteredDialog();
+    if (!_isDialogContinued) return;
     await _showChoiceListMusicDialog();
+    if (!_isDialogContinued) return;
 
     await _commitMusicList(_tempListName, _tempListInMusicList);
-    Future.delayed(const Duration(milliseconds: 100), (){
-      _initListFetcher();
-    });
+    _initListFetcher();
   }
 
   Future _showListNameEnteredDialog() async {
     await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
-          String textFieldValue = "";
-
           return AlertDialog(
             title: Text(_string.listDialogTitle),
             content: TextField(
@@ -72,15 +74,16 @@ class _ListPageState extends State<ListPage> {
               },
             ),
             actions: <Widget>[
-              // ボタン領域
               TextButton(
                   child: Text(_string.listDialogCancel),
                   onPressed: () => {
-                        Navigator.of(context).pop(textFieldValue),
+                        _isDialogContinued = false,
+                        Navigator.pop(context),
                       }),
               TextButton(
                   child: Text(_string.listDialogOK),
                   onPressed: () => {
+                        _isDialogContinued = true,
                         Navigator.pop(context),
                       }),
             ],
@@ -90,6 +93,10 @@ class _ListPageState extends State<ListPage> {
 
   void _getMusicListCallback(List<ObjectId> listArg) {
     _tempListInMusicList = listArg;
+  }
+
+  void _isContinuedDialogCallback(bool isContinuedArg) {
+    _isDialogContinued = isContinuedArg;
   }
 
   Future _showChoiceListMusicDialog() async {
@@ -104,15 +111,72 @@ class _ListPageState extends State<ListPage> {
           return _ResisterListDialog(
             listInMusicInfo: listInMusicInfo,
             getMusicListCallback: _getMusicListCallback,
+            isContinuedDialogCallback: _isContinuedDialogCallback,
           );
         });
   }
 
   Future _commitMusicList(String nameArg, List<ObjectId> musicListArg) async {
-    _adder.add(nameArg, musicListArg);
+    _musicListController.add(nameArg, musicListArg);
   }
 
   void _onShuffleBtnTapped() {}
+
+  void _onListTapped(MusicList listArg) {
+    print("name = ${listArg.name}");
+    print("list = ${listArg.list}");
+  }
+
+  Future _onDeleteListBtnTapped(ObjectId idArg) async {
+    bool isDeleteAgree = await _showCheckListDeleteDialog();
+    if (isDeleteAgree) _musicListController.delete(idArg);
+    _initListFetcher();
+  }
+
+  Future<bool> _showCheckListDeleteDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(_string.listDialogCheckDeleteListTitle),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Image.asset(
+                _picture.listImg,
+                width: 50,
+              ),
+              // Image.asset(
+              //   _picture.rightArrowImg,
+              //   width: 50,
+              // ),
+              Image.asset(
+                _picture.deleteListImg,
+                width: 50,
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(_string.listDialogCancel),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text(_string.listDialogOK),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result == null) throw ErrorSummary("deleteListDialogResult => null");
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,18 +198,33 @@ class _ListPageState extends State<ListPage> {
             child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
                 return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  elevation: 4.0,
-                  child: ListTile(
-                    leading: Image.asset(
-                      _picture.musicRecordImg,
-                      width: 50,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
-                    title: Text(_listInMusicList[index].name),
-                  ),
-                );
+                    elevation: 4.0,
+                    child: InkWell(
+                      onTap: () => _onListTapped(_listInMusicList[index]),
+                      child: ListTile(
+                          leading: Image.asset(
+                            _picture.listImg,
+                            width: 50,
+                          ),
+                          title: Text(_listInMusicList[index].name),
+                          trailing: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            elevation: 4.0,
+                            child: InkWell(
+                              onTap: () => _onDeleteListBtnTapped(
+                                  _listInMusicList[index].id),
+                              child: Image.asset(
+                                _picture.deleteListImg,
+                                width: 40,
+                              ),
+                            ),
+                          )),
+                    ));
               },
               itemCount: _listInMusicList.length,
             ),
@@ -159,12 +238,17 @@ class _ListPageState extends State<ListPage> {
 class _ResisterListDialog extends StatefulWidget {
   late final List<MusicInfo> listInMusicInfo;
   late final Function(List<ObjectId>) getMusicListCallback;
+  late final Function(bool) isContinuedDialogCallback;
   _ResisterListDialog(
-      {required this.listInMusicInfo, required this.getMusicListCallback});
+      {required this.listInMusicInfo,
+      required this.getMusicListCallback,
+      required this.isContinuedDialogCallback});
 
   @override
-  _ResisterListDialogState createState() =>
-      _ResisterListDialogState(this.listInMusicInfo, this.getMusicListCallback);
+  _ResisterListDialogState createState() => _ResisterListDialogState(
+      this.listInMusicInfo,
+      this.getMusicListCallback,
+      this.isContinuedDialogCallback);
 }
 
 class _ResisterListDialogState extends State<_ResisterListDialog> {
@@ -179,11 +263,15 @@ class _ResisterListDialogState extends State<_ResisterListDialog> {
   List<ObjectId> tempListInMusicList = [];
 
   late final Function(List<ObjectId>) getMusicListCallback;
+  late final Function(bool) isContinuedDialogCallback;
 
-  _ResisterListDialogState(List<MusicInfo> listArg,
-      Function(List<ObjectId>) getMusicListCallbackArg) {
+  _ResisterListDialogState(
+      List<MusicInfo> listArg,
+      Function(List<ObjectId>) getMusicListCallbackArg,
+      Function(bool) isContinuedDialogCallbackArg) {
     listInMusicInfo = listArg;
     getMusicListCallback = getMusicListCallbackArg;
+    isContinuedDialogCallback = isContinuedDialogCallbackArg;
 
     selected = List.generate(listInMusicInfo.length, (index) => false);
   }
@@ -239,11 +327,13 @@ class _ResisterListDialogState extends State<_ResisterListDialog> {
         TextButton(
             child: Text(_string.listDialogCancel),
             onPressed: () => {
+                  isContinuedDialogCallback(false),
                   Navigator.pop(context),
                 }),
         TextButton(
             child: Text(_string.listDialogOK),
             onPressed: () => {
+                  isContinuedDialogCallback(true),
                   getMusicListCallback(tempListInMusicList),
                   Navigator.pop(context),
                 }),
