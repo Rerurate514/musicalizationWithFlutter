@@ -15,6 +15,6 @@ class MusicListController{
   }
 
   void delete(ObjectId idArg){
-    realmIOManager.delete(idArg: idArg);
+    realmIOManager.delete<MusicList>(idArg: idArg);
   }
 }
