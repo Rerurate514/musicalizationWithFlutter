@@ -29,6 +29,8 @@ class _ListPageState extends State<ListPage> {
   List<ObjectId> _tempListInMusicList = [];
   bool _isDialogContinued = false;
 
+  bool _listSelected = false;
+
   @override
   void initState() {
     super.initState();
@@ -120,11 +122,17 @@ class _ListPageState extends State<ListPage> {
     _musicListController.add(nameArg, musicListArg);
   }
 
-  void _onShuffleBtnTapped() {}
+  void _onShuffleBtnTapped() {
+    //todo シャッフルボタンが押されたときの処理
+  }
 
   void _onListTapped(MusicList listArg) {
-    print("name = ${listArg.name}");
-    print("list = ${listArg.list}");
+    _toggleListSelected(_listSelected);
+
+  }
+
+  void _toggleListSelected(bool selectedArg){
+    !_listSelected;
   }
 
   Future _onDeleteListBtnTapped(ObjectId idArg) async {
@@ -146,10 +154,10 @@ class _ListPageState extends State<ListPage> {
                 _picture.listImg,
                 width: 50,
               ),
-              // Image.asset(
-              //   _picture.rightArrowImg,
-              //   width: 50,
-              // ),
+              Image.asset(
+                _picture.rightArrowImg,
+                width: 50,
+              ),
               Image.asset(
                 _picture.deleteListImg,
                 width: 50,
@@ -195,45 +203,15 @@ class _ListPageState extends State<ListPage> {
         children: [
           _UpMenuBarWidget(_onResisterBtnTapped, _onShuffleBtnTapped),
           Expanded(
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    elevation: 4.0,
-                    child: InkWell(
-                      onTap: () => _onListTapped(_listInMusicList[index]),
-                      child: ListTile(
-                          leading: Image.asset(
-                            _picture.listImg,
-                            width: 50,
-                          ),
-                          title: Text(_listInMusicList[index].name),
-                          trailing: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            elevation: 4.0,
-                            child: InkWell(
-                              onTap: () => _onDeleteListBtnTapped(
-                                  _listInMusicList[index].id),
-                              child: Image.asset(
-                                _picture.deleteListImg,
-                                width: 40,
-                              ),
-                            ),
-                          )),
-                    ));
-              },
-              itemCount: _listInMusicList.length,
-            ),
+            child: 
           )
         ],
       ),
     );
   }
 }
+
+
 
 class _ResisterListDialog extends StatefulWidget {
   late final List<MusicInfo> listInMusicInfo;
