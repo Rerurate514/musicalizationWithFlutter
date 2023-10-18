@@ -3,23 +3,16 @@ import 'package:flutter/material.dart';
 import '../../setting/picture.dart';
 
 class UpMenuBarWidget extends StatelessWidget {
-  late final Function() _onCentralBtnTapped;
-  late final Function() _onRightBtnTapped;
-
-  late final String _centralBtnImg;
-  late final String _rightBtnImg;
+  late final ButtonSetting _centralBtnSetting;
+  late final ButtonSetting _rightBtnSetting;
 
   final _picture = PictureConstants();
 
   UpMenuBarWidget(
-      {required onCentralBtnTappedCallbackArg,
-      required onRightBtnTappedCallbackArg,
-      required centralBtnImgArg,
-      required rightBtnImgArg}) {
-    _onCentralBtnTapped = onCentralBtnTappedCallbackArg;
-    _onRightBtnTapped = onRightBtnTappedCallbackArg;
-    _centralBtnImg = centralBtnImgArg;
-    _rightBtnImg = rightBtnImgArg;
+      {required centralBtnSettingArg,
+      required rightBtnSettingArg}) {
+   _centralBtnSetting = centralBtnSettingArg;
+   _rightBtnSetting = rightBtnSettingArg;
   }
 
   @override
@@ -36,12 +29,12 @@ class UpMenuBarWidget extends StatelessWidget {
           Card(
             elevation: 4.0,
             child: InkWell(
-                onTap: _onCentralBtnTapped,
+                onTap: _centralBtnSetting.btnFunction,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 5.0),
                   child: Image.asset(
-                    _centralBtnImg,
+                    _centralBtnSetting.btnPicture,
                     width: 50,
                   ),
                 )),
@@ -49,12 +42,12 @@ class UpMenuBarWidget extends StatelessWidget {
           Card(
             elevation: 4.0,
             child: InkWell(
-                onTap: _onRightBtnTapped,
+                onTap: _rightBtnSetting.btnFunction,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 20.0, vertical: 5.0),
                   child: Image.asset(
-                    _rightBtnImg,
+                    _rightBtnSetting.btnPicture,
                     width: 50,
                   ),
                 )),
@@ -65,16 +58,16 @@ class UpMenuBarWidget extends StatelessWidget {
   }
 }
 
-class ButtonSetting<BUTTONARGMENT>{
+class ButtonSetting<BUTTONARGMENT extends Function>{
   late final String _btnPicture;
   get btnPicture => _btnPicture;
 
-  late final Function(BUTTONARGMENT) _btnFunction;
+  late final BUTTONARGMENT _btnFunction;
   get btnFunction => _btnFunction;
 
   ButtonSetting(
     String btnPictureArg,
-    Function(BUTTONARGMENT) btnFunctionArg,
+    BUTTONARGMENT btnFunctionArg,
   ){
     _btnPicture = btnPictureArg;
     _btnFunction = btnFunctionArg;
