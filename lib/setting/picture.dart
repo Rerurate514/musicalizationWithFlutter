@@ -10,10 +10,12 @@ class PictureConstants{
 
   //list
   String get listModeImg => 'images/mp3_ui_list_mode.png';
+  String get listImg => 'images/mp3_ui_list.png';
   String get resisterMusicImg => 'images/mp3_ui_music_register_button.png';
   String get musicAddToListImg => 'images/mp3_ui_list_add.png';
   String get makeListImg => 'images/mp3_ui_list_make.png';
-
+  String get deleteListImg => 'images/mp3_ui_delete.png';
+  String get rightArrowImg => 'images/mp3_ui_right_arrow.png';
 
   //play
   String get playModeImg => 'images/mp3_ui_music_mode.png';
