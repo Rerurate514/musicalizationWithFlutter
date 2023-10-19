@@ -22,7 +22,7 @@ class InListPageComponentState extends State<InListPageComponent> {
   final _musicInfoRecordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
 
   late final MusicList _musicList;
-  List<MusicInfo> _listInMusicInfo = [];
+  final List<MusicInfo> _listInMusicInfo = [];
 
   late final Function() _toggleListSelectedCallback;
 
@@ -36,7 +36,6 @@ class InListPageComponentState extends State<InListPageComponent> {
   void initState() {
     super.initState();
     _initListFetcher();
-    print("music = $_musicList");
   }
 
   Future<void> _initListFetcher() async {
@@ -48,7 +47,6 @@ class InListPageComponentState extends State<InListPageComponent> {
 
   void _fetchMusicInfoFromMusicList() {
     for (var musicIdArg in _musicList.list) {
-      print("music = $musicIdArg");
       setState(() {
         _listInMusicInfo.add(_musicInfoRecordFetcher.getRecordFromId(musicIdArg));
       });

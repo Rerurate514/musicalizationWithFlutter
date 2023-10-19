@@ -1,20 +1,32 @@
 import 'package:musicalization/logic/realm/model/schema.dart';
-import 'package:realm/realm.dart';
 
 import '../interface/realmValidatedSchemaValueInterface.dart';
+
+import 'Column/musicName.dart';
+import 'Column/musicPath.dart';
+import 'Column/musicVolume.dart';
+import 'Column/musicLyrics.dart';
+import 'Column/musicPicture.dart';
 
 class ValidatedMusicInfo extends RealmValidatedSchemaValueInterface{
   late MusicInfo _payload;
   get payload => _payload;
 
+  late final MusicName _name;
+  late final MusicPath _path;
+  late final MusicVolume _volume;
+  late final MusicLyrics _lyrics;
+  late final MusicPicture _picture;
+
   ValidatedMusicInfo(
-    ObjectId idArg,
-    String nameArg,
-    String pathArg,
-    int volumeArg,
-    String lyricsArg,
-    String pictureArg
+    MusicInfo infoArg
   ){
-    _payload = MusicInfo(idArg, nameArg, pathArg, volumeArg, lyricsArg, pictureArg);
+    _name = MusicName(infoArg.name);
+    _path = MusicPath(infoArg.path);
+    _volume = MusicVolume(infoArg.volume);
+    _lyrics = MusicLyrics(infoArg.lyrics);
+    _picture = MusicPicture(infoArg.picture);
+
+    _payload = MusicInfo(infoArg.id, _name.value, _path.value, _volume.value, _lyrics.value, _picture.value);
   }
 }

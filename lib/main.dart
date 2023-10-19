@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicalization/data/MusicFileListData.dart';
 
 import 'Pages/homePage.dart';
 import 'Pages/listPage.dart';
@@ -6,6 +7,7 @@ import 'Pages/playPage.dart';
 import 'Pages/settingPage.dart';
 
 import 'logic/audioPlayerManager.dart';
+import 'logic/permission.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'musicalization',
       theme: ThemeData.dark().copyWith(
         textTheme: ThemeData.dark().textTheme.copyWith(
               bodyText2: const TextStyle(
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'musicalization Home Page'),
     );
   }
 }
@@ -41,8 +43,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final audioPlayerManager = AudioPlayerManager();
-
+  final _audioPlayerManager = AudioPlayerManager();
+  final _permissionRequester = MediaAudioPermissionRequester();
   late PageController _pageController;
 
   int _selecetedIndex = 0;
@@ -57,22 +59,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    _permissionRequester.requestPermission();
     _pageController = PageController(initialPage: _selecetedIndex);
-    audioPlayerManager.setPlayingMusicCurrentListener();
-    audioPlayerManager.setPlayingMusicDurationListener();
+    _audioPlayerManager.setPlayingMusicCurrentListener();
+    _audioPlayerManager.setPlayingMusicDurationListener();
   }
 
   @override
-	void dispose(){
-    audioPlayerManager.destroyAudioPlayer();
-		_pageController.dispose();
+  void dispose() {
+    _audioPlayerManager.destroyAudioPlayer();
+    _pageController.dispose();
     super.dispose();
-	}
+  }
 
-  void _onPageChanged(int indexArg){
+  void _onPageChanged(int indexArg) {
     setState(() {
       _selecetedIndex = indexArg;
-       _pageController.animateToPage(
+      _pageController.animateToPage(
         indexArg,
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
@@ -99,26 +102,23 @@ class _MyHomePageState extends State<MyHomePage> {
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'images/mp3_ui_list.png',
-              width: 25,
-            ),
-            label: "Music List"
-          ),
+              icon: Image.asset(
+                'images/mp3_ui_list.png',
+                width: 25,
+              ),
+              label: "Music List"),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'images/mp3_ui_play_button.png',
-              width: 23,
-            ),
-            label: "Music Play"
-          ),
+              icon: Image.asset(
+                'images/mp3_ui_play_button.png',
+                width: 23,
+              ),
+              label: "Music Play"),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'images/mp3_ui_setting_button.png',
-              width: 20,
-            ),
-            label: "Setting"
-          ),
+              icon: Image.asset(
+                'images/mp3_ui_setting_button.png',
+                width: 20,
+              ),
+              label: "Setting"),
         ],
         selectedItemColor: Colors.white,
         currentIndex: _selecetedIndex,
@@ -127,5 +127,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-

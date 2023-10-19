@@ -5,22 +5,27 @@ class FileFetcher{
   late List _list = [];
   List get list => _list;
 
-  late List _nameList;
-  List get nameList => _nameList;
-  late List _pathList;
-  List get pathList => _pathList;
+  List get nameList => _getNameList();
+  List get pathList => _getPathList();
 
   final _trimFileStr = FileStrTrimer();
 
-
   FileFetcher(){
-    _doAsyncMethod();
+    _initFileFetcher();
   }
 
-  Future<void> _doAsyncMethod() async {
+  Future<void> _initFileFetcher() async {
     await _fetchFileFromDownloadDir().then((value) => _list = value);
-    _nameList = _trimFileStr.convertFileNameToNameString(_list);
-    _pathList = _trimFileStr.convertFileNameToPathString(_list);
+  }
+
+  List _getNameList(){
+    _initFileFetcher();
+    return _trimFileStr.convertFileNameToNameString(_list);
+  }
+
+  List _getPathList(){
+    _initFileFetcher();
+    return _trimFileStr.convertFileNameToPathString(_list);
   }
 
   ///このメソッドは外部ストレージのオブジェクトを取得するメソッドです。
@@ -29,7 +34,7 @@ class FileFetcher{
 
     if(Platform.isWindows){
       //todo
-      directory = Directory("C:\\Users\\InUserName\\pic\\Saved Pictures\\Saved Pictures");
+      directory = Directory("C:\\Users\\rerur\\pic\\Saved Pictures\\Saved Pictures");
     }
     else if(Platform.isAndroid){
       directory = Directory("/storage/emulated/0/Download/");

@@ -25,7 +25,7 @@ class RealmIOManager extends RealmIOManagerInterface {
   }
 
   @override
-  List readAll<SCHEMA extends RealmObject>() {
+  List<SCHEMA> readAll<SCHEMA extends RealmObject>() {
     RealmIOResults results = _reader.readAll<SCHEMA>(realm: realm);
     return results.payload;
   }
@@ -50,7 +50,6 @@ class RealmIOManager extends RealmIOManagerInterface {
 
   @override
   void deleteAll<SCHEMA extends RealmObject>() {
-    print("deleteall");
     realm.write(() => realm.deleteAll<SCHEMA>());
   }
 }

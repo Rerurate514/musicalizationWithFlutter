@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicalization/Pages/pageComponents/upMenuBarWidget.dart';
 import 'package:musicalization/logic/realm/logic/musicInfo/musicInfoUpdater.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'dart:async';
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   final ScrollController _scrollController = ScrollController();
 
-  List<MusicInfo> _list = [];
+  List<MusicInfo> _listInMusicInfo = [];
 
   @override
   void initState() {
@@ -39,28 +40,33 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _initFileFetcher() async {
     setState((){
-      _list = recordFetcher.getAllReacordList();
+      _listInMusicInfo = recordFetcher.getAllReacordList();
     });
   }
 
-  Future<void> _onListItemTapped(
-    String musicNameArg, String musicPathArg) async {
-    _audioPlayerManager.startMusic(musicNameArg, musicPathArg);
+  Future<void> _onListItemTapped(int musicListIndexArg) async {
+    _audioPlayerManager.setMusicList(_listInMusicInfo, musicListIndexArg);
   }
 
   void _onUpdateBtnTapped(){
     setState(() {
-      _list = [];
+      _listInMusicInfo = [];
     });
     
     _musicInfoUpdater.updateDataBase();
 
     Future.delayed(const Duration(microseconds: 1000),() {
       setState(() {
-        _list = recordFetcher.getAllReacordList();
+        _listInMusicInfo = recordFetcher.getAllReacordList();
       });
     });
   }
+
+  void _onShuffleBtnTappedCallback(){
+
+  }
+
+  void _onFetchFileFromGoogleDriveBtnTappedCallback(){}
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +83,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          _UpMenuBarWidget(),
+          UpMenuBarWidget(
+            centralBtnSettingArg: ButtonSetting<Function()>(_picture.shuffleImg, _onShuffleBtnTappedCallback), 
+            rightBtnSettingArg: ButtonSetting<Function()>(_picture.fetchingFromGoogleDriveImg, _onFetchFileFromGoogleDriveBtnTappedCallback)
+          ),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -89,19 +98,18 @@ class _HomePageState extends State<HomePage> {
                   ),
                   elevation: 4.0,
                   child: InkWell(
-                    onTap: () => _onListItemTapped(
-                        _list[index].path, _list[index].path.toString()),
+                    onTap: () => _onListItemTapped(index),
                     child: ListTile(
                       leading: Image.asset(
                         _picture.musicRecordImg,
                         width: 50,
                       ),
-                      title: Text(_list[index].name),
+                      title: Text(_listInMusicInfo[index].name),
                     ),
                   ),
                 );
               },
-              itemCount: _list.length,
+              itemCount: _listInMusicInfo.length,
             ),
           )
         ],
@@ -113,49 +121,6 @@ class _HomePageState extends State<HomePage> {
           width: 40,
         ),
         onPressed: _onUpdateBtnTapped,
-      ),
-    );
-  }
-}
-
-class _UpMenuBarWidget extends StatelessWidget {
-  _UpMenuBarWidget();
-  final _picture = PictureConstants();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).primaryColor,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Image.asset(
-            _picture.appTitleLettersImg,
-            width: 80,
-          ),
-          Card(
-              elevation: 4.0,
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 5.0),
-                  child: InkWell(
-                    child: Image.asset(
-                      _picture.shuffleImg,
-                      width: 50,
-                    ),
-                  ))),
-          Card(
-              elevation: 4.0,
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 5.0),
-                  child: InkWell(
-                    child: Image.asset(
-                      _picture.fetchingFromGoogleDriveImg,
-                      width: 50,
-                    ),
-                  ))),
-        ],
       ),
     );
   }
