@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:musicalization/logic/realm/model/schema.dart';
 
 ///audioPlayerの管理を行うクラス
 class AudioPlayerManager {
@@ -16,16 +17,34 @@ class AudioPlayerManager {
   final _audioPlayerListenerResistry = _AudioPlayerListenerResistry();
 
   _AudioPlayerMusicData _data = _AudioPlayerMusicData();
-
   get musicDuration => _data.musicDuration;
   get musicCurrent => _data.musicCurrent;
-  get musicName => _data.musicName;
+  get musicName => _data.musicInfo.name;
 
   int _musicModeIndex = 0;
 
+  late List<MusicInfo> _listInMusicInfo;
+  late int _listInMusicInfoIndex = 0;
+
+  ///dataクラスにList<MusicInfo>のトラックをセットする
+  void setMusicList(List<MusicInfo> infoListArg, int musicListIndexArg){
+    _listInMusicInfo = infoListArg;
+    _listInMusicInfoIndex = musicListIndexArg;
+  }
+
+  ///現在の音楽トラックを次のトラックに移動するためのメソッド。
+  void moveNextMusic(){
+    _listInMusicInfoIndex++;
+  }
+
+  ///現在の音楽トラックを前のトラックに移動するためのメソッド。
+  void moveBackMusic(){
+    _listInMusicInfoIndex--;
+  }
+
   ///audioPlayerに曲をセットして、再生を開始する。
-  Future<void> startMusic(String musicNameArg, String musicPathArg) async {
-    _data = await _player.startMusic(_audioPlayer, _data, musicNameArg, musicPathArg);
+  Future<void> startMusic() async {
+    _data = await _player.startMusic(_audioPlayer, _data, _listInMusicInfo[_listInMusicInfoIndex]);
   }
 
   ///曲の一時停止、再生切り替え
@@ -86,7 +105,7 @@ class AudioPlayerManager {
   ///曲の終了検知リスナーを登録する
   void setPlayerCompletionListener() {
     _audioPlayerListenerResistry.setPlayerCompletionListener(
-        _audioPlayer, _data);
+        _audioPlayer, _data, moveBackMusic);
   }
 
   ///audioPlayerインスタンスの解放
@@ -100,14 +119,12 @@ class _MusicPlayer {
   Future<_AudioPlayerMusicData> startMusic(
       AudioPlayer audioPlayerArg,
       _AudioPlayerMusicData dataArg,
-      String musicNameArg,
-      String musicPathArg) async {
-    dataArg.musicName = musicNameArg; //曲の名前のセット
-    dataArg.musicPath = musicPathArg; //曲のパスセット
+      MusicInfo infoArg) async {
+    dataArg.musicInfo = infoArg;
     dataArg.isPlaying = true;
 
     try {
-      await audioPlayerArg.play(DeviceFileSource(dataArg.musicPath));
+      await audioPlayerArg.play(DeviceFileSource(dataArg.musicInfo.path));
     } catch (e, stackTrace) {
       throw Error.throwWithStackTrace(e, stackTrace);
     }
@@ -192,10 +209,12 @@ class _AudioPlayerListenerResistry {
 
   ///曲の終了検知リスナーを登録する
   _AudioPlayerMusicData setPlayerCompletionListener(
-      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg
+      AudioPlayer audioPlayerArg, _AudioPlayerMusicData dataArg, Function() musicCompletionCallbackArg
   ) {
     audioPlayerArg.onPlayerComplete.listen((event) {
-      dataArg.isPlaying = false;
+      if(!dataArg.isLooping){
+        musicCompletionCallbackArg;
+      }
     });
 
     return dataArg;
@@ -203,39 +222,13 @@ class _AudioPlayerListenerResistry {
 }
 
 class _AudioPlayerMusicData {
-  String _musicName = ""; //曲の名前
-  String get musicName => _musicName;
-  set musicName(String musicNameArg) {
-    _musicName = musicNameArg;
-  }
+  late MusicInfo musicInfo; //曲の情報
 
-  double _musicDuration = 0.0; //曲の長さ
-  double get musicDuration => _musicDuration;
-  set musicDuration(double musicDurationArg) {
-    _musicDuration = musicDurationArg;
-  }
+  double musicDuration = 0.0; //曲の長さ
 
-  double _musicCurrent = 0.0; //曲の再生位置
-  double get musicCurrent => _musicCurrent;
-  set musicCurrent(double musicCurrentArg) {
-    _musicCurrent = musicCurrentArg;
-  }
+  double musicCurrent = 0.0; //曲の再生位置
 
-  String _musicPath = ""; //曲のファイルパス
-  String get musicPath => _musicPath;
-  set musicPath(String musicPathArg) {
-    _musicPath = musicPathArg;
-  }
+  bool isPlaying = false; //再生しているかどうか
 
-  bool _isPlaying = false; //再生しているかどうか
-  bool get isPlaying => _isPlaying;
-  set isPlaying(bool isPlayingArg) {
-    _isPlaying = isPlayingArg;
-  }
-
-  bool _isLooping = false; //ループしているかどうか
-  bool get isLooping => _isLooping;
-  set isLooping(bool isLoopingArg) {
-    _isLooping = isLoopingArg;
-  }
+  bool isLooping = false; //ループしているかどうか
 }
