@@ -7,32 +7,39 @@ import 'package:musicalization/setting/picture.dart';
 import 'package:musicalization/logic/audioPlayerManager.dart';
 
 class InListPageComponent extends StatefulWidget {
-  late final Function() toggleListSelectedCallback;
   late final MusicList musicList;
+  late final Function() toggleListSelectedCallback;
+  late final Function() movePlayPageCallback;
 
-  InListPageComponent(
-      {required Function() this.toggleListSelectedCallback,
-      required MusicList this.musicList});
+  InListPageComponent({
+    required MusicList this.musicList,
+    required Function() this.toggleListSelectedCallback,
+    required Function() this.movePlayPageCallback,
+  });
 
   @override
-  InListPageComponentState createState() =>
-      InListPageComponentState(toggleListSelectedCallback, musicList);
+  InListPageComponentState createState() => InListPageComponentState(
+      musicList, toggleListSelectedCallback, movePlayPageCallback);
 }
 
 class InListPageComponentState extends State<InListPageComponent> {
   final _picture = PictureConstants();
   final _musicInfoRecordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
-  final _audioPlayer = AudioPlayerManager();
+  final _audioPlayerManager = AudioPlayerManager();
 
   late final MusicList _musicList;
   final List<MusicInfo> _listInMusicInfo = [];
 
   late final Function() _toggleListSelectedCallback;
+  late final Function() _movePlayPageCallback;
 
   InListPageComponentState(
-      Function() toggleListSelectedCallbackArg, MusicList listArg) {
-    _toggleListSelectedCallback = toggleListSelectedCallbackArg;
+      MusicList listArg,
+      Function() toggleListSelectedCallbackArg,
+      Function() movePlayPageCallbackArg) {
     _musicList = listArg;
+    _toggleListSelectedCallback = toggleListSelectedCallbackArg;
+    _movePlayPageCallback = movePlayPageCallbackArg;
   }
 
   @override
@@ -43,7 +50,7 @@ class InListPageComponentState extends State<InListPageComponent> {
 
   Future<void> _initListFetcher() async {
     Future.delayed(const Duration(milliseconds: 100), () {
-      if(!mounted) return;
+      if (!mounted) return;
       _fetchMusicInfoFromMusicList();
     });
   }
@@ -51,7 +58,8 @@ class InListPageComponentState extends State<InListPageComponent> {
   void _fetchMusicInfoFromMusicList() {
     for (var musicIdArg in _musicList.list) {
       setState(() {
-        _listInMusicInfo.add(_musicInfoRecordFetcher.getRecordFromId(musicIdArg));
+        _listInMusicInfo
+            .add(_musicInfoRecordFetcher.getRecordFromId(musicIdArg));
       });
     }
   }
@@ -60,8 +68,9 @@ class InListPageComponentState extends State<InListPageComponent> {
 
   void _onResisterMusicBtnTappedCallback() {}
 
-  void _onMusicBtnTappedCallback(int musicListIndexArg){
-    _audioPlayer.setMusicList(_listInMusicInfo, musicListIndexArg);
+  void _onMusicBtnTapped(int musicListIndexArg) {
+    _audioPlayerManager.setMusicList(_listInMusicInfo, musicListIndexArg);
+    _audioPlayerManager.startMusic();
   }
 
   @override
@@ -73,7 +82,8 @@ class InListPageComponentState extends State<InListPageComponent> {
               centralBtnSettingArg: ButtonSetting<Function()>(
                   _picture.shuffleImg, _onShuffleBtnTappedCallback),
               rightBtnSettingArg: ButtonSetting<Function()>(
-                  _picture.resisterMusicImg, _onResisterMusicBtnTappedCallback)),
+                  _picture.resisterMusicImg,
+                  _onResisterMusicBtnTappedCallback)),
           Expanded(
             child: ListView.builder(
               itemBuilder: (BuildContext context, int index) {
@@ -83,8 +93,7 @@ class InListPageComponentState extends State<InListPageComponent> {
                     ),
                     elevation: 4.0,
                     child: InkWell(
-                      onTap: () =>
-                          _onMusicBtnTappedCallback(index),
+                      onTap: () => _onMusicBtnTapped(index),
                       child: ListTile(
                         leading: Image.asset(
                           _picture.playMusicBtnImg,

@@ -7,11 +7,12 @@ import '../setting/string.dart';
 import '../setting/picture.dart';
 
 class ListPage extends StatefulWidget {
-  const ListPage({super.key, required this.title});
-  final String title;
+  const ListPage({super.key, required this.movePageFuncsMap});
+
+  final Map<String, Function()> movePageFuncsMap;
 
   @override
-  State<ListPage> createState() => _ListPageState();
+  State<ListPage> createState() => _ListPageState(movePageFuncsMapArg: movePageFuncsMap);
 }
 
 class _ListPageState extends State<ListPage> {
@@ -21,6 +22,13 @@ class _ListPageState extends State<ListPage> {
   bool _isListSelected = false;
 
   late MusicList _selectedMusicList; 
+
+  late final Map<String, Function()> _movePageFuncsMap;
+
+  _ListPageState({required Map<String, Function()> movePageFuncsMapArg}){
+    _movePageFuncsMap = movePageFuncsMapArg;
+  } 
+
 
   @override
   void initState() {
@@ -37,6 +45,11 @@ class _ListPageState extends State<ListPage> {
     _selectedMusicList = listArg;
   }
 
+  void movePlayPageCallback(){
+    Function() movePageCallback = _movePageFuncsMap['Play']!;
+    movePageCallback();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +64,8 @@ class _ListPageState extends State<ListPage> {
           ]),
         ),
         body: _isListSelected 
-        ? InListPageComponent(toggleListSelectedCallback: _toggleListSelectedCallback, musicList: _selectedMusicList)
+        ? InListPageComponent(musicList: _selectedMusicList, toggleListSelectedCallback: _toggleListSelectedCallback, movePlayPageCallback: movePlayPageCallback)
         :ListPageComponent(toggleListSelectedCallback: _toggleListSelectedCallback,  setSelectedListCallback: _setSelectedListCallback));
   }
 }
+

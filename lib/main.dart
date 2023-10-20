@@ -1,5 +1,6 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
-import 'package:musicalization/data/MusicFileListData.dart';
 
 import 'Pages/homePage.dart';
 import 'Pages/listPage.dart';
@@ -49,12 +50,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _selecetedIndex = 0;
 
-  final _pages = [
-    const HomePage(title: "Home"),
-    const ListPage(title: "List"),
-    const PlayPage(title: "Play"),
-    const SettingPage(title: "Setting"),
-  ];
+  late final _pages;
+
+  late final Map<String, Function()> _movePageFuncsMap = HashMap();
 
   @override
   void initState() {
@@ -63,6 +61,20 @@ class _MyHomePageState extends State<MyHomePage> {
     _pageController = PageController(initialPage: _selecetedIndex);
     _audioPlayerManager.setPlayingMusicCurrentListener();
     _audioPlayerManager.setPlayingMusicDurationListener();
+
+    _movePageFuncsMap.addAll({
+      'Home': moveHomePageCallback,
+      'List': moveListPageCallback,
+      'Play': movePlayPageCallback,
+      'Setting': moveSettingPageCallback
+    });
+
+    _pages = [
+      HomePage(movePageFuncsMap: _movePageFuncsMap),
+      ListPage(movePageFuncsMap: _movePageFuncsMap),
+      PlayPage(title: "Play"),
+      SettingPage(title: "Setting"),
+    ];
   }
 
   @override
@@ -70,6 +82,22 @@ class _MyHomePageState extends State<MyHomePage> {
     _audioPlayerManager.destroyAudioPlayer();
     _pageController.dispose();
     super.dispose();
+  }
+
+  void moveHomePageCallback(){
+    _onPageChanged(0);
+  }
+
+  void moveListPageCallback(){
+    _onPageChanged(1);
+  }
+
+  void movePlayPageCallback(){
+    _onPageChanged(2);
+  }
+
+  void moveSettingPageCallback(){
+    _onPageChanged(3);
   }
 
   void _onPageChanged(int indexArg) {

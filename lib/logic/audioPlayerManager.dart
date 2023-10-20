@@ -27,7 +27,7 @@ class AudioPlayerManager {
   late int _listInMusicInfoIndex = 0;
 
   ///dataクラスにList<MusicInfo>のトラックをセットする
-  void setMusicList(List<MusicInfo> infoListArg, int musicListIndexArg){
+  Future setMusicList(List<MusicInfo> infoListArg, int musicListIndexArg) async {
     _listInMusicInfo = infoListArg;
     _listInMusicInfoIndex = musicListIndexArg;
   }
@@ -225,10 +225,8 @@ class _AudioPlayerMusicData {
   late MusicInfo musicInfo; //曲の情報
 
   double musicDuration = 0.0; //曲の長さ
-
   double musicCurrent = 0.0; //曲の再生位置
-
+  
   bool isPlaying = false; //再生しているかどうか
-
   bool isLooping = false; //ループしているかどうか
 }

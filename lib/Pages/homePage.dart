@@ -12,11 +12,12 @@ import '../logic/audioPlayerManager.dart';
 import '../logic/realm/logic/recordFetcher.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
-  final String title;
+  const HomePage({super.key, required this.movePageFuncsMap});
+
+  final Map<String, Function()> movePageFuncsMap;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(movePageFuncsMapArg: movePageFuncsMap);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -32,6 +33,12 @@ class _HomePageState extends State<HomePage> {
 
   List<MusicInfo> _listInMusicInfo = [];
 
+  late final Map<String, Function()> _movePageFuncsMap;
+
+  _HomePageState({required Map<String, Function()> movePageFuncsMapArg}){
+    _movePageFuncsMap = movePageFuncsMapArg;
+  } 
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +52,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _onListItemTapped(int musicListIndexArg) async {
-    _audioPlayerManager.setMusicList(_listInMusicInfo, musicListIndexArg);
+    await _audioPlayerManager.setMusicList(_listInMusicInfo, musicListIndexArg);
+    await _audioPlayerManager.startMusic();
+
+    Function() movePageCallback = _movePageFuncsMap['Play']!;
+    movePageCallback();
   }
 
   void _onUpdateBtnTapped(){
@@ -67,6 +78,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onFetchFileFromGoogleDriveBtnTappedCallback(){}
+
+  
 
   @override
   Widget build(BuildContext context) {
