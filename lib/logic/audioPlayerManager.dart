@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
+import 'package:realm/realm.dart';
 
 ///audioPlayerの管理を行うクラス
 class AudioPlayerManager {
@@ -23,8 +24,8 @@ class AudioPlayerManager {
 
   int _musicModeIndex = 0;
 
-  late List<MusicInfo> _listInMusicInfo;
-  late int _listInMusicInfoIndex = 0;
+  List<MusicInfo> _listInMusicInfo = [MusicInfo(ObjectId(), "", "", 40, "", "")];
+  int _listInMusicInfoIndex = 0;
 
   ///dataクラスにList<MusicInfo>のトラックをセットする
   Future setMusicList(List<MusicInfo> infoListArg, int musicListIndexArg) async {
@@ -35,11 +36,15 @@ class AudioPlayerManager {
   ///現在の音楽トラックを次のトラックに移動するためのメソッド。
   void moveNextMusic(){
     _listInMusicInfoIndex++;
+    if(_listInMusicInfo.length < _listInMusicInfoIndex) _listInMusicInfoIndex = 0;
+    startMusic();
   }
 
   ///現在の音楽トラックを前のトラックに移動するためのメソッド。
   void moveBackMusic(){
     _listInMusicInfoIndex--;
+    if(0 > _listInMusicInfoIndex) _listInMusicInfoIndex = _listInMusicInfo.length;
+    startMusic();
   }
 
   ///audioPlayerに曲をセットして、再生を開始する。
@@ -105,7 +110,7 @@ class AudioPlayerManager {
   ///曲の終了検知リスナーを登録する
   void setPlayerCompletionListener() {
     _audioPlayerListenerResistry.setPlayerCompletionListener(
-        _audioPlayer, _data, moveBackMusic);
+        _audioPlayer, _data, moveNextMusic);
   }
 
   ///audioPlayerインスタンスの解放
@@ -213,7 +218,9 @@ class _AudioPlayerListenerResistry {
   ) {
     audioPlayerArg.onPlayerComplete.listen((event) {
       if(!dataArg.isLooping){
-        musicCompletionCallbackArg;
+        print("fn = $musicCompletionCallbackArg");
+        Function() musicCompletionCallback = musicCompletionCallbackArg;
+        musicCompletionCallback();
       }
     });
 
@@ -222,7 +229,7 @@ class _AudioPlayerListenerResistry {
 }
 
 class _AudioPlayerMusicData {
-  late MusicInfo musicInfo; //曲の情報
+  MusicInfo musicInfo = MusicInfo(ObjectId(), "", "", 40, "", ""); //曲の情報
 
   double musicDuration = 0.0; //曲の長さ
   double musicCurrent = 0.0; //曲の再生位置

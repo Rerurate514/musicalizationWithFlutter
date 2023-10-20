@@ -65,7 +65,7 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onMusicBackButtonTapped() {
-    musicButtonFuncs.onMusicBackButtonTapped();
+    musicButtonFuncs.onMusicBackButtonTapped(_setMusicName);
   }
 
   void _onPlayModeToggleButtonTapped() {
@@ -90,7 +90,7 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onMusicNextButtonTapped() {
-    musicButtonFuncs.onMusicNextButtonTapped();
+    musicButtonFuncs.onMusicNextButtonTapped(_setMusicName);
   }
 
   @override
@@ -283,19 +283,29 @@ class _MusicButtonImageController {
 }
 
 class _MusicButtonFuncs {
-  final audioPlayerManager = AudioPlayerManager();
+  final _audioPlayerManager = AudioPlayerManager();
 
-  void onMusicBackButtonTapped() {}
+  void onMusicBackButtonTapped(Function() musicNameTextInitFuncArg) {
+    _audioPlayerManager.moveBackMusic();
+
+    Function() musicNameTextInitFunc = musicNameTextInitFuncArg;
+    musicNameTextInitFunc();
+  }
 
   void onPlayModeToggleButtonTapped() {
-    audioPlayerManager.toggleMusicMode();
+    _audioPlayerManager.toggleMusicMode();
   }
 
   void onMusicPlayingToggleButtonTapped() {
-    audioPlayerManager.togglePlayMusic();
+    _audioPlayerManager.togglePlayMusic();
   }
 
   void onVolumeChangeButtonTapped() {}
 
-  void onMusicNextButtonTapped() {}
+  void onMusicNextButtonTapped(Function() musicNameTextInitFuncArg) {
+    _audioPlayerManager.moveNextMusic();
+    
+    Function() musicNameTextInitFunc = musicNameTextInitFuncArg;
+    musicNameTextInitFunc();
+  }
 }

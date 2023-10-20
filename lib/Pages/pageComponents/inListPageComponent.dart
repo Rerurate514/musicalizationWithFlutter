@@ -71,6 +71,9 @@ class InListPageComponentState extends State<InListPageComponent> {
   void _onMusicBtnTapped(int musicListIndexArg) {
     _audioPlayerManager.setMusicList(_listInMusicInfo, musicListIndexArg);
     _audioPlayerManager.startMusic();
+
+    Function() movePageCallback = _movePlayPageCallback;
+    movePageCallback();
   }
 
   @override
