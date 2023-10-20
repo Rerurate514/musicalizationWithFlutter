@@ -4,6 +4,8 @@ import 'package:musicalization/logic/realm/logic/recordFetcher.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:musicalization/setting/picture.dart';
 
+import 'package:musicalization/logic/audioPlayerManager.dart';
+
 class InListPageComponent extends StatefulWidget {
   late final Function() toggleListSelectedCallback;
   late final MusicList musicList;
@@ -20,6 +22,7 @@ class InListPageComponent extends StatefulWidget {
 class InListPageComponentState extends State<InListPageComponent> {
   final _picture = PictureConstants();
   final _musicInfoRecordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
+  final _audioPlayer = AudioPlayerManager();
 
   late final MusicList _musicList;
   final List<MusicInfo> _listInMusicInfo = [];
@@ -57,7 +60,9 @@ class InListPageComponentState extends State<InListPageComponent> {
 
   void _onResisterMusicBtnTappedCallback() {}
 
-  void _onMusicBtnTappedCallback(MusicInfo infoArg) {}
+  void _onMusicBtnTappedCallback(int musicListIndexArg){
+    _audioPlayer.setMusicList(_listInMusicInfo, musicListIndexArg);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +84,7 @@ class InListPageComponentState extends State<InListPageComponent> {
                     elevation: 4.0,
                     child: InkWell(
                       onTap: () =>
-                          _onMusicBtnTappedCallback(_listInMusicInfo[index]),
+                          _onMusicBtnTappedCallback(index),
                       child: ListTile(
                         leading: Image.asset(
                           _picture.playMusicBtnImg,
