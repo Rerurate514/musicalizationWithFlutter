@@ -4,7 +4,7 @@ import 'package:musicalization/logic/realm/logic/recordFetcher.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:musicalization/setting/picture.dart';
 
-import 'package:musicalization/logic/audioPlayerManager.dart';
+import 'package:musicalization/logic/musicPlayer.dart';
 
 class InListPageComponent extends StatefulWidget {
   late final MusicList musicList;
@@ -25,7 +25,7 @@ class InListPageComponent extends StatefulWidget {
 class InListPageComponentState extends State<InListPageComponent> {
   final _picture = PictureConstants();
   final _musicInfoRecordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
-  final _audioPlayerManager = AudioPlayerManager();
+  late final MusicPlayer _musicPlayer;
 
   late final MusicList _musicList;
   final List<MusicInfo> _listInMusicInfo = [];
@@ -65,13 +65,11 @@ class InListPageComponentState extends State<InListPageComponent> {
   }
 
   void _onShuffleBtnTappedCallback() {}
-
   void _onResisterMusicBtnTappedCallback() {}
 
-  void _onMusicBtnTapped(int musicListIndexArg) {
-    _audioPlayerManager.setMusicList(_listInMusicInfo, musicListIndexArg);
-    _audioPlayerManager.startMusic();
-
+  void _onMusicBtnTapped(int listInMusicInfoIndexArg) {
+    _musicPlayer = MusicPlayer(_listInMusicInfo, listInMusicInfoIndexArg, _musicList.name);
+    _musicPlayer.start();
     Function() movePageCallback = _movePlayPageCallback;
     movePageCallback();
   }

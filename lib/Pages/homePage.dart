@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:musicalization/Pages/pageComponents/upMenuBarWidget.dart';
+import 'package:musicalization/logic/musicPlayer.dart';
 import 'package:musicalization/logic/realm/logic/musicInfo/musicInfoUpdater.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'dart:async';
 
 import '../setting/string.dart';
 import '../setting/picture.dart';
-
-import '../logic/audioPlayerManager.dart';
 
 import '../logic/realm/logic/recordFetcher.dart';
 
@@ -24,8 +23,6 @@ class _HomePageState extends State<HomePage> {
   final _string = StringConstants();
   final _picture = PictureConstants();
 
-  final _audioPlayerManager = AudioPlayerManager();
-
   final recordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
   final MusicInfoUpdater _musicInfoUpdater = MusicInfoUpdater();
 
@@ -33,6 +30,7 @@ class _HomePageState extends State<HomePage> {
 
   List<MusicInfo> _listInMusicInfo = [];
 
+  late final MusicPlayer _musicPlayer;
   late final Map<String, Function()> _movePageFuncsMap;
 
   _HomePageState({required Map<String, Function()> movePageFuncsMapArg}){
@@ -51,9 +49,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> _onListItemTapped(int musicListIndexArg) async {
-    await _audioPlayerManager.setMusicList(_listInMusicInfo, musicListIndexArg);
-    await _audioPlayerManager.startMusic();
+  Future<void> _onListItemTapped(int listInMusicInfoIndexArg) async {
+    _musicPlayer = MusicPlayer(_listInMusicInfo, listInMusicInfoIndexArg);
+
+    _musicPlayer.start();
 
     Function() movePageCallback = _movePageFuncsMap['Play']!;
     movePageCallback();
@@ -89,7 +88,7 @@ class _HomePageState extends State<HomePage> {
           Text(_string.appNameStr),
           const Spacer(),
           Image.asset(
-            _picture.mainModeImg,
+            _picture.homeModeImg,
             width: 70,
           )
         ]),

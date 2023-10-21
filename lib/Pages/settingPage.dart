@@ -4,8 +4,7 @@ import '../setting/string.dart';
 import '../setting/picture.dart';
 
 class SettingPage extends StatefulWidget {
-  const SettingPage({super.key, required this.title});
-  final String title;
+  const SettingPage({super.key});
 
   @override
   State<SettingPage> createState() => _SettingPageState();

@@ -19,9 +19,9 @@ class _ResisterListDialog extends StatefulWidget {
 
   @override
   _ResisterListDialogState createState() => _ResisterListDialogState(
-      this.listInMusicInfo,
-      this.getMusicListCallback,
-      this.isContinuedDialogCallback);
+      listInMusicInfo,
+      getMusicListCallback,
+      isContinuedDialogCallback);
 }
 
 class _ResisterListDialogState extends State<_ResisterListDialog> {

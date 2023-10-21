@@ -1,6 +1,8 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:musicalization/logic/musicPlayer.dart';
+import 'package:musicalization/setting/picture.dart';
 
 import 'Pages/homePage.dart';
 import 'Pages/listPage.dart';
@@ -44,7 +46,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _audioPlayerManager = AudioPlayerManager();
+  final _musicPlayer = MusicPlayer();
+
+  final _picture = PictureConstants();
   final _permissionRequester = MediaAudioPermissionRequester();
   late PageController _pageController;
 
@@ -59,8 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     _permissionRequester.requestPermission();
     _pageController = PageController(initialPage: _selecetedIndex);
-    _audioPlayerManager.setPlayingMusicCurrentListener();
-    _audioPlayerManager.setPlayingMusicDurationListener();
 
     _movePageFuncsMap.addAll({
       'Home': moveHomePageCallback,
@@ -72,14 +74,14 @@ class _MyHomePageState extends State<MyHomePage> {
     _pages = [
       HomePage(movePageFuncsMap: _movePageFuncsMap),
       ListPage(movePageFuncsMap: _movePageFuncsMap),
-      PlayPage(title: "Play"),
-      SettingPage(title: "Setting"),
+      const PlayPage(),
+      const SettingPage(),
     ];
   }
 
   @override
   void dispose() {
-    _audioPlayerManager.destroyAudioPlayer();
+    _musicPlayer.destroy();
     _pageController.dispose();
     super.dispose();
   }
@@ -117,33 +119,32 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        // onPageChanged: _onPageChanged,
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
             icon: Image.asset(
-              'images/mp3_ui_home.png',
+              _picture.homeImg,
               width: 35,
             ),
             label: "Home",
           ),
           BottomNavigationBarItem(
               icon: Image.asset(
-                'images/mp3_ui_list.png',
+                _picture.listImg,
                 width: 25,
               ),
               label: "Music List"),
           BottomNavigationBarItem(
               icon: Image.asset(
-                'images/mp3_ui_play_button.png',
+                _picture.playMusicBtnImg,
                 width: 23,
               ),
               label: "Music Play"),
           BottomNavigationBarItem(
               icon: Image.asset(
-                'images/mp3_ui_setting_button.png',
+                _picture.settingModeImg,
                 width: 20,
               ),
               label: "Setting"),
