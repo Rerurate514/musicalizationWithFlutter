@@ -12,7 +12,7 @@ class RealmIOManager extends RealmIOManagerInterface {
   final realmInsFac = RealmInstanceFactory();
   final _reader = _DataReader();
   final _adder = _DataAdder();
-  late Realm realm;
+  late final Realm realm;
 
   RealmIOManager(SchemaObject schemaObjectArg) {
     realm = realmInsFac.createRealmIns(schemaObjectArg: schemaObjectArg);
@@ -37,9 +37,9 @@ class RealmIOManager extends RealmIOManagerInterface {
   }
 
   @override
-  SCHEMA searchByName<SCHEMA extends RealmObject>({required ObjectId idArg}) {
-    var result = _reader.searchById<SCHEMA>(realm: realm, idArg: idArg);
-    return result.payload;
+  Future<void> edit<T extends RealmValidatedSchemaValueInterface, SCHEMA extends RealmObject>({required ObjectId idArg, required T dataInsToAddArg}) async {
+    delete<SCHEMA>(idArg: idArg);
+    _adder.add<T>(realm: realm, dataInsToAddArg: dataInsToAddArg);
   }
 
   @override
@@ -73,24 +73,6 @@ class _DataReader extends RealmReaderInterface {
   }
 
   @override
-  RealmIOResults searchByName<SCHEMA extends RealmObject>(
-      {required Realm realm, required String nameArg}) {
-    // var infoResult = realm.query<MusicInfo>('name == $nameArg');
-
-    // late RealmIOResults<MusicInfo> ioResult;
-
-    // if (infoResult != null) {
-    //   ioResult = RealmIOResults(isSuccessArg: true, payloadArg: infoResult);
-    // } else {
-    //   ioResult = RealmIOResults(
-    //       isSuccessArg: false,
-    //       resultStringArg: "That record is no Exists.");
-    // }
-    // //todo このメソッドの作成
-    return RealmIOResults(isSuccessArg: true, payloadArg: "このメソッドはまだ作成していない");
-  }
-
-  @override
   RealmIOResults readAll<SCHEMA extends RealmObject>({required Realm realm}) {
     var infoResult = realm.all<SCHEMA>().toList();
 
@@ -106,12 +88,4 @@ class _DataAdder extends RealmAdderInterface {
     realm.write(() => realm.add(dataInsToAddArg.payload));
     return RealmIOResults(isSuccessArg: true);
   }
-}
-
-class _MusicInfoEditor {
-  void editVolumeColumn({required ObjectId idArg}) {}
-
-  void editLyricsColumn({required ObjectId idArg}) {}
-
-  void editPictureColumn({required ObjectId idArg}) {}
 }
