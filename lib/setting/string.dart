@@ -4,9 +4,11 @@ class StringConstants{
   
 
   String get listDialogTitle => "リスト名を決めてください"; 
-  String get listDialogTExtFieldHintText => "リスト名の入力"; 
+  String get listDialogTextFieldHintText => "リスト名の入力"; 
   String get listDialogOK => "OK";
   String get listDialogCancel => "Cancel";
   String get listDialogChoiceMusicTitle => "リストに追加する曲の選択";
   String get listDialogCheckDeleteListTitle => "本当にこのリストを削除しますか？";
+  String get listDialogEditListTitle => "新しいリストの名前を入力してください";
+  String get listDialogEditListAndDeleteMusic => "リストに追加する曲の選択と削除する曲の選択";
 }

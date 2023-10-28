@@ -15,11 +15,11 @@ class MusicListController{
   }
 
   void editList(ObjectId idArg, String nameArg, List<ObjectId> infoListArg){
-    MusicList list = MusicList(ObjectId(), nameArg);
+    MusicList list = MusicList(idArg, nameArg);
     list.list.addAll(infoListArg);
   
     ValidatedMusicList addData = ValidatedMusicList(list);
-    _realmIOManager.edit(idArg: idArg ,dataInsToAddArg: addData);
+    _realmIOManager.edit<ValidatedMusicList, MusicList>(idArg: idArg ,dataInsToAddArg: addData);
   }
 
   void delete(ObjectId idArg){

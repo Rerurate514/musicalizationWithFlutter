@@ -12,16 +12,18 @@ class ValidatedMusicList extends RealmValidatedSchemaValueInterface{
   late MusicList _payload;
   get payload => _payload;
 
+  late final ObjectId _id;
   late final ListName _name;
   late final ListMusicList _list;
 
   ValidatedMusicList(
     MusicList listArg
   ){
+    _id = listArg.id;
     _name = ListName(listArg.name);
     _list = ListMusicList(listArg.list);
 
-    _payload = MusicList(ObjectId(), _name.value);
+    _payload = MusicList(_id, _name.value);
     _payload.list.addAll(_list.value);
   }
 }

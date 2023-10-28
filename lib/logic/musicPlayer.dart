@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
+import 'dart:math' as math;
+
+import 'package:realm/realm.dart';
 
 class MusicPlayer {
   final _player = _MusicPlayerManager();
@@ -59,7 +62,7 @@ class _MusicPlayerManager {
   final _PlayerCompletionListenerResistry _playerCompletionListener =
       _PlayerCompletionListenerResistry();
 
-  late _TrackManager _trackManager;
+  _TrackManager _trackManager = _TrackManager([MusicInfo(ObjectId(), "", "", 40, "", "")], 0);
 
   final listStartIndex = 0;
 
@@ -79,6 +82,7 @@ class _MusicPlayerManager {
         _TrackManager(listInMusicInfoArg, listInMusicInfoIndexArg, listNameArg);
     _currentListener.setPlayingMusicCurrentListener(_audioPlayer);
     _durationListener.setPlayingMusicDurationListener(_audioPlayer);
+    _musicPlayModeController.resetMusicPlayMode();
   }
 
   void checkTrackManagerInit() {
@@ -188,7 +192,9 @@ class _TrackManager {
   }
 
   void moveRamdomMusic() {
-    //todo shffle再生　乱数
+    var random = math.Random();
+
+    _listInMusicInfoIndex = random.nextInt(_listInMusicInfo.length);
   }
 
   Function() switchModeCallback(bool isShufflingArg) {
@@ -204,31 +210,33 @@ class _MusicPlayModeController {
   bool get isShuffling => _isShuffling;
 
   int _musicModeIndex = 0;
+  
+  void resetMusicPlayMode(){
+    _musicModeIndex = 0;
+  }
 
   void toggleMusicPlayMode(AudioPlayer audioPlayerArg) {
     switch (_musicModeIndex) {
       case 0:
-        _isShuffling = false;
+        _toggleLoop(audioPlayerArg);
         break;
       case 1:
         _toggleLoop(audioPlayerArg);
+        _isShuffling = true;
         break;
       case 2:
-        _toggleLoop(audioPlayerArg);
-        _isShuffling = true;
+        _isShuffling = false;
         break;
     }
     _musicModeIndex = (_musicModeIndex + 1) % 3;
   }
 
   void _toggleLoop(AudioPlayer audioPlayerArg) {
-    if (_isLooping) {
-      audioPlayerArg.setReleaseMode(ReleaseMode.release);
-      _isLooping = false;
-    } else {
-      audioPlayerArg.setReleaseMode(ReleaseMode.loop);
-      _isLooping = true;
-    }
+    _isLooping
+      ? audioPlayerArg.setReleaseMode(ReleaseMode.release)
+      : audioPlayerArg.setReleaseMode(ReleaseMode.loop);
+
+    _isLooping = !_isLooping;
   }
 }
 

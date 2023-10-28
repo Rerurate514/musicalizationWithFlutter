@@ -8,120 +8,11 @@ import 'package:realm/realm.dart';
 import '../../setting/string.dart';
 import '../../setting/picture.dart';
 
-class _ResisterListDialog extends StatefulWidget {
-  late final List<MusicInfo> listInMusicInfo;
-  late final Function(List<ObjectId>) getMusicListCallback;
-  late final Function(bool) isContinuedDialogCallback;
-  _ResisterListDialog(
-      {required this.listInMusicInfo,
-      required this.getMusicListCallback,
-      required this.isContinuedDialogCallback});
-
-  @override
-  _ResisterListDialogState createState() => _ResisterListDialogState(
-      listInMusicInfo,
-      getMusicListCallback,
-      isContinuedDialogCallback);
-}
-
-class _ResisterListDialogState extends State<_ResisterListDialog> {
-  final _string = StringConstants();
-  List<MusicInfo> listInMusicInfo = [];
-
-  final String unselectedListTileImage = PictureConstants().resisterMusicImg;
-  final String selectedListTileImage = PictureConstants().musicAddToListImg;
-
-  late List<bool> selected;
-
-  List<ObjectId> tempListInMusicList = [];
-
-  late final Function(List<ObjectId>) getMusicListCallback;
-  late final Function(bool) isContinuedDialogCallback;
-
-  _ResisterListDialogState(
-      List<MusicInfo> listArg,
-      Function(List<ObjectId>) getMusicListCallbackArg,
-      Function(bool) isContinuedDialogCallbackArg) {
-    listInMusicInfo = listArg;
-    getMusicListCallback = getMusicListCallbackArg;
-    isContinuedDialogCallback = isContinuedDialogCallbackArg;
-
-    selected = List.generate(listInMusicInfo.length, (index) => false);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void addList(ObjectId idArg) {
-    setState(() {
-      tempListInMusicList.contains(idArg)
-          ? tempListInMusicList.remove(idArg)
-          : tempListInMusicList.add(idArg);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return (AlertDialog(
-      title: Text(_string.listDialogChoiceMusicTitle),
-      content: Container(
-          width: double.maxFinite,
-          child: ListView.builder(
-            addAutomaticKeepAlives: true,
-            itemBuilder: (BuildContext context, int index) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                elevation: 4.0,
-                child: InkWell(
-                    onTap: () => {
-                          setState(() {
-                            selected[index] = !selected[index];
-                          }),
-                          addList(listInMusicInfo[index].id),
-                        },
-                    child: ListTile(
-                      leading: Image.asset(
-                        selected[index]
-                            ? selectedListTileImage
-                            : unselectedListTileImage,
-                        width: 45,
-                      ),
-                      title: Text(listInMusicInfo[index].name),
-                    )),
-              );
-            },
-            itemCount: listInMusicInfo.length,
-          )),
-      actions: <Widget>[
-        TextButton(
-            child: Text(_string.listDialogCancel),
-            onPressed: () => {
-                  isContinuedDialogCallback(false),
-                  Navigator.pop(context),
-                }),
-        TextButton(
-            child: Text(_string.listDialogOK),
-            onPressed: () => {
-                  isContinuedDialogCallback(true),
-                  getMusicListCallback(tempListInMusicList),
-                  Navigator.pop(context),
-                }),
-      ],
-    ));
-  }
-}
-
-
-
 class ListPageComponent extends StatefulWidget {
-  late final Function() toggleListSelectedCallback;
-  late final Function(MusicList) setSelectedListCallback;
+  final Function() toggleListSelectedCallback;
+  final Function(MusicList) setSelectedListCallback;
 
-  ListPageComponent({
+  const ListPageComponent({
     required Function() this.toggleListSelectedCallback,
     required Function(MusicList) this.setSelectedListCallback
   });
@@ -198,7 +89,7 @@ class ListPageComponentState extends State<ListPageComponent> {
             content: TextField(
               autofocus: true,
               decoration: InputDecoration(
-                hintText: _string.listDialogTExtFieldHintText,
+                hintText: _string.listDialogTextFieldHintText,
               ),
               onChanged: (textArg) {
                 _tempListName = textArg;
@@ -360,6 +251,113 @@ class ListPageComponentState extends State<ListPageComponent> {
           )
         ],
       ),
+    ));
+  }
+}
+
+class _ResisterListDialog extends StatefulWidget {
+  late final List<MusicInfo> listInMusicInfo;
+  late final Function(List<ObjectId>) getMusicListCallback;
+  late final Function(bool) isContinuedDialogCallback;
+  _ResisterListDialog(
+      {required this.listInMusicInfo,
+      required this.getMusicListCallback,
+      required this.isContinuedDialogCallback});
+
+  @override
+  _ResisterListDialogState createState() => _ResisterListDialogState(
+      listInMusicInfo,
+      getMusicListCallback,
+      isContinuedDialogCallback);
+}
+
+class _ResisterListDialogState extends State<_ResisterListDialog> {
+  final _string = StringConstants();
+  List<MusicInfo> listInMusicInfo = [];
+
+  final String unselectedListTileImage = PictureConstants().resisterMusicImg;
+  final String selectedListTileImage = PictureConstants().musicAddToListImg;
+
+  late List<bool> selected;
+
+  List<ObjectId> tempListInMusicList = [];
+
+  late final Function(List<ObjectId>) getMusicListCallback;
+  late final Function(bool) isContinuedDialogCallback;
+
+  _ResisterListDialogState(
+      List<MusicInfo> listArg,
+      Function(List<ObjectId>) getMusicListCallbackArg,
+      Function(bool) isContinuedDialogCallbackArg) {
+    listInMusicInfo = listArg;
+    getMusicListCallback = getMusicListCallbackArg;
+    isContinuedDialogCallback = isContinuedDialogCallbackArg;
+
+    selected = List.generate(listInMusicInfo.length, (index) => false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void addList(ObjectId idArg) {
+    setState(() {
+      tempListInMusicList.contains(idArg)
+          ? tempListInMusicList.remove(idArg)
+          : tempListInMusicList.add(idArg);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return (AlertDialog(
+      title: Text(_string.listDialogChoiceMusicTitle),
+      content: Container(
+          width: double.maxFinite,
+          child: ListView.builder(
+            addAutomaticKeepAlives: true,
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                elevation: 4.0,
+                child: InkWell(
+                    onTap: () => {
+                          setState(() {
+                            selected[index] = !selected[index];
+                          }),
+                          addList(listInMusicInfo[index].id),
+                        },
+                    child: ListTile(
+                      leading: Image.asset(
+                        selected[index]
+                            ? selectedListTileImage
+                            : unselectedListTileImage,
+                        width: 45,
+                      ),
+                      title: Text(listInMusicInfo[index].name),
+                    )),
+              );
+            },
+            itemCount: listInMusicInfo.length,
+          )),
+      actions: <Widget>[
+        TextButton(
+            child: Text(_string.listDialogCancel),
+            onPressed: () => {
+                  isContinuedDialogCallback(false),
+                  Navigator.pop(context),
+                }),
+        TextButton(
+            child: Text(_string.listDialogOK),
+            onPressed: () => {
+                  isContinuedDialogCallback(true),
+                  getMusicListCallback(tempListInMusicList),
+                  Navigator.pop(context),
+                }),
+      ],
     ));
   }
 }

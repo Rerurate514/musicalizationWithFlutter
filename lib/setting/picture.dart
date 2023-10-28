@@ -4,7 +4,8 @@ class PictureConstants{
   String get shuffleImg => 'images/mp3_ui_music_shuffle_button.png';
 
   //home
-  String get mainModeImg => 'images/mp3_ui_main_mode.png';
+  String get homeImg => 'images/mp3_ui_home.png';
+  String get homeModeImg => 'images/mp3_ui_main_mode.png';
   String get updateImg => 'images/mp3_ui_update.png';
   String get fetchingFromGoogleDriveImg => 'images/mp3_ui_google_drive_button.png';
 

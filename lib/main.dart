@@ -9,7 +9,6 @@ import 'Pages/listPage.dart';
 import 'Pages/playPage.dart';
 import 'Pages/settingPage.dart';
 
-import 'logic/audioPlayerManager.dart';
 import 'logic/permission.dart';
 
 void main() {
