@@ -35,6 +35,7 @@ class MusicPlayer {
   Future moveBackMusic() async => _player.moveBackMusic();
   Future toggleMusicPlayMode() async => _player.toggleMusicPlayMode();
   Future changeVolume(int volumeArg) async => _player.changeVolume(volumeArg);
+  void setOnMusicCompleteCallback(Function() onMusicCompleteCallbackArg) => _player.setOnMusicCompleteCallback(onMusicCompleteCallbackArg);
   void destroy() => _player.destroy();
 }
 
@@ -50,7 +51,8 @@ class _MusicPlayerManager {
 
   final _audioPlayer = AudioPlayer();
 
-  final _MusicPlayController _playController = _MusicPlayController();
+  late final _MusicPlayController _playController;
+  final _isPlayingWatcher = _AudioPlayerIsPlayingListenerWatcher();
   final _MusicSeekController _seekController = _MusicSeekController();
   final _MusicVolumeChanger _volumeChanger = _MusicVolumeChanger();
   final _MusicPlayModeController _musicPlayModeController =
@@ -62,7 +64,8 @@ class _MusicPlayerManager {
   final _PlayerCompletionListenerResistry _playerCompletionListener =
       _PlayerCompletionListenerResistry();
 
-  _TrackManager _trackManager = _TrackManager([MusicInfo(ObjectId(), "", "", 40, "", "")], 0);
+  _TrackManager _trackManager =
+      _TrackManager([MusicInfo(ObjectId(), "", "", 40, "", "")], 0);
 
   final listStartIndex = 0;
 
@@ -76,13 +79,17 @@ class _MusicPlayerManager {
   String get listName => _trackManager.listName;
   MusicInfo get currentMusic => _trackManager.currentMusic;
 
+  late final Function() _onMusicCompleteCallback;
+
   Future set(List<MusicInfo> listInMusicInfoArg, int listInMusicInfoIndexArg,
       [String listNameArg = ""]) async {
+    _playController = _MusicPlayController(_isPlayingWatcher);
     _trackManager =
         _TrackManager(listInMusicInfoArg, listInMusicInfoIndexArg, listNameArg);
     _currentListener.setPlayingMusicCurrentListener(_audioPlayer);
     _durationListener.setPlayingMusicDurationListener(_audioPlayer);
     _musicPlayModeController.resetMusicPlayMode();
+    _playController.setPlayingChangedListener();
   }
 
   void checkTrackManagerInit() {
@@ -115,12 +122,24 @@ class _MusicPlayerManager {
     _trackManager.moveBackMusic();
   }
 
+  void setOnMusicCompleteCallback(Function() onMusicCompleteCallbackArg) {
+    _onMusicCompleteCallback = onMusicCompleteCallbackArg;
+    _playerCompletionListener.setPlayerCompletionListener(
+        _audioPlayer, isLooping, _onMusicCompleteCallback, _isPlayingWatcher);
+  }
+
   Future toggleMusicPlayMode() async {
     _musicPlayModeController.toggleMusicPlayMode(_audioPlayer);
+      late Function() callback;
 
-    Function() callback = _trackManager.switchModeCallback(isShuffling);
+    if (!isLooping) {
+      callback = _trackManager.switchModeCallback(isShuffling);
+    } else {
+      callback = _onMusicCompleteCallback;
+    }
+    
     _playerCompletionListener.setPlayerCompletionListener(
-        _audioPlayer, isLooping, callback);
+        _audioPlayer, isLooping, callback, _isPlayingWatcher);
   }
 
   Future changeVolume(int volumeArg) async {
@@ -133,12 +152,16 @@ class _MusicPlayerManager {
 }
 
 class _MusicPlayController {
+  final _AudioPlayerIsPlayingListenerWatcher _watcher;
+
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
 
+  _MusicPlayController(this._watcher);
+
   Future start(AudioPlayer audioPlayerArg, String musicPathArg) async {
     try {
-      _isPlaying = true;
+      _watcher.setPlaying(true);
       await audioPlayerArg.play(DeviceFileSource(musicPathArg));
     } catch (e, stackTrace) {
       throw Error.throwWithStackTrace(e, stackTrace);
@@ -146,18 +169,39 @@ class _MusicPlayController {
   }
 
   Future togglePlaying(AudioPlayer audioPlayerArg) async {
-    _isPlaying ? _pause(audioPlayerArg) : _resume(audioPlayerArg);
+    _watcher.isPlaying ? _pause(audioPlayerArg) : _resume(audioPlayerArg);
   }
 
   Future _pause(AudioPlayer audioPlayerArg) async {
-    _isPlaying = false;
+    _watcher.setPlaying(false);
     await audioPlayerArg.pause();
   }
 
   Future _resume(AudioPlayer audioPlayerArg) async {
-    _isPlaying = true;
+    _watcher.setPlaying(true);
     await audioPlayerArg.resume();
   }
+
+  void setPlayingChangedListener() {
+    _watcher.stream.listen((isPlayingArg) {
+      _isPlaying = isPlayingArg;
+    });
+  }
+}
+
+class _AudioPlayerIsPlayingListenerWatcher {
+  final StreamController<bool> _controller = StreamController<bool>.broadcast();
+  bool _isPlaying = false;
+  bool get isPlaying => _isPlaying;
+
+  Stream<bool> get stream => _controller.stream;
+
+  void setPlaying(bool isPlayingArg) {
+    _isPlaying = isPlayingArg;
+    _controller.add(_isPlaying);
+  }
+
+  void dispose() => _controller.close();
 }
 
 class _TrackManager {
@@ -210,8 +254,8 @@ class _MusicPlayModeController {
   bool get isShuffling => _isShuffling;
 
   int _musicModeIndex = 0;
-  
-  void resetMusicPlayMode(){
+
+  void resetMusicPlayMode() {
     _musicModeIndex = 0;
   }
 
@@ -233,8 +277,8 @@ class _MusicPlayModeController {
 
   void _toggleLoop(AudioPlayer audioPlayerArg) {
     _isLooping
-      ? audioPlayerArg.setReleaseMode(ReleaseMode.release)
-      : audioPlayerArg.setReleaseMode(ReleaseMode.loop);
+        ? audioPlayerArg.setReleaseMode(ReleaseMode.release)
+        : audioPlayerArg.setReleaseMode(ReleaseMode.loop);
 
     _isLooping = !_isLooping;
   }
@@ -276,11 +320,15 @@ class _DurationListenerResistry {
 }
 
 class _PlayerCompletionListenerResistry {
-  void setPlayerCompletionListener(AudioPlayer audioPlayerArg,
-      bool isLoopingArg, Function() musicCompletionCallbackArg) {
+  void setPlayerCompletionListener(
+      AudioPlayer audioPlayerArg,
+      bool isLoopingArg,
+      Function() musicCompletionCallbackArg,
+      _AudioPlayerIsPlayingListenerWatcher watcherArg) {
     audioPlayerArg.onPlayerComplete.listen((event) {
       if (!isLoopingArg) {
         Function() musicCompletionCallback = musicCompletionCallbackArg;
+        watcherArg.setPlaying(false);
         musicCompletionCallback();
       }
     });

@@ -37,7 +37,9 @@ class RealmIOManager extends RealmIOManagerInterface {
   }
 
   @override
-  Future<void> edit<T extends RealmValidatedSchemaValueInterface, SCHEMA extends RealmObject>({required ObjectId idArg, required T dataInsToAddArg}) async {
+  Future<void> edit<T extends RealmValidatedSchemaValueInterface,
+          SCHEMA extends RealmObject>(
+      {required ObjectId idArg, required T dataInsToAddArg}) async {
     delete<SCHEMA>(idArg: idArg);
     _adder.add<T>(realm: realm, dataInsToAddArg: dataInsToAddArg);
   }

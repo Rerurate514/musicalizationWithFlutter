@@ -325,7 +325,7 @@ class _EditListDialogState extends State<_EditListDialog> {
                     onTap: () => {
                           setState(() {
                             _selected[index] = !_selected[index];
-                          }),
+                          }), 
                           addList(_listInAllMusicInfo[index].id),
                         },
                     child: ListTile(

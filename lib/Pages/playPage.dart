@@ -43,6 +43,7 @@ class _PlayPageState extends State<PlayPage> {
   Future<void> _startLogic() async {
     _setMusicNameAndListName();
     _setMusicDurCur();
+    _musicPlayer.setOnMusicCompleteCallback(_musicButtonImageController.changePlayImage);
   }
 
   void _setMusicNameAndListName() {
