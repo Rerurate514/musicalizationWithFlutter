@@ -4,6 +4,7 @@ import 'package:musicalization/logic/musicPlayer.dart';
 import 'package:musicalization/logic/realm/logic/musicInfo/musicInfoUpdater.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'dart:async';
+import 'dart:math' as math;
 
 import '../setting/string.dart';
 import '../setting/picture.dart';
@@ -16,7 +17,8 @@ class HomePage extends StatefulWidget {
   final Map<String, Function()> movePageFuncsMap;
 
   @override
-  State<HomePage> createState() => _HomePageState(movePageFuncsMapArg: movePageFuncsMap);
+  State<HomePage> createState() =>
+      _HomePageState(movePageFuncsMapArg: movePageFuncsMap);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -33,9 +35,9 @@ class _HomePageState extends State<HomePage> {
   late final MusicPlayer _musicPlayer;
   late final Map<String, Function()> _movePageFuncsMap;
 
-  _HomePageState({required Map<String, Function()> movePageFuncsMapArg}){
+  _HomePageState({required Map<String, Function()> movePageFuncsMapArg}) {
     _movePageFuncsMap = movePageFuncsMapArg;
-  } 
+  }
 
   @override
   void initState() {
@@ -44,9 +46,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initFileFetcher() async {
-    setState((){
+    setState(() {
       _listInMusicInfo = recordFetcher.getAllReacordList();
     });
+  }
+
+  void _playMusic(int listInMusicInfoIndexArg, {required bool isShufflingArg}) {
+    _musicPlayer = MusicPlayer(_listInMusicInfo, listInMusicInfoIndexArg);
+    if (isShufflingArg) {
+      _musicPlayer.toggleMusicPlayMode();
+      _musicPlayer.toggleMusicPlayMode();
+    }
+
+    _musicPlayer.start();
+
+    Function() movePageCallback = _movePageFuncsMap['Play']!;
+    movePageCallback();
   }
 
   Future<void> _onListItemTapped(int listInMusicInfoIndexArg) async {
@@ -58,27 +73,28 @@ class _HomePageState extends State<HomePage> {
     movePageCallback();
   }
 
-  void _onUpdateBtnTapped(){
+  void _onUpdateBtnTapped() {
     setState(() {
       _listInMusicInfo = [];
     });
-    
+
     _musicInfoUpdater.updateDataBase();
 
-    Future.delayed(const Duration(microseconds: 1000),() {
+    Future.delayed(const Duration(microseconds: 1000), () {
       setState(() {
         _listInMusicInfo = recordFetcher.getAllReacordList();
       });
     });
   }
 
-  void _onShuffleBtnTappedCallback(){
+  void _onShuffleBtnTappedCallback() {
+    var random = math.Random();
 
+    int listInMusicInfoIndex = random.nextInt(_listInMusicInfo.length);
+    _playMusic(listInMusicInfoIndex, isShufflingArg: true);
   }
 
-  void _onFetchFileFromGoogleDriveBtnTappedCallback(){}
-
-  
+  void _onFetchFileFromGoogleDriveBtnTappedCallback() {}
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +112,11 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           UpMenuBarWidget(
-            centralBtnSettingArg: ButtonSetting<Function()>(_picture.shuffleImg, _onShuffleBtnTappedCallback), 
-            rightBtnSettingArg: ButtonSetting<Function()>(_picture.fetchingFromGoogleDriveImg, _onFetchFileFromGoogleDriveBtnTappedCallback)
-          ),
+              centralBtnSettingArg: ButtonSetting<Function()>(
+                  _picture.shuffleImg, _onShuffleBtnTappedCallback),
+              rightBtnSettingArg: ButtonSetting<Function()>(
+                  _picture.fetchingFromGoogleDriveImg,
+                  _onFetchFileFromGoogleDriveBtnTappedCallback)),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,

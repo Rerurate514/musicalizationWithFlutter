@@ -44,6 +44,22 @@ class _PlayPageState extends State<PlayPage> {
     _setMusicNameAndListName();
     _setMusicDurCur();
     _musicPlayer.setOnMusicCompleteCallback(_musicButtonImageController.changePlayImage);
+
+    if(_musicPlayer.isLooping) _setLoopingMode();
+    if(_musicPlayer.isShuffling) _setShufflingMode();
+  }
+
+  void _setLoopingMode(){
+    setState(() {
+      _musicButtonImageController.changeModeImage();
+    });
+  }
+
+  void _setShufflingMode(){
+    setState(() {
+      _musicButtonImageController.changeModeImage();
+      _musicButtonImageController.changeModeImage();
+    });
   }
 
   void _setMusicNameAndListName() {

@@ -35,7 +35,8 @@ class MusicPlayer {
   Future moveBackMusic() async => _player.moveBackMusic();
   Future toggleMusicPlayMode() async => _player.toggleMusicPlayMode();
   Future changeVolume(int volumeArg) async => _player.changeVolume(volumeArg);
-  void setOnMusicCompleteCallback(Function() onMusicCompleteCallbackArg) => _player.setOnMusicCompleteCallback(onMusicCompleteCallbackArg);
+  void setOnMusicCompleteCallback(Function() onMusicCompleteCallbackArg) =>
+      _player.setOnMusicCompleteCallback(onMusicCompleteCallbackArg);
   void destroy() => _player.destroy();
 }
 
@@ -79,7 +80,7 @@ class _MusicPlayerManager {
   String get listName => _trackManager.listName;
   MusicInfo get currentMusic => _trackManager.currentMusic;
 
-  late final Function() _onMusicCompleteCallback;
+  Function() _onMusicCompleteCallback = () => null;
 
   Future set(List<MusicInfo> listInMusicInfoArg, int listInMusicInfoIndexArg,
       [String listNameArg = ""]) async {
@@ -130,14 +131,14 @@ class _MusicPlayerManager {
 
   Future toggleMusicPlayMode() async {
     _musicPlayModeController.toggleMusicPlayMode(_audioPlayer);
-      late Function() callback;
+    Function() callback = () => null;
 
     if (!isLooping) {
       callback = _trackManager.switchModeCallback(isShuffling);
     } else {
       callback = _onMusicCompleteCallback;
     }
-    
+
     _playerCompletionListener.setPlayerCompletionListener(
         _audioPlayer, isLooping, callback, _isPlayingWatcher);
   }
@@ -265,7 +266,7 @@ class _MusicPlayModeController {
         _toggleLoop(audioPlayerArg);
         break;
       case 1:
-        _toggleLoop(audioPlayerArg);
+        _toggleLoop(audioPlayerArg); 
         _isShuffling = true;
         break;
       case 2:
