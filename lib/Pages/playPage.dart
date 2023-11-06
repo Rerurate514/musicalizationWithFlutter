@@ -21,6 +21,8 @@ class _PlayPageState extends State<PlayPage> {
   final _musicButtonFuncs = _MusicButtonFuncs();
   final _musicButtonImageController = _MusicButtonImageController();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   String _musicName = "null";
   String _listName = "";
 
@@ -110,9 +112,23 @@ class _PlayPageState extends State<PlayPage> {
     _musicButtonFuncs.onMusicNextButtonTapped(_musicPlayer, _setMusicNameAndListName);
   }
 
+  void _onFloatingBunttonTapped(){
+    _openDrawer();
+  }
+
+  void _openDrawer() => _scaffoldKey.currentState!.openDrawer();
+  void _closeDrawer() => _scaffoldKey.currentState!.closeDrawer();
+
+  void _autoVolumeSettingItemTapped(){}
+  void _lyricsSettingItemTapped(){}
+  void _nameSettingItemTapped(){}
+  void _pictureSettingItemTapped(){}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Row(children: [
           Text(_string.appNameStr),
@@ -194,7 +210,7 @@ class _PlayPageState extends State<PlayPage> {
       floatingActionButton: Padding(
           padding: const EdgeInsets.only(top: 80),
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () => _onFloatingBunttonTapped(),
             backgroundColor: Theme.of(context).cardColor,
             child: const Icon(
               Icons.menu,
@@ -202,6 +218,10 @@ class _PlayPageState extends State<PlayPage> {
             ),
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+
+      drawer: const Drawer(
+        child: Text("test"),
+      ),
     );
   }
 
@@ -251,6 +271,77 @@ class _PlayPageState extends State<PlayPage> {
         min: 0,
         max: _musicDuration,
       ),
+    );
+  }
+
+  Widget buildMusicSettingDrawer(){
+
+  }
+
+  Widget buildDrawerItems(String titleArg, Function onItemTappedCallbackArg){
+    return(
+      Card(
+        child: InkWell(
+          onTap: () => onItemTappedCallbackArg,
+          child: ListTile(
+            leading: ,
+            title: titleArg,
+          ),
+        )
+      )
+    );
+  }
+}
+
+class _MusicSettingDrawer extends StatelessWidget{
+  final _string = StringConstants();
+  late final Map<String, Function> _funcMap;
+
+  _MusicSettingDrawer(this._funcMap);
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          Card(
+            child: InkWell(
+              onTap: () => _funcMap["autoVolumeSetting"],
+              child: ListTile(
+                leading: Image.asset(name),//音量調整
+                title: Text(_string.musicSettingDrawerItemAutoVolumeSetting),
+              ),
+            ),
+          ),
+          Card(
+            child: InkWell(
+              onTap: () => _funcMap["LyricsSetting"],
+              child: ListTile(
+                leading: Image.asset(name),//歌詞設定
+                title: Text(_string.musicSettingDrawerItemLyricsSetting),
+              ),
+            ),
+          ),
+          Card(
+            child: InkWell(
+              onTap: () => _funcMap["NameSetting"],
+              child: ListTile(
+                leading: Image.asset(name),//名称変更
+                title: Text(_string.musicSettingDrawerItemNameSetting),
+              ),
+            ),
+          ),
+          Card(
+            child: InkWell(
+              onTap: () => _funcMap["PictureSetting"],
+              child: ListTile(
+                leading: Image.asset(name),//パケ絵の変更
+                title: Text(_string.musicSettingDrawerItemPictureSetting),
+              ),
+            ),
+          ),
+        ],
+      )
     );
   }
 }

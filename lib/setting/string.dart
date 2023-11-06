@@ -11,4 +11,9 @@ class StringConstants{
   String get listDialogCheckDeleteListTitle => "本当にこのリストを削除しますか？";
   String get listDialogEditListTitle => "新しいリストの名前を入力してください";
   String get listDialogEditListAndDeleteMusic => "リストに追加する曲の選択と削除する曲の選択";
+
+  String get musicSettingDrawerItemAutoVolumeSetting => "自動音量調整";
+  String get musicSettingDrawerItemLyricsSetting => "歌詞の入力";
+  String get musicSettingDrawerItemNameSetting => "ファイル名の変更";
+  String get musicSettingDrawerItemPictureSetting => "パッケージイラストの変更";
 }
