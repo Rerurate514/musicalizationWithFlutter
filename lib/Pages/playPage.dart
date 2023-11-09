@@ -6,6 +6,8 @@ import '../setting/colors.dart';
 import '../setting/picture.dart';
 import '../logic/musicPlayer.dart';
 
+import 'pageComponents/musicSettingDrawer.dart';
+
 class PlayPage extends StatefulWidget {
   const PlayPage({super.key});
 
@@ -45,19 +47,20 @@ class _PlayPageState extends State<PlayPage> {
   Future<void> _startLogic() async {
     _setMusicNameAndListName();
     _setMusicDurCur();
-    _musicPlayer.setOnMusicCompleteCallback(_musicButtonImageController.changePlayImage);
+    _musicPlayer.setOnMusicCompleteCallback(
+        _musicButtonImageController.changePlayImage);
 
-    if(_musicPlayer.isLooping) _setLoopingMode();
-    if(_musicPlayer.isShuffling) _setShufflingMode();
+    if (_musicPlayer.isLooping) _setLoopingMode();
+    if (_musicPlayer.isShuffling) _setShufflingMode();
   }
 
-  void _setLoopingMode(){
+  void _setLoopingMode() {
     setState(() {
       _musicButtonImageController.changeModeImage();
     });
   }
 
-  void _setShufflingMode(){
+  void _setShufflingMode() {
     setState(() {
       _musicButtonImageController.changeModeImage();
       _musicButtonImageController.changeModeImage();
@@ -84,7 +87,8 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onMusicBackButtonTapped() {
-    _musicButtonFuncs.onMusicBackButtonTapped(_musicPlayer, _setMusicNameAndListName);
+    _musicButtonFuncs.onMusicBackButtonTapped(
+        _musicPlayer, _setMusicNameAndListName);
   }
 
   void _onPlayModeToggleButtonTapped() {
@@ -109,21 +113,32 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onMusicNextButtonTapped() {
-    _musicButtonFuncs.onMusicNextButtonTapped(_musicPlayer, _setMusicNameAndListName);
+    _musicButtonFuncs.onMusicNextButtonTapped(
+        _musicPlayer, _setMusicNameAndListName);
   }
 
-  void _onFloatingBunttonTapped(){
+  void _onFloatingBunttonTapped() {
     _openDrawer();
   }
 
   void _openDrawer() => _scaffoldKey.currentState!.openDrawer();
   void _closeDrawer() => _scaffoldKey.currentState!.closeDrawer();
 
-  void _autoVolumeSettingItemTapped(){}
-  void _lyricsSettingItemTapped(){}
-  void _nameSettingItemTapped(){}
-  void _pictureSettingItemTapped(){}
+  void _autoVolumeSettingItemTapped() {
+    print("auto");
+  }
 
+  void _lyricsSettingItemTapped() {
+    print("歌詞");
+  }
+
+  void _nameSettingItemTapped() {
+    print("name");
+  }
+
+  void _pictureSettingItemTapped() {
+    print("picture");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +178,7 @@ class _PlayPageState extends State<PlayPage> {
               elevation: 16,
               child: Image.asset(
                 _picture.musicRecordImg,
-                width: 10,//325
+                width: 10, //325
               ),
             ),
           ),
@@ -218,10 +233,12 @@ class _PlayPageState extends State<PlayPage> {
             ),
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-
-      drawer: const Drawer(
-        child: Text("test"),
-      ),
+      drawer: MusisSettingDrawer({
+        DrawerItemTappped.AUTOVOLUMESETTING: _autoVolumeSettingItemTapped,
+        DrawerItemTappped.LYRICSSETTING: _lyricsSettingItemTapped,
+        DrawerItemTappped.NAMESETTING: _nameSettingItemTapped,
+        DrawerItemTappped.PICTURESETTING: _pictureSettingItemTapped,
+      }),
     );
   }
 
@@ -235,17 +252,17 @@ class _PlayPageState extends State<PlayPage> {
             borderRadius: BorderRadius.circular(1000),
           ),
           elevation: 4,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(1000),
-              onTap: onTapped,
-              child: Padding(
-                padding: EdgeInsets.all(paddingArg),
-                child: Image.asset(
-                  imagePathArg,
-                  width: imageWidthArg,
-                ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(1000),
+            onTap: onTapped,
+            child: Padding(
+              padding: EdgeInsets.all(paddingArg),
+              child: Image.asset(
+                imagePathArg,
+                width: imageWidthArg,
               ),
             ),
+          ),
         ));
   }
 
@@ -273,77 +290,6 @@ class _PlayPageState extends State<PlayPage> {
       ),
     );
   }
-
-  Widget buildMusicSettingDrawer(){
-
-  }
-
-  Widget buildDrawerItems(String titleArg, Function onItemTappedCallbackArg){
-    return(
-      Card(
-        child: InkWell(
-          onTap: () => onItemTappedCallbackArg,
-          child: ListTile(
-            leading: ,
-            title: titleArg,
-          ),
-        )
-      )
-    );
-  }
-}
-
-class _MusicSettingDrawer extends StatelessWidget{
-  final _string = StringConstants();
-  late final Map<String, Function> _funcMap;
-
-  _MusicSettingDrawer(this._funcMap);
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: Column(
-        children: [
-          Card(
-            child: InkWell(
-              onTap: () => _funcMap["autoVolumeSetting"],
-              child: ListTile(
-                leading: Image.asset(name),//音量調整
-                title: Text(_string.musicSettingDrawerItemAutoVolumeSetting),
-              ),
-            ),
-          ),
-          Card(
-            child: InkWell(
-              onTap: () => _funcMap["LyricsSetting"],
-              child: ListTile(
-                leading: Image.asset(name),//歌詞設定
-                title: Text(_string.musicSettingDrawerItemLyricsSetting),
-              ),
-            ),
-          ),
-          Card(
-            child: InkWell(
-              onTap: () => _funcMap["NameSetting"],
-              child: ListTile(
-                leading: Image.asset(name),//名称変更
-                title: Text(_string.musicSettingDrawerItemNameSetting),
-              ),
-            ),
-          ),
-          Card(
-            child: InkWell(
-              onTap: () => _funcMap["PictureSetting"],
-              child: ListTile(
-                leading: Image.asset(name),//パケ絵の変更
-                title: Text(_string.musicSettingDrawerItemPictureSetting),
-              ),
-            ),
-          ),
-        ],
-      )
-    );
-  }
 }
 
 class _MusicButtonImageController {
@@ -367,11 +313,18 @@ class _MusicButtonImageController {
   late final String _nextBtnImage;
   String get nextBtnImage => _nextBtnImage;
 
-  _MusicButtonImageController(){
+  _MusicButtonImageController() {
     _backBtnImage = _picture.backMusicBtnImg;
     _playBtnImage = [_picture.stopMusicBtnImg, _picture.playMusicBtnImg];
-    _modeBtnImage = [_picture.loopOffMusicBtnImg, _picture.loopOnMusicBtnImg, _picture.shuffleImg];
-    _volumeBtnImage = [_picture.soundUnmuteOffMusicBtnImg, _picture.soundUnmuteOnMusicBtnImg];
+    _modeBtnImage = [
+      _picture.loopOffMusicBtnImg,
+      _picture.loopOnMusicBtnImg,
+      _picture.shuffleImg
+    ];
+    _volumeBtnImage = [
+      _picture.soundUnmuteOffMusicBtnImg,
+      _picture.soundUnmuteOnMusicBtnImg
+    ];
     _nextBtnImage = _picture.nextBtnMusicImg;
   }
 
@@ -390,7 +343,8 @@ class _MusicButtonImageController {
 }
 
 class _MusicButtonFuncs {
-  void onMusicBackButtonTapped(MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
+  void onMusicBackButtonTapped(
+      MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
     musicPlayerArg.moveBackMusic();
 
     Function() musicNameTextInitFunc = musicNameTextInitFuncArg;
@@ -407,9 +361,10 @@ class _MusicButtonFuncs {
 
   void onVolumeChangeButtonTapped(MusicPlayer musicPlayerArg) {}
 
-  void onMusicNextButtonTapped(MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
+  void onMusicNextButtonTapped(
+      MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
     musicPlayerArg.moveNextMusic();
-    
+
     Function() musicNameTextInitFunc = musicNameTextInitFuncArg;
     musicNameTextInitFunc();
   }
