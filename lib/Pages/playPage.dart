@@ -6,6 +6,8 @@ import '../setting/colors.dart';
 import '../setting/picture.dart';
 import '../logic/musicPlayer.dart';
 
+import 'pageComponents/musicSettingDrawer.dart';
+
 class PlayPage extends StatefulWidget {
   const PlayPage({super.key});
 
@@ -20,6 +22,8 @@ class _PlayPageState extends State<PlayPage> {
   final _musicPlayer = MusicPlayer();
   final _musicButtonFuncs = _MusicButtonFuncs();
   final _musicButtonImageController = _MusicButtonImageController();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   String _musicName = "null";
   String _listName = "";
@@ -43,19 +47,20 @@ class _PlayPageState extends State<PlayPage> {
   Future<void> _startLogic() async {
     _setMusicNameAndListName();
     _setMusicDurCur();
-    _musicPlayer.setOnMusicCompleteCallback(_musicButtonImageController.changePlayImage);
+    _musicPlayer.setOnMusicCompleteCallback(
+        _musicButtonImageController.changePlayImage);
 
-    if(_musicPlayer.isLooping) _setLoopingMode();
-    if(_musicPlayer.isShuffling) _setShufflingMode();
+    if (_musicPlayer.isLooping) _setLoopingMode();
+    if (_musicPlayer.isShuffling) _setShufflingMode();
   }
 
-  void _setLoopingMode(){
+  void _setLoopingMode() {
     setState(() {
       _musicButtonImageController.changeModeImage();
     });
   }
 
-  void _setShufflingMode(){
+  void _setShufflingMode() {
     setState(() {
       _musicButtonImageController.changeModeImage();
       _musicButtonImageController.changeModeImage();
@@ -82,7 +87,8 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onMusicBackButtonTapped() {
-    _musicButtonFuncs.onMusicBackButtonTapped(_musicPlayer, _setMusicNameAndListName);
+    _musicButtonFuncs.onMusicBackButtonTapped(
+        _musicPlayer, _setMusicNameAndListName);
   }
 
   void _onPlayModeToggleButtonTapped() {
@@ -107,12 +113,37 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onMusicNextButtonTapped() {
-    _musicButtonFuncs.onMusicNextButtonTapped(_musicPlayer, _setMusicNameAndListName);
+    _musicButtonFuncs.onMusicNextButtonTapped(
+        _musicPlayer, _setMusicNameAndListName);
+  }
+
+  void _onFloatingBunttonTapped() {
+    _openDrawer();
+  }
+
+  void _openDrawer() => _scaffoldKey.currentState!.openDrawer();
+  void _closeDrawer() => _scaffoldKey.currentState!.closeDrawer();
+
+  void _autoVolumeSettingItemTapped() {
+    print("auto");
+  }
+
+  void _lyricsSettingItemTapped() {
+    print("歌詞");
+  }
+
+  void _nameSettingItemTapped() {
+    print("name");
+  }
+
+  void _pictureSettingItemTapped() {
+    print("picture");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Row(children: [
           Text(_string.appNameStr),
@@ -147,7 +178,7 @@ class _PlayPageState extends State<PlayPage> {
               elevation: 16,
               child: Image.asset(
                 _picture.musicRecordImg,
-                width: 10,//325
+                width: 10, //325
               ),
             ),
           ),
@@ -194,7 +225,7 @@ class _PlayPageState extends State<PlayPage> {
       floatingActionButton: Padding(
           padding: const EdgeInsets.only(top: 80),
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () => _onFloatingBunttonTapped(),
             backgroundColor: Theme.of(context).cardColor,
             child: const Icon(
               Icons.menu,
@@ -202,6 +233,12 @@ class _PlayPageState extends State<PlayPage> {
             ),
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      drawer: MusisSettingDrawer({
+        DrawerItemTappped.AUTOVOLUMESETTING: _autoVolumeSettingItemTapped,
+        DrawerItemTappped.LYRICSSETTING: _lyricsSettingItemTapped,
+        DrawerItemTappped.NAMESETTING: _nameSettingItemTapped,
+        DrawerItemTappped.PICTURESETTING: _pictureSettingItemTapped,
+      }),
     );
   }
 
@@ -215,17 +252,17 @@ class _PlayPageState extends State<PlayPage> {
             borderRadius: BorderRadius.circular(1000),
           ),
           elevation: 4,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(1000),
-              onTap: onTapped,
-              child: Padding(
-                padding: EdgeInsets.all(paddingArg),
-                child: Image.asset(
-                  imagePathArg,
-                  width: imageWidthArg,
-                ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(1000),
+            onTap: onTapped,
+            child: Padding(
+              padding: EdgeInsets.all(paddingArg),
+              child: Image.asset(
+                imagePathArg,
+                width: imageWidthArg,
               ),
             ),
+          ),
         ));
   }
 
@@ -276,11 +313,18 @@ class _MusicButtonImageController {
   late final String _nextBtnImage;
   String get nextBtnImage => _nextBtnImage;
 
-  _MusicButtonImageController(){
+  _MusicButtonImageController() {
     _backBtnImage = _picture.backMusicBtnImg;
     _playBtnImage = [_picture.stopMusicBtnImg, _picture.playMusicBtnImg];
-    _modeBtnImage = [_picture.loopOffMusicBtnImg, _picture.loopOnMusicBtnImg, _picture.shuffleImg];
-    _volumeBtnImage = [_picture.soundUnmuteOffMusicBtnImg, _picture.soundUnmuteOnMusicBtnImg];
+    _modeBtnImage = [
+      _picture.loopOffMusicBtnImg,
+      _picture.loopOnMusicBtnImg,
+      _picture.shuffleImg
+    ];
+    _volumeBtnImage = [
+      _picture.soundUnmuteOffMusicBtnImg,
+      _picture.soundUnmuteOnMusicBtnImg
+    ];
     _nextBtnImage = _picture.nextBtnMusicImg;
   }
 
@@ -299,7 +343,8 @@ class _MusicButtonImageController {
 }
 
 class _MusicButtonFuncs {
-  void onMusicBackButtonTapped(MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
+  void onMusicBackButtonTapped(
+      MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
     musicPlayerArg.moveBackMusic();
 
     Function() musicNameTextInitFunc = musicNameTextInitFuncArg;
@@ -316,9 +361,10 @@ class _MusicButtonFuncs {
 
   void onVolumeChangeButtonTapped(MusicPlayer musicPlayerArg) {}
 
-  void onMusicNextButtonTapped(MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
+  void onMusicNextButtonTapped(
+      MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
     musicPlayerArg.moveNextMusic();
-    
+
     Function() musicNameTextInitFunc = musicNameTextInitFuncArg;
     musicNameTextInitFunc();
   }
