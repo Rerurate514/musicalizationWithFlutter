@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicalization/Pages/pageComponents/volumeControl.dart';
 import 'dart:async';
 
 import '../setting/string.dart';
@@ -33,6 +34,8 @@ class _PlayPageState extends State<PlayPage> {
 
   double _musicDuration = 100.0;
   double _musicCurrent = 0.0;
+
+  bool _isShowVolumeSlider = false;
 
   @override
   void initState() {
@@ -107,6 +110,9 @@ class _PlayPageState extends State<PlayPage> {
 
   void _onVolumeChangeButtonTapped() {
     setState(() {
+      print("before = $_isShowVolumeSlider");
+      _isShowVolumeSlider = !_isShowVolumeSlider;
+      print("sfter = $_isShowVolumeSlider");
       _musicButtonImageController.changeVolumeImage();
       _musicButtonFuncs.onVolumeChangeButtonTapped(_musicPlayer);
     });
@@ -154,73 +160,84 @@ class _PlayPageState extends State<PlayPage> {
           )
         ]),
       ),
-      body: Center(
-        child: Column(children: [
-          Container(
-            margin: const EdgeInsets.only(top: 25, bottom: 25),
-            child: Text(
-              _listName,
-              style: const TextStyle(fontSize: 18),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
-            child: Text(
-              _musicName,
-              style: const TextStyle(fontSize: 25),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(1000)),
-              elevation: 16,
-              child: Image.asset(
-                _picture.musicRecordImg,
-                width: 10, //325
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 16),
+      body: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          Center(
             child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(_musicCurText),
-                  const Text("   /   "),
-                  Text(_musicDurText),
-                ],
+              Container(
+                margin: const EdgeInsets.only(top: 25, bottom: 25),
+                child: Text(
+                  _listName,
+                  style: const TextStyle(fontSize: 18),
+                ),
               ),
-              buildMusicCurrentSlider(),
+              Container(
+                margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
+                child: Text(
+                  _musicName,
+                  style: const TextStyle(fontSize: 25),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(1000)),
+                  elevation: 16,
+                  child: Image.asset(
+                    _picture.musicRecordImg,
+                    width: 325, //325 = 10
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(_musicCurText),
+                      const Text("   /   "),
+                      Text(_musicDurText),
+                    ],
+                  ),
+                  buildMusicCurrentSlider(),
+                ]),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  buildMusicButton(
+                    _musicButtonImageController.backBtnImage,
+                    40,
+                    _onMusicBackButtonTapped,
+                  ),
+                  buildMusicButton(
+                    _musicButtonImageController.modeBtnImage,
+                    50,
+                    _onPlayModeToggleButtonTapped,
+                  ),
+                  buildMusicButton(
+                    _musicButtonImageController.playBtnImage,
+                     55,
+                    _onMusicPlayingToggleButtonTapped,
+                    16
+                  ),
+                  buildMusicButton(
+                    _musicButtonImageController.volumeBtnImage,
+                    50,
+                    _onVolumeChangeButtonTapped,
+                  ),
+                  buildMusicButton(_musicButtonImageController.nextBtnImage, 40,
+                      _onMusicNextButtonTapped),
+                ]),
+              ),
             ]),
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              buildMusicButton(
-                _musicButtonImageController.backBtnImage,
-                40,
-                _onMusicBackButtonTapped,
-              ),
-              buildMusicButton(
-                _musicButtonImageController.modeBtnImage,
-                50,
-                _onPlayModeToggleButtonTapped,
-              ),
-              buildMusicButton(_musicButtonImageController.playBtnImage, 55,
-                  _onMusicPlayingToggleButtonTapped, 16),
-              buildMusicButton(
-                _musicButtonImageController.volumeBtnImage,
-                50,
-                _onVolumeChangeButtonTapped,
-              ),
-              buildMusicButton(_musicButtonImageController.nextBtnImage, 40,
-                  _onMusicNextButtonTapped),
-            ]),
-          ),
-        ]),
+          if(_isShowVolumeSlider) MusicVolumeContorlContainer(),
+        ],
       ),
       floatingActionButton: Padding(
           padding: const EdgeInsets.only(top: 80),
