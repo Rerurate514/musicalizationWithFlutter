@@ -110,9 +110,7 @@ class _PlayPageState extends State<PlayPage> {
 
   void _onVolumeChangeButtonTapped() {
     setState(() {
-      print("before = $_isShowVolumeSlider");
       _isShowVolumeSlider = !_isShowVolumeSlider;
-      print("sfter = $_isShowVolumeSlider");
       _musicButtonImageController.changeVolumeImage();
       _musicButtonFuncs.onVolumeChangeButtonTapped(_musicPlayer);
     });
