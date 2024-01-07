@@ -3,10 +3,10 @@ import 'package:musicalization/setting/picture.dart';
 import 'package:musicalization/setting/string.dart';
 
 enum DrawerItemTappped {
-  AUTOVOLUMESETTING,
-  LYRICSSETTING,
-  NAMESETTING,
-  PICTURESETTING
+  AUTO_VOLUME_SETTING,
+  LYRICS_SETTING,
+  NAME_SETTING,
+  PICTURE_SETTING
 }
 
 class MusisSettingDrawer extends Drawer{
@@ -16,30 +16,29 @@ class MusisSettingDrawer extends Drawer{
   late final Map<DrawerItemTappped, Function> _tappedFuncsMap;
 
   MusisSettingDrawer(this._tappedFuncsMap);
-
-  Widget build(BuildContext cotext){
+  Widget build(BuildContext context){
     return Drawer(
       child: Column(
         children: [
           _MusicSettingDrawerItems(
             _string.musicSettingDrawerItemAutoVolumeSetting, 
             _picture.musicSettingDrawerItemAutoVolumeSettingImg,
-            _tappedFuncsMap[DrawerItemTappped.AUTOVOLUMESETTING]!
+            _tappedFuncsMap[DrawerItemTappped.AUTO_VOLUME_SETTING]!
           ),
           _MusicSettingDrawerItems(
             _string.musicSettingDrawerItemLyricsSetting, 
             _picture.musicSettingDrawerItemLyricsSettingImg,
-            _tappedFuncsMap[DrawerItemTappped.LYRICSSETTING]!
+            _tappedFuncsMap[DrawerItemTappped.LYRICS_SETTING]!
           ),
           _MusicSettingDrawerItems(
             _string.musicSettingDrawerItemNameSetting, 
             _picture.musicSettingDrawerItemNameSettingImg,
-            _tappedFuncsMap[DrawerItemTappped.NAMESETTING]!
+            _tappedFuncsMap[DrawerItemTappped.NAME_SETTING]!
           ),
           _MusicSettingDrawerItems(
             _string.musicSettingDrawerItemPictureSetting, 
             _picture.musicSettingDrawerItemPictureSettingImg,
-            _tappedFuncsMap[DrawerItemTappped.PICTURESETTING]!
+            _tappedFuncsMap[DrawerItemTappped.PICTURE_SETTING]!
           ),
         ],
       ),
@@ -57,7 +56,7 @@ class _MusicSettingDrawerItems extends StatelessWidget{
   Widget build(BuildContext contect){
     return Card(
       child: InkWell(
-        onTap: () => _onItemTappedFunc,
+        onTap: () => _onItemTappedFunc(),
         child: ListTile(
           leading: Image.asset(
             _itemPicture,

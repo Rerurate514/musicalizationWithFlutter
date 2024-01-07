@@ -15,7 +15,7 @@ dependencies:
   audioplayers: ^5.1.0
 
   cupertino_icons: ^1.0.2
-  realm: ^1.4.0
+  realm: ^1.6.1
 
 
   

@@ -34,7 +34,7 @@ class FileFetcher{
 
     if(Platform.isWindows){
       //todo
-      directory = Directory("C:\\Users\\rerur\\pic\\Saved Pictures\\Saved Pictures");
+      directory = Directory("C:\\Users\\rerur\\.pic");
     }
     else if(Platform.isAndroid){
       directory = Directory("/storage/emulated/0/Download/");

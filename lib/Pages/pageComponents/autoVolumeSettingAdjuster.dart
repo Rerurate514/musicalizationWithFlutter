@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:musicalization/logic/musicPlayer.dart';
+import 'package:musicalization/logic/realm/logic/musicInfo/musicInfoEditor.dart';
+import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:musicalization/setting/colors.dart';
 import 'package:musicalization/setting/picture.dart';
 import 'package:musicalization/setting/string.dart';
+import 'package:realm/realm.dart';
 
 class AutoVolumeSettingAdjuster extends StatefulWidget{
   @override
@@ -13,8 +16,8 @@ class AutoVolumeSettingAdjuster extends StatefulWidget{
 class AutoVolumeSettingAdjusterState extends State<AutoVolumeSettingAdjuster>{
   final _string = StringConstants();
   final _colors = MyColors();
-  final _picture = PictureConstants();
   final _musicPlayer = MusicPlayer();
+  final _editor = MusicInfoEditor();
 
   double _decideVolume = 0;
 
@@ -43,10 +46,9 @@ class AutoVolumeSettingAdjusterState extends State<AutoVolumeSettingAdjuster>{
                   child: Slider(
                     value: _decideVolume,
                     onChanged: (currentValue) {
-                      // setState(() {
-                      //   _decideVolume = currentValue;
-                      // });
-                      Navigator.of(context).pop(_decideVolume);
+                      setState(() {
+                        _decideVolume = currentValue;
+                      });
                     },
                     min: 0,
                     max: 100,
@@ -63,7 +65,17 @@ class AutoVolumeSettingAdjusterState extends State<AutoVolumeSettingAdjuster>{
             TextButton( 
               child: Text(_string.listDialogOK), 
               onPressed: () => {
-
+                _editor.edit(
+                  idArg: _musicPlayer.currentMusic.id, 
+                  dataInsToAddArg: MusicInfo(
+                    _musicPlayer.currentMusic.id, 
+                    _musicPlayer.currentMusic.name, 
+                    _musicPlayer.currentMusic.path, 
+                    _decideVolume.toInt(), 
+                    _musicPlayer.currentMusic.lyrics, 
+                    _musicPlayer.currentMusic.picture
+                  )
+                ),
                 Navigator.pop(context), 
               }
             ), 
