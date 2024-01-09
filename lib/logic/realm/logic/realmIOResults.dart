@@ -8,10 +8,7 @@ class RealmIOResults<SCHEMA> {
   late final SCHEMA? _payload;
   get payload => _payload;
 
-  RealmIOResults(
-      {required bool isSuccessArg,
-      SCHEMA? payloadArg,
-      String resultStringArg = ""}) {
+  RealmIOResults({required bool isSuccessArg, SCHEMA? payloadArg, String resultStringArg = ""}) {
     _isSuccess = isSuccessArg;
     _payload = payloadArg;
     _resultString = resultStringArg;

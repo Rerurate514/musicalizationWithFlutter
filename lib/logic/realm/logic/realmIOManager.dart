@@ -1,3 +1,4 @@
+import 'package:musicalization/logic/musicPlayer.dart';
 import 'package:musicalization/logic/realm/logic/interface/realmValidatedSchemaValueInterface.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:realm/realm.dart';
@@ -80,8 +81,10 @@ class _DataEditor {
   Future<RealmIOResults> edit<COLUMN_TYPE>({required Realm realm, required Set<COLUMN_TYPE> editArg, required COLUMN_TYPE editValueArg}) async {
     realm.write(() => {    
       editArg.clear(),
-      editArg.add(editValueArg)
+      editArg.add(editValueArg),
+      
     });
+
     return RealmIOResults(isSuccessArg: true);
   }
 } 

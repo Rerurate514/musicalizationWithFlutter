@@ -24,6 +24,16 @@ class AutoVolumeSettingAdjusterState extends State<AutoVolumeSettingAdjuster>{
   AutoVolumeSettingAdjusterState(){
     _decideVolume = _musicPlayer.currentMusic.volume.toDouble();
   }
+
+  void _okBtnTapped(){
+    //_musicPlayer.currentMusic.volume = 12;
+
+    _editor.edit<int>(
+      idArg: _musicPlayer.currentMusic.id, 
+      columnArg: MusicInfoColumn.AUTO_VOLUME_SETTING,
+      newValueArg: _decideVolume.toInt()
+    );
+  }
   
   @override
   Widget build(BuildContext context){
@@ -65,17 +75,7 @@ class AutoVolumeSettingAdjusterState extends State<AutoVolumeSettingAdjuster>{
             TextButton( 
               child: Text(_string.listDialogOK), 
               onPressed: () => {
-                _editor.edit(
-                  idArg: _musicPlayer.currentMusic.id, 
-                  dataInsToAddArg: MusicInfo(
-                    _musicPlayer.currentMusic.id, 
-                    _musicPlayer.currentMusic.name, 
-                    _musicPlayer.currentMusic.path, 
-                    _decideVolume.toInt(), 
-                    _musicPlayer.currentMusic.lyrics, 
-                    _musicPlayer.currentMusic.picture
-                  )
-                ),
+                _okBtnTapped(),
                 Navigator.pop(context), 
               }
             ), 
