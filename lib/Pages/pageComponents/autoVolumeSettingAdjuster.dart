@@ -26,13 +26,15 @@ class AutoVolumeSettingAdjusterState extends State<AutoVolumeSettingAdjuster>{
   }
 
   void _okBtnTapped(){
-    //_musicPlayer.currentMusic.volume = 12;
-
-    _editor.edit<int>(
-      idArg: _musicPlayer.currentMusic.id, 
-      columnArg: MusicInfoColumn.AUTO_VOLUME_SETTING,
-      newValueArg: _decideVolume.toInt()
+    MusicInfo musicInfo = MusicInfo(
+      _musicPlayer.currentMusic.id, 
+      _musicPlayer.currentMusic.name, 
+      _musicPlayer.currentMusic.path, 
+      _decideVolume.toInt(),
+      _musicPlayer.currentMusic.lyrics,
+      _musicPlayer.currentMusic.picture
     );
+    _editor.edit(newMusicInfoArg: musicInfo);
   }
   
   @override

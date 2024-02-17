@@ -8,31 +8,14 @@ enum MusicListColumn{
   NAME,
   LIST
 }
-
-extension MusicListColumnExtension on MusicListColumn {
-  Set set(MusicList list){
-    switch(this){
-      case MusicListColumn.ID: return { list.id };
-      case MusicListColumn.NAME: return { list.name };
-      case MusicListColumn.LIST: return { list.list };
-    }
-  }
-
-  Type get type{
-    switch(this){
-      case MusicListColumn.ID: return int;
-      case MusicListColumn.NAME: return String;
-      case MusicListColumn.LIST: return List<ObjectId>;
-    }
-  }
-}
-
 class ListEditor{
   final _realmIOManager = RealmIOManager(MusicList.schema);
+
+  void edit(String nameArg, List<ObjectId> infoListArg){
+    MusicList list = MusicList(ObjectId(), nameArg);
+    list.list.addAll(infoListArg);
   
-    void editList({required ObjectId idArg, required MusicListColumn columnArg, required List<ObjectId> newListArg}){
-    MusicList list = _realmIOManager.searchById(idArg: idArg);
-  
-    _realmIOManager.edit(editArg: columnArg.set(list), editValueArg: newListArg);
+    ValidatedMusicList editData = ValidatedMusicList(list);
+    _realmIOManager.edit<ValidatedMusicList>(dataInsToAddArg: editData);
   }
 }

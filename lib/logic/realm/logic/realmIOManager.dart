@@ -16,8 +16,7 @@ class RealmIOManager {
     realm = realmInsFac.createRealmIns(schemaObjectArg: schemaObjectArg);
   }
 
-  Future<void> add<T extends RealmValidatedSchemaValueInterface>(
-      {required T dataInsToAddArg}) async {
+  Future<void> add<T extends RealmValidatedSchemaValueInterface>({required T dataInsToAddArg}) async {
     _adder.add<T>(realm: realm, dataInsToAddArg: dataInsToAddArg);
   }
 
@@ -31,8 +30,8 @@ class RealmIOManager {
     return result.payload;
   }
 
-  Future<void> edit<COLUMN_TYPE>({required Set<COLUMN_TYPE> editArg, required COLUMN_TYPE editValueArg}) async {
-    _editor.edit(realm: realm, editArg: editArg, editValueArg: editValueArg);
+  Future<void> edit<T extends RealmValidatedSchemaValueInterface>({required T dataInsToAddArg}) async {
+    _editor.edit<T>(realm: realm, dataInsToAddArg: dataInsToAddArg);
   }
 
   void delete<SCHEMA extends RealmObject>({required ObjectId idArg}) {
@@ -78,13 +77,8 @@ class _DataAdder {
 }
 
 class _DataEditor {
-  Future<RealmIOResults> edit<COLUMN_TYPE>({required Realm realm, required Set<COLUMN_TYPE> editArg, required COLUMN_TYPE editValueArg}) async {
-    realm.write(() => {    
-      editArg.clear(),
-      editArg.add(editValueArg),
-      
-    });
-
+  Future<RealmIOResults> edit<T extends RealmValidatedSchemaValueInterface>({required Realm realm, required T dataInsToAddArg}) async {
+    realm.write(() => realm.add(dataInsToAddArg.payload, update: true));
     return RealmIOResults(isSuccessArg: true);
   }
 } 
