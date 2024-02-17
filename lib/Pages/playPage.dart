@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musicalization/Pages/pageComponents/autoVolumeSettingAdjuster.dart';
 import 'package:musicalization/Pages/pageComponents/volumeControl.dart';
 import 'dart:async';
 
@@ -110,9 +111,7 @@ class _PlayPageState extends State<PlayPage> {
 
   void _onVolumeChangeButtonTapped() {
     setState(() {
-      print("before = $_isShowVolumeSlider");
       _isShowVolumeSlider = !_isShowVolumeSlider;
-      print("sfter = $_isShowVolumeSlider");
       _musicButtonImageController.changeVolumeImage();
       _musicButtonFuncs.onVolumeChangeButtonTapped(_musicPlayer);
     });
@@ -131,7 +130,7 @@ class _PlayPageState extends State<PlayPage> {
   void _closeDrawer() => _scaffoldKey.currentState!.closeDrawer();
 
   void _autoVolumeSettingItemTapped() {
-    print("auto");
+    _showAutoVolumeAdjuster();
   }
 
   void _lyricsSettingItemTapped() {
@@ -144,6 +143,15 @@ class _PlayPageState extends State<PlayPage> {
 
   void _pictureSettingItemTapped() {
     print("picture");
+  }
+
+  void _showAutoVolumeAdjuster() async {
+    showDialog(
+      context: context, 
+      builder: (BuildContext context) {
+        return AutoVolumeSettingAdjuster();
+      }
+    );
   }
 
   @override
@@ -191,7 +199,7 @@ class _PlayPageState extends State<PlayPage> {
                   elevation: 16,
                   child: Image.asset(
                     _picture.musicRecordImg,
-                    width: 325, //325 = 10
+                    width: 10, //325 = 10
                   ),
                 ),
               ),
@@ -258,10 +266,10 @@ class _PlayPageState extends State<PlayPage> {
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       drawer: MusisSettingDrawer({
-        DrawerItemTappped.AUTOVOLUMESETTING: _autoVolumeSettingItemTapped,
-        DrawerItemTappped.LYRICSSETTING: _lyricsSettingItemTapped,
-        DrawerItemTappped.NAMESETTING: _nameSettingItemTapped,
-        DrawerItemTappped.PICTURESETTING: _pictureSettingItemTapped,
+        DrawerItemTappped.AUTO_VOLUME_SETTING: _autoVolumeSettingItemTapped,
+        DrawerItemTappped.LYRICS_SETTING: _lyricsSettingItemTapped,
+        DrawerItemTappped.NAME_SETTING: _nameSettingItemTapped,
+        DrawerItemTappped.PICTURE_SETTING: _pictureSettingItemTapped,
       }),
     );
   }

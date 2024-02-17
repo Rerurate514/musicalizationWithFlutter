@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicalization/Pages/pageComponents/upMenuBarWidget.dart';
 import 'package:musicalization/logic/musicPlayer.dart';
+import 'package:musicalization/logic/musicSettingSyncer.dart';
 import 'package:musicalization/logic/realm/logic/musicInfo/musicInfoUpdater.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'dart:async';
@@ -59,6 +60,9 @@ class _HomePageState extends State<HomePage> {
     }
 
     _musicPlayer.start();
+
+    final settingSyncer = MusicSettingSyncer();
+    settingSyncer.syncAllSetting();
 
     Function() movePageCallback = _movePageFuncsMap['Play']!;
     movePageCallback();

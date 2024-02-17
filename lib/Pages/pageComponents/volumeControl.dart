@@ -61,42 +61,35 @@ class _MusicVolumeContorlContainerState
                 RotatedBox(
                   quarterTurns: 3,
                   child: SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      trackHeight: 2.0,
-                      activeTrackColor: Theme.of(context).splashColor,
-                      inactiveTrackColor: Theme.of(context).cardColor,
-                      thumbColor: _colors.primaryBlue,
-                      thumbShape:
-                          const RoundSliderThumbShape(enabledThumbRadius: 8.0),
-                      overlayColor: Colors.blue,
-                      overlayShape:
-                          const RoundSliderOverlayShape(overlayRadius: 20.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 4,//bottom
-                        right: 16//top
+                      data: SliderTheme.of(context).copyWith(
+                        trackHeight: 2.0,
+                        activeTrackColor: Theme.of(context).splashColor,
+                        inactiveTrackColor: Theme.of(context).cardColor,
+                        thumbColor: _colors.primaryBlue,
+                        thumbShape: const RoundSliderThumbShape(
+                            enabledThumbRadius: 8.0),
+                        overlayColor: Colors.blue,
+                        overlayShape:
+                            const RoundSliderOverlayShape(overlayRadius: 20.0),
                       ),
-                      child: Slider(
-                        value: _value.toDouble(),
-                        onChanged: (newVolume) => _onChangedSlider(newVolume),
-                        max: 100,
-                        min: 0,
-                      ),
-                    )
-                  ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 4, //bottom
+                            right: 16 //top
+                            ),
+                        child: Slider(
+                          value: _value.toDouble(),
+                          onChanged: (newVolume) => _onChangedSlider(newVolume),
+                          max: 100,
+                          min: 0,
+                        ),
+                      )),
                 ),
                 Padding(
-                  padding: const  EdgeInsets.only(
-                    top: 8,
-                    bottom: 32 
-                  ),
+                  padding: const EdgeInsets.only(top: 8, bottom: 32),
                   child: Text("$_value"),
                 ),
-                Image.asset(
-                  _picture.soundUnmuteOnMusicBtnImg,
-                  width: 64
-                ),
+                Image.asset(_picture.soundUnmuteOnMusicBtnImg, width: 64),
               ]),
             )
           ]),
