@@ -36,52 +36,69 @@ class AutoVolumeSettingAdjusterState extends State<AutoVolumeSettingAdjuster>{
     );
     _editor.edit(newMusicInfoArg: musicInfo);
   }
-  
+
   @override
   Widget build(BuildContext context){
-    return AlertDialog(
-          title: Text(_string.musicSettingDrawerItemAutoVolumeSettingDialogTitle),
-          content: Center(
-            child:  Column(
-              children: [
-                Text("${_decideVolume.toInt()}"),
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    trackHeight: 2.0,
-                    activeTrackColor: Theme.of(context).splashColor,
-                    inactiveTrackColor: Theme.of(context).cardColor,
-                    thumbColor: _colors.primaryBlue,
-                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8.0),
-                    overlayColor: Colors.blue,
-                    overlayShape: const RoundSliderOverlayShape(overlayRadius: 20.0),
-                  ),
-                  child: Slider(
-                    value: _decideVolume,
-                    onChanged: (currentValue) {
-                      setState(() {
-                        _decideVolume = currentValue;
-                      });
-                    },
-                    min: 0,
-                    max: 100,
-                  ),
+    final Size size = MediaQuery.of(context).size;
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: size.height * 0.3, horizontal: size.width * 0.1),
+        child: Card(
+        elevation: 8,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
+                child: Text(
+                  _string.musicSettingDrawerItemAutoVolumeSettingDialogTitle,
+                  style: TextStyle(fontSize: size.height * 0.02),
                 ),
-              ]
-            ),
+              ),
+              Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.015)),
+              Text("${_decideVolume.toInt()}"),
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  trackHeight: 2.0,
+                  activeTrackColor: Theme.of(context).splashColor,
+                  inactiveTrackColor: Theme.of(context).cardColor,
+                  thumbColor: _colors.primaryBlue,
+                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8.0),
+                  overlayColor: Colors.blue,
+                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 20.0),
+                ),
+                child: Slider(
+                  value: _decideVolume,
+                  onChanged: (currentValue) {
+                    setState(() {
+                      _decideVolume = currentValue;
+                    });
+                  },
+                  min: 0,
+                  max: 100,
+                ),
+              ),
+              Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.015)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton( 
+                    child: Text(_string.listDialogCancel),
+                    onPressed: () => Navigator.pop(context), 
+                  ), 
+                  TextButton( 
+                    child: Text(_string.listDialogOK), 
+                    onPressed: () => {
+                      _okBtnTapped(),
+                      Navigator.pop(context), 
+                    }
+                  ), 
+                ],
+              )
+            ],
           ),
-          actions: <Widget>[ // ボタン領域 
-            TextButton( 
-              child: Text(_string.listDialogCancel),
-              onPressed: () => Navigator.pop(context), 
-            ), 
-            TextButton( 
-              child: Text(_string.listDialogOK), 
-              onPressed: () => {
-                _okBtnTapped(),
-                Navigator.pop(context), 
-              }
-            ), 
-          ],
-        );
+        )
+      )
+    );
   }
 }

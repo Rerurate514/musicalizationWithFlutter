@@ -17,9 +17,25 @@ class MusisSettingDrawer extends Drawer{
 
   MusisSettingDrawer(this._tappedFuncsMap);
   Widget build(BuildContext context){
+    final Size size = MediaQuery.of(context).size;
     return Drawer(
       child: Column(
         children: [
+          Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+                child: Image.asset(
+                  _picture.settingModeImg,
+                  width: size.width * 0.07,
+                ),
+              ),
+              Text(
+                _string.musicSettingStr,
+                style: const TextStyle(fontSize: 32),
+              ),
+            ],
+          ),
           _MusicSettingDrawerItems(
             _string.musicSettingDrawerItemAutoVolumeSetting, 
             _picture.musicSettingDrawerItemAutoVolumeSettingImg,
