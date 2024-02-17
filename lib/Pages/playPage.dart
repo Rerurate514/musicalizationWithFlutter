@@ -148,6 +148,7 @@ class _PlayPageState extends State<PlayPage> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -173,11 +174,14 @@ class _PlayPageState extends State<PlayPage> {
                 ),
               ),
               Container(
+                height: size.height * 0.05,
                 margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
-                child: Text(
-                  _musicName,
-                  style: const TextStyle(fontSize: 25),
-                ),
+                child: FittedBox(
+                  child: Text(
+                    _musicName,
+                    style: const TextStyle(fontSize: 25),
+                  ),
+                )
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),
@@ -230,8 +234,11 @@ class _PlayPageState extends State<PlayPage> {
                     50,
                     _onVolumeChangeButtonTapped,
                   ),
-                  buildMusicButton(_musicButtonImageController.nextBtnImage, 40,
-                      _onMusicNextButtonTapped),
+                  buildMusicButton(
+                  _musicButtonImageController.nextBtnImage, 
+                    40,
+                    _onMusicNextButtonTapped
+                  ),
                 ]),
               ),
             ]),
@@ -260,8 +267,7 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   Widget buildMusicButton(
-      String imagePathArg, double imageWidthArg, void Function() onTapped,
-      [double paddingArg = 8.0]) {
+      String imagePathArg, double imageWidthArg, void Function() onTapped,[double paddingArg = 8.0]) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
         child: Card(
@@ -360,8 +366,7 @@ class _MusicButtonImageController {
 }
 
 class _MusicButtonFuncs {
-  void onMusicBackButtonTapped(
-      MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
+  void onMusicBackButtonTapped(MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
     musicPlayerArg.moveBackMusic();
 
     Function() musicNameTextInitFunc = musicNameTextInitFuncArg;
@@ -378,8 +383,7 @@ class _MusicButtonFuncs {
 
   void onVolumeChangeButtonTapped(MusicPlayer musicPlayerArg) {}
 
-  void onMusicNextButtonTapped(
-      MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
+  void onMusicNextButtonTapped(MusicPlayer musicPlayerArg, Function() musicNameTextInitFuncArg) {
     musicPlayerArg.moveNextMusic();
 
     Function() musicNameTextInitFunc = musicNameTextInitFuncArg;
