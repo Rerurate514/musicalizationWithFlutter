@@ -16,6 +16,8 @@ class MusisSettingDrawer extends Drawer{
   late final Map<DrawerItemTappped, Function> _tappedFuncsMap;
 
   MusisSettingDrawer(this._tappedFuncsMap);
+
+  @override
   Widget build(BuildContext context){
     final Size size = MediaQuery.of(context).size;
     return Drawer(

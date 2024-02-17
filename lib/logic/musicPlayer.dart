@@ -53,7 +53,7 @@ class _MusicPlayerManager {
   final _DurationListenerResistry _durationListener = _DurationListenerResistry();
   final _PlayerCompletionListenerResistry _playerCompletionListener = _PlayerCompletionListenerResistry();
 
-  late _TrackManager _trackManager = _TrackManager([MusicInfo(ObjectId(), "", "", 0, "", "")], 0, () async {});
+  late _TrackManager _trackManager = _TrackManager([MusicInfo(ObjectId(), "null", "", 0, "", "")], 0, () async {});
 
   final listStartIndex = 0;
 

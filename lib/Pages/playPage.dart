@@ -233,7 +233,7 @@ class _PlayPageState extends State<PlayPage> {
                   ),
                   buildMusicButton(
                     _musicButtonImageController.playBtnImage,
-                     55,
+                    55,
                     _onMusicPlayingToggleButtonTapped,
                     16
                   ),
@@ -243,7 +243,7 @@ class _PlayPageState extends State<PlayPage> {
                     _onVolumeChangeButtonTapped,
                   ),
                   buildMusicButton(
-                  _musicButtonImageController.nextBtnImage, 
+                    _musicButtonImageController.nextBtnImage, 
                     40,
                     _onMusicNextButtonTapped
                   ),
@@ -274,27 +274,27 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 
-  Widget buildMusicButton(
-      String imagePathArg, double imageWidthArg, void Function() onTapped,[double paddingArg = 8.0]) {
+  Widget buildMusicButton(String imagePathArg, double imageWidthArg, void Function() onTapped,[double paddingArg = 8.0]) {
     return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(1000),
-          ),
-          elevation: 4,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(1000),
-            onTap: onTapped,
-            child: Padding(
-              padding: EdgeInsets.all(paddingArg),
-              child: Image.asset(
-                imagePathArg,
-                width: imageWidthArg,
-              ),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(1000),
+        ),
+        elevation: 4,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(1000),
+          onTap: onTapped,
+          child: Padding(
+            padding: EdgeInsets.all(paddingArg),
+            child: Image.asset(
+              imagePathArg,
+              width: imageWidthArg,
             ),
           ),
-        ));
+        ),
+      )
+    );
   }
 
   Widget buildMusicCurrentSlider() {
