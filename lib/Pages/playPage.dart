@@ -160,6 +160,7 @@ class _PlayPageState extends State<PlayPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(children: [
           Text(_string.appNameStr),
           const Spacer(),
