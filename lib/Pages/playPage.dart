@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:musicalization/Pages/pageComponents/autoVolumeSettingAdjuster.dart';
+import 'package:musicalization/Pages/pageComponents/lyricsFragment.dart';
+import 'package:musicalization/Pages/pageComponents/lyricsSettingAdjuster.dart';
 import 'package:musicalization/Pages/pageComponents/volumeControl.dart';
 import 'dart:async';
 
@@ -37,6 +39,7 @@ class _PlayPageState extends State<PlayPage> {
   double _musicCurrent = 0.0;
 
   bool _isShowVolumeSlider = false;
+  bool _isShowLyrics = false;
 
   @override
   void initState() {
@@ -51,8 +54,7 @@ class _PlayPageState extends State<PlayPage> {
   Future<void> _startLogic() async {
     _setMusicNameAndListName();
     _setMusicDurCur();
-    _musicPlayer.setOnMusicCompleteCallback(
-        _musicButtonImageController.changePlayImage);
+
 
     if (_musicPlayer.isLooping) _setLoopingMode();
     if (_musicPlayer.isShuffling) _setShufflingMode();
@@ -86,8 +88,8 @@ class _PlayPageState extends State<PlayPage> {
       });
     }
 
-    _musicCurText = _musicCurrent.toInt().toString() + " s";
-    _musicDurText = _musicDuration.toInt().toString() + " s";
+    _musicCurText = "${_musicCurrent.toInt().toString()} s";
+    _musicDurText = "${_musicDuration.toInt().toString()} s";
   }
 
   void _onMusicBackButtonTapped() {
@@ -104,7 +106,6 @@ class _PlayPageState extends State<PlayPage> {
 
   void _onMusicPlayingToggleButtonTapped() {
     setState(() {
-      _musicButtonImageController.changePlayImage();
       _musicButtonFuncs.onMusicPlayingToggleButtonTapped(_musicPlayer);
     });
   }
@@ -118,12 +119,7 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onMusicNextButtonTapped() {
-    _musicButtonFuncs.onMusicNextButtonTapped(
-        _musicPlayer, _setMusicNameAndListName);
-  }
-
-  void _onFloatingBunttonTapped() {
-    _openDrawer();
+    _musicButtonFuncs.onMusicNextButtonTapped(_musicPlayer, _setMusicNameAndListName);
   }
 
   void _openDrawer() => _scaffoldKey.currentState!.openDrawer();
@@ -134,7 +130,7 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _lyricsSettingItemTapped() {
-    print("歌詞");
+    _showDialog(LyricsSettingAdjuster());
   }
 
   void _nameSettingItemTapped() {
@@ -146,10 +142,14 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _showAutoVolumeAdjuster() async {
+    _showDialog(AutoVolumeSettingAdjuster());
+  }
+
+  void _showDialog(Widget content){
     showDialog(
       context: context, 
       builder: (BuildContext context) {
-        return AutoVolumeSettingAdjuster();
+        return content;
       }
     );
   }
@@ -200,7 +200,7 @@ class _PlayPageState extends State<PlayPage> {
                   elevation: 16,
                   child: Image.asset(
                     _picture.musicRecordImg,
-                    width: 10, //325 = 10
+                    width: 325, //325 = 10
                   ),
                 ),
               ),
@@ -221,51 +221,75 @@ class _PlayPageState extends State<PlayPage> {
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 16),
                 child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  buildMusicButton(
-                    _musicButtonImageController.backBtnImage,
-                    40,
-                    _onMusicBackButtonTapped,
-                  ),
-                  buildMusicButton(
-                    _musicButtonImageController.modeBtnImage,
-                    50,
-                    _onPlayModeToggleButtonTapped,
-                  ),
-                  buildMusicButton(
-                    _musicButtonImageController.playBtnImage,
-                    55,
-                    _onMusicPlayingToggleButtonTapped,
-                    16
-                  ),
-                  buildMusicButton(
-                    _musicButtonImageController.volumeBtnImage,
-                    50,
-                    _onVolumeChangeButtonTapped,
-                  ),
-                  buildMusicButton(
-                    _musicButtonImageController.nextBtnImage, 
-                    40,
-                    _onMusicNextButtonTapped
-                  ),
-                ]),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    buildMusicButton(
+                      _musicButtonImageController.backBtnImage,
+                      40,
+                      _onMusicBackButtonTapped,
+                    ),
+                    buildMusicButton(
+                      _musicButtonImageController.modeBtnImage,
+                      50,
+                      _onPlayModeToggleButtonTapped,
+                    ),
+                    buildMusicButton(
+                      _musicButtonImageController.playBtnImage,
+                      55,
+                      _onMusicPlayingToggleButtonTapped,
+                      16
+                    ),
+                    buildMusicButton(
+                      _musicButtonImageController.volumeBtnImage,
+                      50,
+                      _onVolumeChangeButtonTapped,
+                    ),
+                    buildMusicButton(
+                      _musicButtonImageController.nextBtnImage, 
+                      40,
+                      _onMusicNextButtonTapped
+                    ),
+                  ]
+                ),
               ),
             ]),
           ),
           if(_isShowVolumeSlider) MusicVolumeContorlContainer(),
+          if(_isShowLyrics) LyricsFragment(closeFragmentCallback: () => { _isShowLyrics = !_isShowLyrics },),
         ],
       ),
-      floatingActionButton: Padding(
-          padding: const EdgeInsets.only(top: 80),
-          child: FloatingActionButton(
-            onPressed: () => _onFloatingBunttonTapped(),
-            backgroundColor: Theme.of(context).cardColor,
-            child: const Icon(
-              Icons.menu,
-              color: Color.fromARGB(255, 44, 232, 245),
+      floatingActionButton: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: EdgeInsets.only(top: size.height * 0.14, right: size.width * 0.002),
+              child: FloatingActionButton(
+                onPressed: () => _openDrawer(),
+                backgroundColor: Theme.of(context).cardColor,
+                child: const Icon(
+                  Icons.menu,
+                  color: Color.fromARGB(255, 44, 232, 245),
+                ),
+              )
             ),
-          )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.only(top: size.height * 0.14, left: size.width * 0.072),
+              child: FloatingActionButton(
+                onPressed: () {
+                  _isShowLyrics = !_isShowLyrics;
+                },
+                backgroundColor: Theme.of(context).cardColor,
+                child: Image.asset(
+                  _picture.lyricsIconImg
+                ),
+              )
+            ),
+          ),
+        ],
+      ),
       drawer: MusisSettingDrawer({
         DrawerItemTappped.AUTO_VOLUME_SETTING: _autoVolumeSettingItemTapped,
         DrawerItemTappped.LYRICS_SETTING: _lyricsSettingItemTapped,
@@ -326,19 +350,20 @@ class _PlayPageState extends State<PlayPage> {
 
 class _MusicButtonImageController {
   final _picture = PictureConstants();
+  final _musicPlayer = MusicPlayer();
 
   late final String _backBtnImage;
   String get backBtnImage => _backBtnImage;
 
-  late final List _playBtnImage;
+  late final List<String> _playBtnImage;
   int _playBtnIndex = 0;
-  String get playBtnImage => _playBtnImage[_playBtnIndex];
+  String get playBtnImage => _musicPlayer.isPlaying ?  _picture.stopMusicBtnImg : _picture.playMusicBtnImg;
 
-  late final List _modeBtnImage;
+  late final List<String> _modeBtnImage;
   int _modeBtnIndex = 0;
   String get modeBtnImage => _modeBtnImage[_modeBtnIndex];
 
-  late final List _volumeBtnImage;
+  late final List<String> _volumeBtnImage;
   int _volumeBtnIndex = 0;
   String get volumeBtnImage => _volumeBtnImage[_volumeBtnIndex];
 
@@ -347,7 +372,6 @@ class _MusicButtonImageController {
 
   _MusicButtonImageController() {
     _backBtnImage = _picture.backMusicBtnImg;
-    _playBtnImage = [_picture.stopMusicBtnImg, _picture.playMusicBtnImg];
     _modeBtnImage = [
       _picture.loopOffMusicBtnImg,
       _picture.loopOnMusicBtnImg,
@@ -363,10 +387,6 @@ class _MusicButtonImageController {
   void changeModeImage() {
     _modeBtnIndex++;
     if (_modeBtnIndex == 3) _modeBtnIndex = 0;
-  }
-
-  void changePlayImage() {
-    _playBtnIndex = (_playBtnIndex + 1) % _playBtnImage.length;
   }
 
   void changeVolumeImage() {

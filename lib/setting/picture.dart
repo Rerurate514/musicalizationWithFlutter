@@ -28,6 +28,7 @@ class PictureConstants{
   String get soundUnmuteOffMusicBtnImg => 'images/mp3_ui_sound_control_unmute_off.png';
   String get soundUnmuteOnMusicBtnImg => 'images/mp3_ui_sound_control_unmute_on.png';
   String get nextBtnMusicImg => 'images/mp3_ui_next_music.png';
+  String get lyricsIconImg => 'images/mp3_ui_lyrics.png';
   String get musicSettingDrawerItemAutoVolumeSettingImg => 'images/mp3_menu_auto_sound_control.png';
   String get musicSettingDrawerItemLyricsSettingImg => 'images/mp3_menu_lyrics_setting.png';
   String get musicSettingDrawerItemNameSettingImg => 'images/mp3_menu_name_change_button.png';

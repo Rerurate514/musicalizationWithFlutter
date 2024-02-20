@@ -16,6 +16,9 @@ class StringConstants{
   String get musicSettingDrawerItemAutoVolumeSetting => "自動音量調整";
   String get musicSettingDrawerItemAutoVolumeSettingDialogTitle => "曲再生時に設定したい音量を決めてください。";
   String get musicSettingDrawerItemLyricsSetting => "歌詞の入力";
+  String get musicSettingDrawerItemLyricsSettingDialogTitle => "歌詞の入力";
   String get musicSettingDrawerItemNameSetting => "ファイル名の変更";
   String get musicSettingDrawerItemPictureSetting => "パッケージイラストの変更";
+
+  String get lyrics => "歌詞";
 }
