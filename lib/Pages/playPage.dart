@@ -198,10 +198,17 @@ class _PlayPageState extends State<PlayPage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(1000)),
                   elevation: 16,
-                  child: Image.asset(
-                    _picture.musicRecordImg,
-                    width: 325, //325 = 10
-                  ),
+                  // child: Image.asset(
+                  //   _picture.musicRecordImg,
+                  //   width: 325, //325 = 10
+                  // ),
+                  child: SizedBox(
+                    width: 325,
+                    height: 325,
+                    child: CircleAvatar(
+                    backgroundImage: AssetImage(_picture.musicRecordImg),
+                    ),
+                  )
                 ),
               ),
               Container(
@@ -269,6 +276,7 @@ class _PlayPageState extends State<PlayPage> {
                 child: const Icon(
                   Icons.menu,
                   color: Color.fromARGB(255, 44, 232, 245),
+                  size: 0.8,
                 ),
               )
             ),

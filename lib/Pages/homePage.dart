@@ -104,14 +104,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(children: [
-          Text(_string.appNameStr),
-          const Spacer(),
-          Image.asset(
-            _picture.homeModeImg,
-            width: 70,
-          )
-        ]),
+        title: Row(
+          children: [
+            Text(_string.appNameStr),
+            const Spacer(),
+            Image.asset(
+              _picture.homeModeImg,
+              width: 70,
+            )
+          ]
+        ),
       ),
       body: Column(
         children: [
