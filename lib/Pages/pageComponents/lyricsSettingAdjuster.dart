@@ -15,7 +15,6 @@ class LyricsSettingAdjuster extends StatefulWidget{
 
 class LyricsSettingAdjusterState extends State<LyricsSettingAdjuster>{
   final _string = StringConstants();
-  final _colors = MyColors();
   final _musicPlayer = MusicPlayer();
   final _editor = MusicInfoEditor();
   final _lyricsTextController = TextEditingController();
@@ -46,52 +45,54 @@ class LyricsSettingAdjusterState extends State<LyricsSettingAdjuster>{
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: size.height * 0.3, horizontal: size.width * 0.1),
         child: Card(
-        elevation: 8,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
-                child: Text(
-                  _string.musicSettingDrawerItemLyricsSettingDialogTitle,
-                  style: TextStyle(fontSize: size.height * 0.02),
-                ),
-              ),
-              Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.015)),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                child: TextField(
-                  controller: _lyricsTextController,
-                  maxLines: null,
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: '歌詞を入力',
+          elevation: 8,
+            child: SingleChildScrollView(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
+                  child: Text(
+                    _string.musicSettingDrawerItemLyricsSettingDialogTitle,
+                    style: TextStyle(fontSize: size.height * 0.02),
                   ),
-                  onChanged: ((value){
-                    _lyrics = value;
-                  }),
                 ),
-              ),
-              Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.015)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton( 
-                    child: Text(_string.listDialogCancel),
-                    onPressed: () => Navigator.pop(context), 
-                  ), 
-                  TextButton( 
-                    child: Text(_string.listDialogOK), 
-                    onPressed: () => {
-                      _okBtnTapped(),
-                      Navigator.pop(context), 
-                    }
-                  ), 
-                ],
-              )
-            ],
-          ),
+                Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.015)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                  child: TextField(
+                    controller: _lyricsTextController,
+                    maxLines: null,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: '歌詞を入力',
+                    ),
+                    onChanged: ((value){
+                      _lyrics = value;
+                    }),
+                  ),
+                ),
+                Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.015)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton( 
+                      child: Text(_string.listDialogCancel),
+                      onPressed: () => Navigator.pop(context), 
+                    ), 
+                    TextButton( 
+                      child: Text(_string.listDialogOK), 
+                      onPressed: () => {
+                        _okBtnTapped(),
+                        Navigator.pop(context), 
+                      }
+                    ), 
+                  ],
+                )
+              ],
+            ),
+          )
         )
       )
     );
