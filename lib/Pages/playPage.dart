@@ -198,15 +198,12 @@ class _PlayPageState extends State<PlayPage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(1000)),
                   elevation: 16,
-                  // child: Image.asset(
-                  //   _picture.musicRecordImg,
-                  //   width: 325, //325 = 10
-                  // ),
                   child: SizedBox(
-                    width: 325,
-                    height: 325,
+                    width: size.width * 0.68,
+                    height: size.height * 0.34,
                     child: CircleAvatar(
-                    backgroundImage: AssetImage(_picture.musicRecordImg),
+                      backgroundColor: const Color.fromARGB(28, 28, 28, 0),
+                      backgroundImage: AssetImage(_picture.musicRecordImg),
                     ),
                   )
                 ),
@@ -231,28 +228,28 @@ class _PlayPageState extends State<PlayPage> {
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     buildMusicButton(
                       _musicButtonImageController.backBtnImage,
-                      40,
+                      size.width * 0.1,
                       _onMusicBackButtonTapped,
                     ),
                     buildMusicButton(
                       _musicButtonImageController.modeBtnImage,
-                      50,
+                      size.width * 0.11,
                       _onPlayModeToggleButtonTapped,
                     ),
                     buildMusicButton(
                       _musicButtonImageController.playBtnImage,
-                      55,
+                      size.width * 0.13,
                       _onMusicPlayingToggleButtonTapped,
                       16
                     ),
                     buildMusicButton(
                       _musicButtonImageController.volumeBtnImage,
-                      50,
+                      size.width * 0.11,
                       _onVolumeChangeButtonTapped,
                     ),
                     buildMusicButton(
                       _musicButtonImageController.nextBtnImage, 
-                      40,
+                      size.width * 0.1,
                       _onMusicNextButtonTapped
                     ),
                   ]
@@ -260,8 +257,18 @@ class _PlayPageState extends State<PlayPage> {
               ),
             ]),
           ),
-          if(_isShowVolumeSlider) MusicVolumeContorlContainer(),
-          if(_isShowLyrics) LyricsFragment(closeFragmentCallback: () => { _isShowLyrics = !_isShowLyrics },),
+          AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Easing.legacyDecelerate,
+              height: _isShowVolumeSlider ? size.height * 0.5 : 0,
+              child: MusicVolumeContorlContainer(),
+          ),
+          AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Easing.legacyDecelerate,
+              width: _isShowLyrics ? size.width : 0,
+              child: LyricsFragment(closeFragmentCallback: () { _isShowLyrics = !_isShowLyrics; }),
+          )
         ],
       ),
       floatingActionButton: Stack(
@@ -273,10 +280,10 @@ class _PlayPageState extends State<PlayPage> {
               child: FloatingActionButton(
                 onPressed: () => _openDrawer(),
                 backgroundColor: Theme.of(context).cardColor,
-                child: const Icon(
+                child: Icon(
                   Icons.menu,
-                  color: Color.fromARGB(255, 44, 232, 245),
-                  size: 0.8,
+                  color: _colors.primaryBlue,
+                  size: 40,
                 ),
               )
             ),
@@ -291,7 +298,8 @@ class _PlayPageState extends State<PlayPage> {
                 },
                 backgroundColor: Theme.of(context).cardColor,
                 child: Image.asset(
-                  _picture.lyricsIconImg
+                  _picture.lyricsIconImg,
+                  width: 40,
                 ),
               )
             ),
@@ -307,7 +315,7 @@ class _PlayPageState extends State<PlayPage> {
     );
   }
 
-  Widget buildMusicButton(String imagePathArg, double imageWidthArg, void Function() onTapped,[double paddingArg = 8.0]) {
+  Widget buildMusicButton(String imagePathArg, double imageWidthArg, void Function() onTapped, [double paddingArg = 8.0]) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4),
       child: Card(

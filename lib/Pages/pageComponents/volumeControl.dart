@@ -25,7 +25,12 @@ class _MusicVolumeContorlContainerState
     MusicInfo currentMusic = _musicPlayer.currentMusic;
     ObjectId musicId = currentMusic.id;
 
-    if (currentMusic.name != "") _initVolume = _recordFetcher.getRecordFromId(musicId).volume;
+    try{
+      if (currentMusic.name != "") _initVolume = _recordFetcher.getRecordFromId(musicId).volume;
+    }
+    catch(e){
+      _initVolume = 40;
+    }
   }
 
   @override
