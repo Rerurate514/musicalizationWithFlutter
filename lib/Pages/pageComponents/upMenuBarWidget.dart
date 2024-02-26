@@ -27,12 +27,15 @@ class UpMenuBarWidget extends StatelessWidget {
             width: 80,
           ),
           Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16)
+            ),
             elevation: 4.0,
             child: InkWell(
+                borderRadius: BorderRadius.circular(16),
                 onTap: _centralBtnSetting.btnFunction,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                   child: Image.asset(
                     _centralBtnSetting.btnPicture,
                     width: 50,
@@ -40,12 +43,15 @@ class UpMenuBarWidget extends StatelessWidget {
                 )),
           ),
           Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16)
+            ),
             elevation: 4.0,
             child: InkWell(
+                borderRadius: BorderRadius.circular(16),
                 onTap: _rightBtnSetting.btnFunction,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                   child: Image.asset(
                     _rightBtnSetting.btnPicture,
                     width: 50,
