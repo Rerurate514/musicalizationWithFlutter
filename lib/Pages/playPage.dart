@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:musicalization/Pages/pageComponents/autoVolumeSettingAdjuster.dart';
+import 'package:musicalization/Pages/pageComponents/imagePickComponent.dart';
 import 'package:musicalization/Pages/pageComponents/lyricsFragment.dart';
 import 'package:musicalization/Pages/pageComponents/lyricsSettingAdjuster.dart';
 import 'package:musicalization/Pages/pageComponents/volumeControl.dart';
+import 'package:musicalization/logic/pictureBinaryConverter.dart';
 import 'dart:async';
 
 import '../setting/string.dart';
@@ -26,6 +30,7 @@ class _PlayPageState extends State<PlayPage> {
   final _musicPlayer = MusicPlayer();
   final _musicButtonFuncs = _MusicButtonFuncs();
   final _musicButtonImageController = _MusicButtonImageController();
+  final _converter = PictureBinaryConverter();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,11 +40,14 @@ class _PlayPageState extends State<PlayPage> {
   String _musicDurText = "null";
   String _musicCurText = "null";
 
+  ImageProvider? _musicPicture;
+
   double _musicDuration = 100.0;
   double _musicCurrent = 0.0;
 
   bool _isShowVolumeSlider = false;
   bool _isShowLyrics = false;
+  bool _isShowPictureSetting = false;
 
   @override
   void initState() {
@@ -52,9 +60,8 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   Future<void> _startLogic() async {
-    _setMusicNameAndListName();
+    _setMusicData();
     _setMusicDurCur();
-
 
     if (_musicPlayer.isLooping) _setLoopingMode();
     if (_musicPlayer.isShuffling) _setShufflingMode();
@@ -73,11 +80,12 @@ class _PlayPageState extends State<PlayPage> {
     });
   }
 
-  void _setMusicNameAndListName() {
+  void _setMusicData() {
     setState(() {
       _musicName = _musicPlayer.currentMusic.name;
       _listName = _musicPlayer.listName;
     });
+    _setMusicPicture();
   }
 
   void _setMusicDurCur() {
@@ -92,9 +100,19 @@ class _PlayPageState extends State<PlayPage> {
     _musicDurText = "${_musicDuration.toInt().toString()} s";
   }
 
+  void _setMusicPicture() {
+    setState(() {
+      if(_musicPlayer.currentMusic.picture != ""){
+        _musicPicture = _converter.convertBase64ToImage(_musicPlayer.currentMusic.picture);
+      }
+      else{
+        _musicPicture = AssetImage(_picture.musicRecordImg);
+      }
+    });
+  }
+
   void _onMusicBackButtonTapped() {
-    _musicButtonFuncs.onMusicBackButtonTapped(
-        _musicPlayer, _setMusicNameAndListName);
+    _musicButtonFuncs.onMusicBackButtonTapped(_musicPlayer, _setMusicData);
   }
 
   void _onPlayModeToggleButtonTapped() {
@@ -119,7 +137,7 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _onMusicNextButtonTapped() {
-    _musicButtonFuncs.onMusicNextButtonTapped(_musicPlayer, _setMusicNameAndListName);
+    _musicButtonFuncs.onMusicNextButtonTapped(_musicPlayer, _setMusicData);
   }
 
   void _openDrawer() => _scaffoldKey.currentState!.openDrawer();
@@ -138,7 +156,8 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _pictureSettingItemTapped() {
-    print("picture");
+    _isShowPictureSetting = !_isShowPictureSetting;
+    _closeDrawer();
   }
 
   void _showAutoVolumeAdjuster() async {
@@ -196,14 +215,15 @@ class _PlayPageState extends State<PlayPage> {
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: Card(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1000)),
+                    borderRadius: BorderRadius.circular(1000)
+                  ),
                   elevation: 16,
                   child: SizedBox(
-                    width: size.width * 0.68,
+                    width: size.width * 0.74,
                     height: size.height * 0.34,
                     child: CircleAvatar(
                       backgroundColor: const Color.fromARGB(28, 28, 28, 0),
-                      backgroundImage: AssetImage(_picture.musicRecordImg),
+                      backgroundImage: _musicPicture,
                     ),
                   )
                 ),
@@ -268,7 +288,13 @@ class _PlayPageState extends State<PlayPage> {
               curve: Easing.legacyDecelerate,
               width: _isShowLyrics ? size.width : 0,
               child: LyricsFragment(closeFragmentCallback: () { _isShowLyrics = !_isShowLyrics; }),
-          )
+          ),
+          AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Easing.legacyDecelerate,
+              width: _isShowPictureSetting ? size.width : 0,
+              child: ImagePickFragment(closeFragmentCallback: () { _isShowPictureSetting = !_isShowPictureSetting; _setMusicData(); }),
+          ),
         ],
       ),
       floatingActionButton: Stack(

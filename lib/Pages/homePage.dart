@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:musicalization/Pages/pageComponents/upMenuBarWidget.dart';
 import 'package:musicalization/logic/musicPlayer.dart';
 import 'package:musicalization/logic/musicSettingSyncer.dart';
+import 'package:musicalization/logic/pictureBinaryConverter.dart';
 import 'package:musicalization/logic/realm/logic/musicInfo/musicInfoUpdater.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'dart:async';
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   final MusicInfoUpdater _musicInfoUpdater = MusicInfoUpdater();
 
   final ScrollController _scrollController = ScrollController();
+  final PictureBinaryConverter _converter = PictureBinaryConverter();
 
   List<MusicInfo> _listInMusicInfo = [];
 
@@ -100,6 +102,13 @@ class _HomePageState extends State<HomePage> {
 
   void _onFetchFileFromGoogleDriveBtnTappedCallback() {}
 
+  Widget _buildMusicPicture(MusicInfo info) {
+    ImageProvider image = _converter.convertBase64ToImage(info.picture);
+    return CircleAvatar(
+      foregroundImage: image,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,11 +127,8 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           UpMenuBarWidget(
-              centralBtnSettingArg: ButtonSetting<Function()>(
-                  _picture.shuffleImg, _onShuffleBtnTappedCallback),
-              rightBtnSettingArg: ButtonSetting<Function()>(
-                  _picture.fetchingFromGoogleDriveImg,
-                  _onFetchFileFromGoogleDriveBtnTappedCallback)),
+              centralBtnSettingArg: ButtonSetting<Function()>(_picture.shuffleImg, _onShuffleBtnTappedCallback),
+              rightBtnSettingArg: ButtonSetting<Function()>(_picture.fetchingFromGoogleDriveImg, _onFetchFileFromGoogleDriveBtnTappedCallback)),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -136,10 +142,12 @@ class _HomePageState extends State<HomePage> {
                   child: InkWell(
                     onTap: () => _onListItemTapped(index),
                     child: ListTile(
-                      leading: Image.asset(
-                        _picture.musicRecordImg,
-                        width: 50,
-                      ),
+                      leading: _listInMusicInfo[index].picture != ""
+                        ? _buildMusicPicture(_listInMusicInfo[index])
+                        : Image.asset(
+                          _picture.musicRecordImg,
+                          width: 50,
+                        ),
                       title: Text(_listInMusicInfo[index].name),
                     ),
                   ),

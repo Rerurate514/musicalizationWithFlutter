@@ -11,8 +11,7 @@ class MusicVolumeContorlContainer extends StatefulWidget {
   State<StatefulWidget> createState() => _MusicVolumeContorlContainerState();
 }
 
-class _MusicVolumeContorlContainerState
-    extends State<MusicVolumeContorlContainer> {
+class _MusicVolumeContorlContainerState extends State<MusicVolumeContorlContainer> {
   final _musicPlayer = MusicPlayer();
   final _recordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
   final _picture = PictureConstants();
@@ -70,17 +69,15 @@ class _MusicVolumeContorlContainerState
                         activeTrackColor: Theme.of(context).splashColor,
                         inactiveTrackColor: Theme.of(context).cardColor,
                         thumbColor: _colors.primaryBlue,
-                        thumbShape: const RoundSliderThumbShape(
-                            enabledThumbRadius: 8.0),
+                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8.0),
                         overlayColor: Colors.blue,
-                        overlayShape:
-                            const RoundSliderOverlayShape(overlayRadius: 20.0),
+                        overlayShape: const RoundSliderOverlayShape(overlayRadius: 20.0),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 4, //bottom
                             right: 16 //top
-                            ),
+                        ),
                         child: Slider(
                           value: _value.toDouble(),
                           onChanged: (newVolume) => _onChangedSlider(newVolume),
