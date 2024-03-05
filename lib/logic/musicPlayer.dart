@@ -150,6 +150,8 @@ class _MusicPlayController {
   bool _isPlaying = false;
   bool get isPlaying => _isPlaying;
 
+  bool _isExcutable = true;
+
   _MusicPlayController();
 
   void setWatcher(_AudioPlayerIsPlayingListenerWatcher watcherArg){
@@ -157,12 +159,19 @@ class _MusicPlayController {
   }
 
   Future start(AudioPlayer audioPlayerArg, String musicPathArg) async {
+    if(!_isExcutable) return;
+    _isExcutable = false;
+
     try {
       _watcher.setPlaying(true);
       await audioPlayerArg.play(DeviceFileSource(musicPathArg));
     } catch (e, stackTrace) {
       throw Exception("Failed to $e, Invalid musicPath = $musicPathArg, stackTrace = $stackTrace");
     }
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _isExcutable = true;
+    });
   }
 
   Future togglePlaying(AudioPlayer audioPlayerArg) async {
