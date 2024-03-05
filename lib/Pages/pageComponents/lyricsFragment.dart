@@ -33,56 +33,60 @@ class LyricsFragment extends StatelessWidget{
             topLeft: Radius.circular(64),
             topRight: Radius.circular(64),
           ),
-          child: Card(
-            elevation: 256,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.008)),
-                  Stack(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            _picture.lyricsIconImg,
-                            scale: 2,
-                          ),
-                          Padding(padding: EdgeInsets.symmetric(horizontal: size.width * 0.02)),
-                          Text(
-                            _string.lyrics,
-                            style: const TextStyle(fontSize: 32),
-                          ),
-                        ],
-                      ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: size.width * 0.07),
-                          child: IconButton(
-                            onPressed: _closeFragment, 
-                            icon: Icon(
-                              Icons.close,
-                              color: _colors.primaryBlue,
-                              size: size.width * 0.13,
-                            )
-                          ),
+          child: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: Card(
+              elevation: 256,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.008)),
+                    Stack(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              _picture.lyricsIconImg,
+                              scale: 2,
+                            ),
+                            Padding(padding: EdgeInsets.symmetric(horizontal: size.width * 0.02)),
+                            Text(
+                              _string.lyrics,
+                              style: const TextStyle(fontSize: 32),
+                            ),
+                          ],
                         ),
-                      )
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.02)),
-                  Align(
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: size.width * 0.07),
+                            child: IconButton(
+                              onPressed: _closeFragment, 
+                              icon: Icon(
+                                Icons.close,
+                                color: _colors.primaryBlue,
+                                size: size.width * 0.13,
+                              )
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.02)),
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: size.width * 0.07),
                         child: Text(_lyrics),
                       ),
                     ),
-                ],
-              ),
-            )
-          ),
+                  ],
+                ),
+              )
+            ),
+          )
         )
       )
     );
