@@ -162,14 +162,14 @@ class _MusicPlayController {
     if(!_isExcutable) return;
     _isExcutable = false;
 
-    try {
-      _watcher.setPlaying(true);
-      await audioPlayerArg.play(DeviceFileSource(musicPathArg));
-    } catch (e, stackTrace) {
-      throw Exception("Failed to $e, Invalid musicPath = $musicPathArg, stackTrace = $stackTrace");
-    }
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 200), () async {
+      try {
+        _watcher.setPlaying(true);
+        await audioPlayerArg.play(DeviceFileSource(musicPathArg));
+      } catch (e, stackTrace) {
+        throw Exception("Failed to $e, Invalid musicPath = $musicPathArg, stackTrace = $stackTrace");
+      }
       _isExcutable = true;
     });
   }
