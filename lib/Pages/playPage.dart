@@ -228,7 +228,7 @@ class _PlayPageState extends State<PlayPage> {
                   )
                 ),
               ),
-              Container(
+               Container(
                 margin: const EdgeInsets.symmetric(vertical: 16),
                 child: Column(children: [
                   Row(
@@ -277,23 +277,56 @@ class _PlayPageState extends State<PlayPage> {
               ),
             ]),
           ),
-          AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Easing.legacyDecelerate,
-              height: _isShowVolumeSlider ? size.height * 0.5 : 0,
-              child: MusicVolumeContorlContainer(),
+          AnimatedSwitcher(
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            },
+            child: _isShowVolumeSlider
+            ? MusicVolumeContorlContainer()
+            : Container(),
           ),
-          AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Easing.legacyDecelerate,
-              width: _isShowLyrics ? size.width : 0,
-              child: LyricsFragment(closeFragmentCallback: () { _isShowLyrics = !_isShowLyrics; }),
+          AnimatedSwitcher(
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            },
+            child: _isShowLyrics
+            ? LyricsFragment(closeFragmentCallback: () { _isShowLyrics = !_isShowLyrics; })
+            : Container(),
           ),
-          AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Easing.legacyDecelerate,
-              width: _isShowPictureSetting ? size.width : 0,
-              child: ImagePickFragment(closeFragmentCallback: () { _isShowPictureSetting = !_isShowPictureSetting; _setMusicData(); }),
+                    AnimatedSwitcher(
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            },
+            child: _isShowPictureSetting
+            ? ImagePickFragment(closeFragmentCallback: () { _isShowPictureSetting = !_isShowPictureSetting; _setMusicData(); })
+            : Container(),
           ),
         ],
       ),
