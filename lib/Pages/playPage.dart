@@ -106,7 +106,7 @@ class _PlayPageState extends State<PlayPage> {
         _musicPicture = _converter.convertBase64ToImage(_musicPlayer.currentMusic.picture);
       }
       else{
-        _musicPicture = AssetImage(_picture.musicRecordImg);
+        _musicPicture = null;
       }
     });
   }
@@ -224,6 +224,9 @@ class _PlayPageState extends State<PlayPage> {
                     child: CircleAvatar(
                       backgroundColor: const Color.fromARGB(28, 28, 28, 0),
                       backgroundImage: _musicPicture,
+                      child: _musicPicture == null
+                      ? Image.asset(_picture.musicRecordImg)
+                      : null,
                     ),
                   )
                 ),
@@ -311,7 +314,7 @@ class _PlayPageState extends State<PlayPage> {
             ? LyricsFragment(closeFragmentCallback: () { _isShowLyrics = !_isShowLyrics; })
             : Container(),
           ),
-                    AnimatedSwitcher(
+          AnimatedSwitcher(
             switchInCurve: Curves.easeInOut,
             switchOutCurve: Curves.easeInOut,
             duration: const Duration(milliseconds: 300),
