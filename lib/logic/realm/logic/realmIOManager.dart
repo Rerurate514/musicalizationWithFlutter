@@ -1,5 +1,4 @@
 import 'package:musicalization/logic/musicPlayer.dart';
-import 'package:musicalization/logic/realm/logic/interface/realmValidatedSchemaValueInterface.dart';
 import 'package:musicalization/logic/realm/model/schema.dart';
 import 'package:realm/realm.dart';
 import 'realmInstanceFactory.dart';
@@ -16,7 +15,7 @@ class RealmIOManager {
     realm = realmInsFac.createRealmIns(schemaObjectArg: schemaObjectArg);
   }
 
-  Future<void> add<T extends RealmValidatedSchemaValueInterface>({required T dataInsToAddArg}) async {
+  Future<void> add<T extends RealmObject>({required T dataInsToAddArg}) async {
     _adder.add<T>(realm: realm, dataInsToAddArg: dataInsToAddArg);
   }
 
@@ -30,7 +29,7 @@ class RealmIOManager {
     return result.payload;
   }
 
-  Future<void> edit<T extends RealmValidatedSchemaValueInterface>({required T dataInsToAddArg}) async {
+  Future<void> edit<T extends RealmObject>({required T dataInsToAddArg}) async {
     _editor.edit<T>(realm: realm, dataInsToAddArg: dataInsToAddArg);
   }
 
@@ -70,15 +69,15 @@ class _DataReader {
 }
 
 class _DataAdder {
-  Future<RealmIOResults> add<T extends RealmValidatedSchemaValueInterface>({required Realm realm, required T dataInsToAddArg}) async {
-    realm.write(() => realm.add(dataInsToAddArg.payload));
+  Future<RealmIOResults> add<T extends RealmObject>({required Realm realm, required T dataInsToAddArg}) async {
+    realm.write(() => realm.add(dataInsToAddArg));
     return RealmIOResults(isSuccessArg: true);
   }
 }
 
 class _DataEditor {
-  Future<RealmIOResults> edit<T extends RealmValidatedSchemaValueInterface>({required Realm realm, required T dataInsToAddArg}) async {
-    realm.write(() => realm.add(dataInsToAddArg.payload, update: true));
+  Future<RealmIOResults> edit<T extends RealmObject>({required Realm realm, required T dataInsToAddArg}) async {
+    realm.write(() => realm.add(dataInsToAddArg, update: true));
     return RealmIOResults(isSuccessArg: true);
   }
 } 
