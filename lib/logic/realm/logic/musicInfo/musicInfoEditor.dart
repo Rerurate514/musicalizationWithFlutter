@@ -13,7 +13,7 @@ enum MusicInfoColumn{
 class MusicInfoEditor{
   final _realmIOManager = RealmIOManager(MusicInfo.schema);
 
-  void edit<COLUMN_TYPE>({required MusicInfo newMusicInfoArg}) {
-    _realmIOManager.edit<MusicInfo>(dataInsToAddArg: newMusicInfoArg);
+  Future<void> edit({required MusicInfo newMusicInfoArg}) async {
+    await _realmIOManager.edit<MusicInfo>(dataInsToAddArg: newMusicInfoArg);
   }
 }

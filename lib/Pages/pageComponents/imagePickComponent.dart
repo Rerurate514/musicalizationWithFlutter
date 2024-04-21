@@ -42,7 +42,7 @@ class _ImagePickFragmentState extends State<ImagePickFragment> {
     _selectedPath = file?.path ?? "";
   }
 
-  void _updatePicture(String newPictureBinary) async {
+  Future<void> _updatePicture(String newPictureBinary) async {
     final MusicInfo info = MusicInfo(
       _musicPlayer.currentMusic.id, 
       _musicPlayer.currentMusic.name,
@@ -52,13 +52,13 @@ class _ImagePickFragmentState extends State<ImagePickFragment> {
       newPictureBinary
     );
     final MusicInfoEditor editer = MusicInfoEditor();
-    editer.edit(newMusicInfoArg: info);
+    await editer.edit(newMusicInfoArg: info);
   }
 
   Future<void> _captureImage() async {
     RenderRepaintBoundary boundary = _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     String imageDataBinary = await _converter.convertBoundaryToImageBase64(boundary);
-    _updatePicture(imageDataBinary);
+    await _updatePicture(imageDataBinary);
  }
 
   Widget buildPicture(){
@@ -72,7 +72,7 @@ class _ImagePickFragmentState extends State<ImagePickFragment> {
         transform: transform,
         child: _selectedPath != ""
           ? Image.file(File(_selectedPath))
-          : const SizedBox(height: 10,width: 10,),
+          : const SizedBox(height: 10,width: 10),
       ),
     );
   }
@@ -139,7 +139,9 @@ class _ImagePickFragmentState extends State<ImagePickFragment> {
                     _buildButton(Icons.restart_alt, () => _initValue() ),
                     _buildButton(Icons.check, () async {
                       await _captureImage();
-                      widget.closeFragmentCallback();
+                      Future.delayed(const Duration(seconds: 1), (){
+                        widget.closeFragmentCallback();
+                      });
                     }),
                   ],
                 )
