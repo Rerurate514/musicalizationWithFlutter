@@ -45,10 +45,7 @@ class InListPageComponentState extends State<InListPageComponent> {
   late String _tempEditedName;
   bool _isDialogContinued = false;
 
-  InListPageComponentState(
-      MusicList listArg,
-      Function() toggleListSelectedCallbackArg,
-      Function() movePlayPageCallbackArg) {
+  InListPageComponentState(MusicList listArg, Function() toggleListSelectedCallbackArg, Function() movePlayPageCallbackArg) {
     _musicList = listArg;
     _musicListId = _musicList.id;
     _toggleListSelectedCallback = toggleListSelectedCallbackArg;
@@ -74,8 +71,7 @@ class InListPageComponentState extends State<InListPageComponent> {
     _listInMusicInfo = [];
     for (var musicIdArg in _musicList.list) {
       setState(() {
-        _listInMusicInfo
-            .add(_musicInfoRecordFetcher.getRecordFromId(musicIdArg));
+        _listInMusicInfo.add(_musicInfoRecordFetcher.getRecordFromId(musicIdArg));
       });
     }
   }
@@ -100,8 +96,7 @@ class InListPageComponentState extends State<InListPageComponent> {
   }
 
   Future _commitEditedMusicList() async {
-    _musicListController.editList(
-        _musicListId, _tempEditedName, _tempEditedList);
+    _musicListController.editList(_musicListId, _tempEditedName, _tempEditedList);
   }
 
   void checkContinueToShowDialog(bool isDialogConituneArg) {
