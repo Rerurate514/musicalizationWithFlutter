@@ -51,7 +51,7 @@ class LyricsSettingAdjusterState extends State<LyricsSettingAdjuster>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.1, vertical: size.height * 0.03),
                   child: Text(
                     _string.musicSettingDrawerItemLyricsSettingDialogTitle,
                     style: TextStyle(fontSize: size.height * 0.02),
@@ -59,7 +59,7 @@ class LyricsSettingAdjusterState extends State<LyricsSettingAdjuster>{
                 ),
                 Padding(padding: EdgeInsets.symmetric(vertical: size.height * 0.015)),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.05, vertical: size.height * 0.01),
                   child: TextField(
                     controller: _lyricsTextController,
                     maxLines: null,
