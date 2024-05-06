@@ -294,7 +294,7 @@ class _PlayPageState extends State<PlayPage> {
               );
             },
             child: _isShowVolumeSlider
-            ? MusicVolumeContorlContainer()
+            ? MusicVolumeControlContainer()
             : Container(),
           ),
           AnimatedSwitcher(

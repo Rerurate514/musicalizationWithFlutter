@@ -6,12 +6,12 @@ import 'package:musicalization/setting/colors.dart';
 import 'package:musicalization/setting/picture.dart';
 import 'package:realm/realm.dart';
 
-class MusicVolumeContorlContainer extends StatefulWidget {
+class MusicVolumeControlContainer extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _MusicVolumeContorlContainerState();
+  State<StatefulWidget> createState() => _MusicVolumeControlContainerState();
 }
 
-class _MusicVolumeContorlContainerState extends State<MusicVolumeContorlContainer> {
+class _MusicVolumeControlContainerState extends State<MusicVolumeControlContainer> {
   final _musicPlayer = MusicPlayer();
   final _recordFetcher = RecordFetcher<MusicInfo>(MusicInfo.schema);
   final _picture = PictureConstants();
@@ -20,7 +20,7 @@ class _MusicVolumeContorlContainerState extends State<MusicVolumeContorlContaine
   int _initVolume = 40;
   int _value = 0;
 
-  _MusicVolumeContorlContainerState() {
+  _MusicVolumeControlContainerState() {
     MusicInfo currentMusic = _musicPlayer.currentMusic;
     ObjectId musicId = currentMusic.id;
 
