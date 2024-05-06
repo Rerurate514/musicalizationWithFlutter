@@ -294,7 +294,7 @@ class _PlayPageState extends State<PlayPage> {
               );
             },
             child: _isShowVolumeSlider
-            ? MusicVolumeControlContainer()
+            ? MusicVolumeControlContainer(closeFragment: () { _isShowVolumeSlider = !_isShowVolumeSlider; },)
             : Container(),
           ),
           AnimatedSwitcher(
@@ -304,7 +304,7 @@ class _PlayPageState extends State<PlayPage> {
             transitionBuilder: (Widget child, Animation<double> animation) {
               return SlideTransition(
                 position: Tween<Offset>(
-                  begin: const Offset(0, 1),
+                  begin: const Offset(1, 0),
                   end: Offset.zero,
                 ).animate(animation),
                 child: child,
