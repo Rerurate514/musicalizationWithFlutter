@@ -111,6 +111,7 @@ class _MusicVolumeControlContainerState extends State<MusicVolumeControlContaine
               margin: const EdgeInsets.all(20),
               color: _colors.primaryBlue,
               child: InkWell(
+                borderRadius: BorderRadius.circular(16),
                 onTap: widget.closeFragment,
                 child: const Padding(
                   padding: EdgeInsets.all(8),
