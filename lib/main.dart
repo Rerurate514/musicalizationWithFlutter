@@ -24,12 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'musicalization',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
-        textTheme: ThemeData.dark().textTheme.copyWith(
-              bodyText2: const TextStyle(
-                fontFamily: 'NotoSansJP',
-                color: Colors.white,
-              ),
-            ),
+        textTheme: ThemeData.dark().textTheme.copyWith(),
       ),
       home: const MyHomePage(title: 'musicalization Home Page'),
     );
