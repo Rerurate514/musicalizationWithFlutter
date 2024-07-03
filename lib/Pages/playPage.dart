@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:musicalization/Pages/pageComponents/autoVolumeSettingAdjuster.dart';
+import 'package:musicalization/Pages/pageComponents/fileRenameDialog.dart';
 import 'package:musicalization/Pages/pageComponents/imagePickComponent.dart';
 import 'package:musicalization/Pages/pageComponents/lyricsFragment.dart';
 import 'package:musicalization/Pages/pageComponents/lyricsSettingAdjuster.dart';
@@ -152,7 +153,7 @@ class _PlayPageState extends State<PlayPage> {
   }
 
   void _nameSettingItemTapped() {
-    print("name");
+    _showDialog(const FileRenameDialog());
   }
 
   void _pictureSettingItemTapped() {
